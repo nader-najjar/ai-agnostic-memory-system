@@ -1,6 +1,6 @@
 ---
 name: chief-of-staff-setup
-description: Manually invoked. Create a new, empty Chief-of-Staff memory at ~/Desktop/chief-of-staff from this skill's templates, set the owner's identities, make it a git repository, and optionally schedule its backup.
+description: Manually invoked. Create a new, empty Chief-of-Staff memory at ~/Desktop/chief-of-staff from this skill's templates, set the owner's identities, make it a git repository, and optionally schedule its backup and a daily scout.
 ---
 
 # Chief-of-Staff Setup
@@ -40,7 +40,9 @@ Use this skill only when the owner explicitly invokes it.
 
    `<root>/backup-mechanism/BACKUP.md` explains how the backup works and how to remove it.
 
-6. **Report.** Give the owner the root path, the initial commit, the backup status, and these notes:
+6. **Offer the scout schedule.** Ask the owner whether to run `chief-of-staff-scout` daily. If they agree, create a scheduled job in their AI tool that runs it, passes it the tool's chat folders and transcript file pattern, and delivers its report to the owner. A schedule can skip a run while the computer is off or asleep, so make sure a missed day still runs once the computer is back, for example by checking often and running at most once a day. Tell the owner the job's name and how to pause or remove it in that tool. If the tool cannot schedule jobs, tell the owner and report the scout as not scheduled.
+
+7. **Report.** Give the owner the root path, the initial commit, the backup and scout schedule status, and these notes:
    - The guardian needs the tools the files under `source-types/` name.
    - To change a rule, the owner edits `SCHEMA.md`, `GUARDIAN.md` or a file under `source-types/` and commits it. The guardian never edits them.
    - To undo an ingest, run `git revert <commit>` in the root.

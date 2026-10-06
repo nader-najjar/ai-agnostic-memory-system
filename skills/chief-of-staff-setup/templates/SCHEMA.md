@@ -22,8 +22,6 @@ backup-mechanism/  backup script and setup guide (BACKUP.md)
 
 Files written under an earlier version of this schema, such as older raw captures and log entries, keep their original form and remain valid. Read them as written; everything new follows this schema. A sidecar with no `schema_version` is version 1, and its `origin` is its `original_location`.
 
-The Chief-of-Staff skills are installed from the AI Agnostic Memory System package, not from this folder.
-
 During ingestion only the guardian writes, and only as `GUARDIAN.md` allows. Outside ingestion, only the owner, or a request made with the owner's explicit permission, may change anything here. Every other session is read-only. Missing subfolders are created when first needed.
 
 ## Source Types

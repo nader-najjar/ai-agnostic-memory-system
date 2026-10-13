@@ -1,6 +1,6 @@
 # Remote Code
 
-- What It Is: a git repository hosted on a remote, by its hosting URL or a local clone of it, at a commit that exists on its `origin` remote, with no uncommitted changes. Local code with no remote is not this type.
+- What It Is: a git repository hosted on a remote, by its hosting URL or a local clone of it, at a commit that exists on its `origin` remote, with no uncommitted changes. Local code with no remote is not this type, and a repository on a host another source type covers is that type instead.
 - Capture: these files:
 
   | File | Holds |
@@ -18,7 +18,7 @@
 
   The guardian reads the code from a temporary clone of the bundle in the system temp directory, left for the system to clean up: `git clone <capture folder>/repository.bundle <dir>`, whose `HEAD` must be the commit. It reads every file `git ls-files` lists at that commit, except those under Ignore, and the full `git log` up to the commit.
 - Original Location: the hosting URL or local clone path given.
-- Identity: the host and repository path of the `origin` remote, such as `github.com/<owner>/<repo>`.
+- Identity: `<host>/<repo path>` in lowercase, without `.git`, such as `github.com/<owner>/<repo>`.
 - Version: the full commit SHA.
 - Ignore: binary files and dependency lockfiles.
 - Author: each commit's author name and email. A commit whose author matches an `owner` identity is the owner's.

@@ -2,26 +2,28 @@
 # Install (or reinstall) a launchd job that runs backup.sh --notify hourly and at login.
 set -euo pipefail
 
-label="com.chief-of-staff.backup"
-plist="$HOME/Library/LaunchAgents/$label.plist"
-log="$HOME/Library/Logs/chief-of-staff-backup.log"
 domain="gui/$(id -u)"
 
 if [ $# -ne 2 ]; then
-  echo "usage: $0 <memory-root> <backup-folder>" >&2
+  echo "usage: $0 <repository> <backup-folder>" >&2
   exit 2
 fi
 
 here=$(cd "$(dirname "$0")" && pwd)
 script="$here/backup.sh"
-root=$(cd "$1" 2>/dev/null && pwd) || { echo "memory root not found: $1" >&2; exit 1; }
+root=$(cd "$1" 2>/dev/null && pwd) || { echo "repository not found: $1" >&2; exit 1; }
 dest=$(cd "$2" 2>/dev/null && pwd) || { echo "backup folder not found: $2" >&2; exit 1; }
 [ -f "$script" ] || { echo "backup.sh not found next to install.sh" >&2; exit 1; }
 git -C "$root" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { echo "not a git repository: $root" >&2; exit 1; }
 case "$dest/" in
-  "$root/"*) echo "backup folder must be outside the memory root: $dest" >&2; exit 1 ;;
+  "$root/"*) echo "backup folder must be outside the repository: $dest" >&2; exit 1 ;;
 esac
 gitdir=$(dirname "$(command -v git)")
+
+name=$(basename "$root")
+label="com.$name.backup"
+plist="$HOME/Library/LaunchAgents/$label.plist"
+log="$HOME/Library/Logs/$name-backup.log"
 
 xml() { sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g' <<<"$1"; }
 
@@ -32,7 +34,7 @@ cat >"$plist" <<EOF
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>$label</string>
+  <string>$(xml "$label")</string>
   <key>ProgramArguments</key>
   <array>
     <string>/bin/bash</string>
@@ -85,9 +87,9 @@ if [ "$running" = "1" ]; then
 fi
 code=$(sed -n 's/.*last exit code = \([0-9-]*\).*/\1/p' <<<"$info" | head -1)
 
-if [ "$code" = "0" ] && [ -f "$dest/chief-of-staff.bundle" ]; then
+if [ "$code" = "0" ] && [ -f "$dest/$name.bundle" ]; then
   echo "installed $label: runs hourly and at login"
-  echo "bundle: $dest/chief-of-staff.bundle"
+  echo "bundle: $dest/$name.bundle"
   echo "log:    $log"
 else
   echo "installed $label, but the first run failed (exit code ${code:-unknown})" >&2

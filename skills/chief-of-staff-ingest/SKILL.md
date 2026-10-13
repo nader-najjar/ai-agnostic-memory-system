@@ -16,11 +16,13 @@ This session never creates, edits, moves or deletes anything under `~/Desktop/ch
 
 ## Steps
 
+Follow these steps, and apply every rule in Special Cases below wherever its case arises.
+
 1. **Check the folder.** Expand `~` to an absolute path. Confirm `SCHEMA.md`, `GUARDIAN.md`, `index.md`, `always.md`, `deferred.md`, `log.md` and `source-types/` exist and that `SCHEMA.md` starts with `schema_version: 2`. If anything is missing, stop with: `Chief-of-Staff memory not found or invalid at <path>.` Do not create it. Then run `git status --porcelain` in the folder. If it prints anything, stop with: `Chief-of-Staff memory has uncommitted changes; commit or discard them before ingesting.` Otherwise record the current `HEAD` commit, read every file under `source-types/`, and read the One Ingestion section of `GUARDIAN.md`.
 
-2. **Identify the inputs.** An invocation carries what `GUARDIAN.md` One Ingestion allows. If it has neither a source nor a note, ask the owner for one.
-   - **Source:** optional, at most one, and it must meet a type in `source-types/`. If it does not, ask the owner for what is missing. If the invocation names more than one source, stop without ingesting any: `One source per invocation; invoke this skill once for each source.`
-   - **Note:** optional. Include one only when the owner explicitly tells you to add a note, and use the owner's exact words, never your paraphrase or additions. An explicit request to add something to `always.md` is such a note. When the owner gives the note as a Markdown file, pass that file. When the note is too long to pass whole in your runtime's subagent prompt, write the owner's exact words to a new Markdown file in the system temp directory and pass that file; never shorten or split the note.
+2. **Identify the inputs.** An invocation carries what `GUARDIAN.md` One Ingestion allows. If it has neither a source nor a note, stop with: `Nothing to ingest; name a source or a note.`
+   - **Source:** optional, at most one, and it must meet a type in `source-types/`. If it does not, stop without ingesting, naming what is missing: `Source does not meet a source type: <what is missing>.` If the invocation names more than one source, stop without ingesting any: `One source per invocation; invoke this skill once for each source.`
+   - **Note:** optional. Include one only when the owner explicitly tells you to add a note, and use the owner's exact words, never your paraphrase or additions.
 
 3. **Start one fresh subagent** using your runtime's own mechanism. It must not inherit this conversation, and it should inherit as little of the runtime's memory, lessons and project context as the runtime allows. It needs read access to the source, git access to check out code repositories, and write access to the folder. If your runtime cannot provide an isolated subagent with those capabilities, stop and say so. Give it a budget of at least 1000 tool calls, or the runtime's maximum if that is lower; never leave it on a smaller default. Give it exactly this prompt, filling in only `<root>` (the absolute folder path), `<source>` and `<note>`, and dropping the `Source:` or `Owner note:` line when that input is absent:
 
@@ -31,7 +33,7 @@ This session never creates, edits, moves or deletes anything under `~/Desktop/ch
    Owner note: <note>
    ```
 
-   Add nothing else: no context, intent, summary or emphasis. For a note in a file, replace the `Owner note:` line with `Owner note file: <absolute path of the file>`.
+   Add nothing else: no context, intent, summary or emphasis.
 
 4. **Relay the result.** Report the guardian's result faithfully and completely.
 
@@ -42,3 +44,12 @@ This session never creates, edits, moves or deletes anything under `~/Desktop/ch
    ```
 
    State that this permanently deletes the uncommitted files and leaves committed work untouched. Run it only when the owner explicitly approves.
+
+## Special Cases
+
+### Notes
+
+- **A request to add to `always.md`.** An explicit request to add something to `always.md` is a note.
+- **A note given as a file.** When the owner gives the note as a Markdown file, pass that file.
+- **A note too long for the prompt.** When the note is too long to pass whole in your runtime's subagent prompt, write the owner's exact words to a new Markdown file in the system temp directory and pass that file; never shorten or split the note.
+- **A note in a file.** In the step 3 prompt, replace the `Owner note:` line with `Owner note file: <absolute path of the file>`.

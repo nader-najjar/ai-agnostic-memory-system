@@ -71,6 +71,7 @@ List a page in `always.md` only when this ingestion's note asks for it. Record t
 - Prefer updating an existing page to creating a near-duplicate. Split a page into facets once it gets too large.
 - When two pages prove to be one subject, keep the one with more claims. Move every claim, web link and alias to it with their citations, mark the other `merged` as `SCHEMA.md` specifies, and replace its slug in every `related` list.
 - Write concisely: one idea per bullet, no filler, no restating the source.
+- Reread every page this ingestion changed as a whole. Supersede any claim on it, whatever it cites, that the new claims make false or contradict.
 - Update `index.md` for every page created, and for any page whose aliases or summary changed.
 - Update `deferred.md` for every item deferred or resolved.
 - Append one entry to `log.md`.

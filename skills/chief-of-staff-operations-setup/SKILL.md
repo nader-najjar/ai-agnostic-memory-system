@@ -51,11 +51,26 @@ Follow these steps, and apply every rule in Special Cases below wherever its cas
 
 10. **Add the feeds.** Skip this step when no feed was selected. Copy each selected feed file into `<root>/scout/feeds/`, replacing `<home>` with the owner's home folder. Commit them with `git -C <root> add scout/feeds && git -C <root> commit -m "scout: Add the feeds"`.
 
-11. **Schedule the scout.** Only when step 5 got `yes`, create one scheduled job in this AI tool per feed added in step 10, each running every hour with the whole instruction `$chief-of-staff-scout <feed> scheduled`, where `<feed>` is the feed file's name without `.md`; each feed is then scouted once a day, on the first hour the computer is awake. Tell the owner each job's name and how to pause or remove it in that tool.
+11. **Schedule the scout.** Only when step 5 got `yes`, create one job per feed added in step 10, as Scout Schedule below says for this AI tool, where `<feed>` is the feed file's name without `.md`. Each job runs every hour, so each feed is scouted once a day, on the first hour the computer is awake. Tell the owner each job's name and how to pause or remove it in that tool.
 
-12. **Report.** Give the owner the operations root path, the initial commit, and the backup, feed and scout schedule status. Name the feeds left out, and tell the owner that a feed can be added later by copying its file from this skill's `templates/feeds/` into `<root>/scout/feeds/`, replacing `<home>`, committing it, and scheduling `$chief-of-staff-scout <feed> scheduled` hourly.
+12. **Report.** Give the owner the operations root path, the initial commit, and the backup, feed and scout schedule status. Name the feeds left out, and tell the owner that a feed can be added later by copying its file from this skill's `templates/feeds/` into `<root>/scout/feeds/`, replacing `<home>`, committing it, and scheduling it as Scout Schedule says.
+
+## Scout Schedule
+
+Only the AI tools below are supported. In any other tool, tell the owner the scout schedule is not supported there yet, and report the scout as not scheduled.
+
+### Kiro Crew
+
+Create each job by running this command in the shell, exactly as written, with `<feed>` and `<timezone>` filled in and nothing added:
+
+```bash
+kirocrew cron add "Chief-of-Staff scout: <feed>" "$(printf '%s\n%s' '$chief-of-staff-scout <feed> scheduled' 'Unless the scheduled check stopped the run, call send_message with your reply line as its only argument.')" --cron "0 * * * *" --timezone <timezone> --silent --hide-in-chat --no-persistent-session --no-minimal-context --timeout-secs 3600
+```
+
+`<timezone>` is the machine's IANA timezone: the part of `readlink /etc/localtime` after `zoneinfo/`, such as `America/New_York`. The command prints the new job's id; when it exits non-zero, report its error and the scout as not scheduled.
+
+Use the shell command, not the `cron_add` tool: a job `cron_add` creates is owned by the chat that created it, so only that chat can change it, while a job the shell command creates has no owning chat. `--silent` keeps a run that the scheduled check stops from notifying the owner, since Kiro Crew otherwise delivers every run, even one with no reply. `--no-minimal-context` is needed because a minimal-context run loads no skill.
 
 ## Special Cases
 
 - **A feed with no data yet.** It can still be added in step 3; it is scouted once its tool writes chats.
-- **The AI tool cannot schedule jobs.** In step 11, tell the owner and report the scout as not scheduled.

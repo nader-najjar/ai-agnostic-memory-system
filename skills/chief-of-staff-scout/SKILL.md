@@ -29,10 +29,10 @@ Follow these steps, and apply every rule in Special Cases below wherever its cas
 
 4. **Find what is worth ingesting.** Read the memory's `SCHEMA.md`, every file under `source-types/`, and in `GUARDIAN.md` the sections `2. Read and Weigh Evidence`, `4. Decide per Claim` and `Boundaries`: they set the bar for what is worth keeping. Read `always.md` and every page it lists in full; they are the owner's standing rules, so follow them. Find the items under the feed's `Where` that are `New` within the span, skip what its `Private` names, and ignore what its `Ignore` names. Each item is a source of the feed's `Type`, with that type's Identity.
 
-   Judge each item, one at a time. Judge a source by what it holds, not by what the memory already has; ingest decides what is new. Read the whole item, as the feed's `Item` defines it, for context, except what `Ignore` names. Its new part is what the feed's `New` names for the span. Then judge, in order:
+   Judge each item, one at a time. Judge a source by what it holds, not by what the memory already has; ingest decides what is new. Judge only from the sources themselves, never from an earlier inbox, the operations repository's history, or memory about earlier runs. Read the whole item, as the feed's `Item` defines it, for context, except what `Ignore` names. Its new part is what the feed's `New` names for the span. Then judge, in order:
 
    1. **The item itself.** It is worth ingesting when its new part holds something the bar would keep.
-   2. **Sources its new part links or names.** Open each read-only with the owner's access and judge it by the same bar.
+   2. **Sources its new part links or names.** Open each read-only with the owner's access and judge it by the same bar. A source is worth ingesting for what it adds about the owner's own world: their work, systems, decisions and life. A source that holds mostly general knowledge anyone could find, such as public documentation, tutorials, articles or vendor pages, is usually not worth ingesting unless it is clearly valuable to them, even when a page would record its link under Web Links.
    3. **One more level.** Only from a level 2 source the bar keeps or the memory holds, open the links in it that a careful reader would open because they likely add knowledge the bar would keep, such as the same project's design doc, and judge them by the same bar. Never follow every link, a source's own parts such as a repository's files, or any link in a level 3 source.
 
    Read each source at most once per run and reuse its verdict wherever it appears again. Judge every item and every source found this way.
@@ -51,7 +51,7 @@ Follow these steps, and apply every rule in Special Cases below wherever its cas
    1. Move each ticked line in an open section to Skipped, still ticked.
    2. Move each unticked line in Skipped back to its open section.
    3. For each source this run found: when it is in Skipped, leave it there. When it is already open, update its latest mention and its section. Otherwise add it.
-   4. Remove each Ingest line whose source the memory has captured after its latest mention: a `raw/` capture whose `meta.md` has that `source_type` and `source_id`, with a `captured_at` after that time.
+   4. Remove each Ingest line whose source the memory has captured after its latest mention: a `raw/` capture whose `meta.md` has that `source_type` and `source_id`, with a `captured_at` after that time. For an item with an older capture, judge only the part after its latest capture: rewrite the line's sentence to that part, or remove the line when that part holds nothing the bar would keep.
 
    When every item and source was judged, write this run's start, alone, to `<state>/last-run.md`. Otherwise leave it unchanged, so the next run covers the same span again.
 

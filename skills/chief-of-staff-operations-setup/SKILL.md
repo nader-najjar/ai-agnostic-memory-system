@@ -64,12 +64,12 @@ Only the AI tools below are supported. In any other tool, tell the owner the sco
 Create each job by running this command in the shell, exactly as written, with `<feed>` and `<timezone>` filled in and nothing added:
 
 ```bash
-kirocrew cron add "Chief-of-Staff scout: <feed>" "$(printf '%s\n%s' '$chief-of-staff-scout <feed> scheduled' 'Unless the scheduled check stopped the run, call send_message with your reply line as its only argument.')" --cron "0 * * * *" --timezone <timezone> --silent --hide-in-chat --no-persistent-session --no-minimal-context --timeout-secs 3600
+kirocrew cron add "Chief-of-Staff scout: <feed>" '$chief-of-staff-scout <feed> scheduled' --cron "0 * * * *" --timezone <timezone> --silent --hide-in-chat --no-persistent-session --no-minimal-context --timeout-secs 3600
 ```
 
 `<timezone>` is the machine's IANA timezone: the part of `readlink /etc/localtime` after `zoneinfo/`, such as `America/New_York`. The command prints the new job's id; when it exits non-zero, report its error and the scout as not scheduled.
 
-Use the shell command, not the `cron_add` tool: a job `cron_add` creates is owned by the chat that created it, so only that chat can change it, while a job the shell command creates has no owning chat. `--silent` keeps a run that the scheduled check stops from notifying the owner, since Kiro Crew otherwise delivers every run, even one with no reply. `--no-minimal-context` is needed because a minimal-context run loads no skill.
+Use the shell command, not the `cron_add` tool: a job `cron_add` creates is owned by the chat that created it, so only that chat can change it, while a job the shell command creates has no owning chat. `--silent` keeps every run that ends without an error from notifying the owner, matching Codex, since Kiro Crew otherwise delivers every run, even one with no reply; the owner reads the inbox instead, and a failed run is rescouted by the next one. `--no-minimal-context` is needed because a minimal-context run loads no skill.
 
 ### Codex in the ChatGPT desktop app
 
@@ -81,21 +81,22 @@ Use the app's native standalone scheduler, with one dedicated project for all se
 
 3. **Ask the owner to create the project.** Ask: `Add <absolute scheduling-folder path> as a local project in the app, named Chief-of-Staff scheduled runs. In Recents, open its menu and uncheck Show > Projects. Have you done both? (yes / no)`. Wait for the reply, then list registered projects and obtain the project ID for the exact scheduling folder. The owner adds the project in the UI; creating the folder does not register it. Unchecking Show > Projects hides all project chats from Recents.
 
-4. **Configure access.** Edit `$CODEX_HOME/config.toml`, or `~/.codex/config.toml` when `CODEX_HOME` is unset. Set the top-level `sandbox_mode` to `"workspace-write"`. Merge these two paths into `sandbox_workspace_write.writable_roots`, replacing `<home>` with the owner's absolute home folder:
+4. **Configure access.** The file is `$CODEX_HOME/config.toml`, or `~/.codex/config.toml` when `CODEX_HOME` is unset. Ask: `Scheduled Scout runs need write access to the operations repository, network access and live web search. May I edit <absolute config path> to set sandbox_mode = "workspace-write", web_search = "live" and sandbox_workspace_write.network_access = true, and add <home>/Desktop/chief-of-staff-operations and <home>/Desktop/chief-of-staff-operations/.git to sandbox_workspace_write.writable_roots? These settings apply to new Codex sessions generally, including scheduled runs; they are not limited to these jobs. (yes / no)`, with `<home>` filled in. On `no`, report the scout as not scheduled and stop. On `yes`, set the top-level `sandbox_mode` to `"workspace-write"` and `web_search` to `"live"`, set `sandbox_workspace_write.network_access` to `true`, and merge these two paths into `sandbox_workspace_write.writable_roots`, replacing `<home>` with the owner's absolute home folder:
 
    ```toml
    [sandbox_workspace_write]
+   network_access = true
    writable_roots = [
      "<home>/Desktop/chief-of-staff-operations",
      "<home>/Desktop/chief-of-staff-operations/.git"
    ]
    ```
 
-   Preserve the other array entries, table settings and approval settings; do not append a duplicate table or key. The explicit `.git` entry permits Scout's commits. Do not add the memory, Desktop or home folder as a writable root. Check that the edited TOML parses. Tell the owner: `These writable-folder settings apply to new Codex sessions generally, including scheduled runs; they are not limited to these jobs.` Verify both paths appear as writable in the new Scout run before claiming access works.
+   Preserve the other array entries, table settings and approval settings; do not append a duplicate table or key. The explicit `.git` entry permits Scout's commits. Do not add the memory, Desktop or home folder as a writable root. Check that the edited TOML parses. Verify both paths appear as writable and network access is on in the new Scout run before claiming access works.
 
 5. **Create the jobs.** Use the native automation tool to create one standalone cron job per selected feed, named `Chief-of-Staff scout: <feed>`. Set `Start run in new chat`, target the registered project ID, select local execution, and schedule hourly checks at minute zero in the machine's local timezone. Use the owner's configured available model and reasoning effort. The whole saved prompt is `$chief-of-staff-scout <feed> scheduled`. Keep the normal result-notification policy. Have the owner enable `Archive successful runs` in the created job's settings; the native automation tool does not expose this checkbox. Confirm each saved job has `Start run in new chat` selected and `Archive successful runs` on, with the correct project, prompt, cadence and execution mode.
 
-6. **Report.** Give each job's ID, schedule status, and how to pause or remove it in Scheduled. Explain that successful run chats are under Settings > Archived chats, grouped by the scheduling project. The project heading's three-dot menu can delete all archived chats in that project. Report silent skipped-check delivery as unverified. Report any setup failures.
+6. **Report.** Give each job's ID, schedule status, and how to pause or remove it in Scheduled. Explain that successful run chats are under Settings > Archived chats, grouped by the scheduling project. The project heading's three-dot menu can delete all archived chats in that project. Explain that every run that ends without an error, including a skipped run and a run that replies `Failed: <reason>`, is archived without notifying the owner; only a run that errors stays unarchived as a notification. Report any setup failures.
 
 ## Special Cases
 

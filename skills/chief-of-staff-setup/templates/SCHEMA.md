@@ -140,7 +140,7 @@ One line per page, sorted by slug:
 
 ## always.md
 
-The owner's standing rules: one line per `principle` page that every session must read and follow, sorted by slug:
+The owner's standing rules: one line per `principle` page that every session must read and follow, in the owner's priority order. A new line goes at the end unless the owner says where:
 
 ```markdown
 - [<Subject>](wiki/<slug>.md) | governs: <when the rules apply>

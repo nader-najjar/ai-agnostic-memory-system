@@ -23,7 +23,7 @@ Follow these steps, and apply every rule in Special Cases below wherever its cas
 
 1. **Check and read the feed.** Confirm the memory has `SCHEMA.md` starting with `schema_version: 2`, plus `GUARDIAN.md`, `index.md`, `always.md`, `deferred.md` and `source-types/`; otherwise stop with: `Chief-of-Staff memory not found or invalid at <path>.` Confirm `~/Desktop/chief-of-staff-operations` is a git repository; otherwise stop with: `Chief-of-Staff operations repository not found at <path>. Run chief-of-staff-operations-setup first.` Read the feed file; if it is missing, stop with: `No scout feed named <feed>.`
 
-2. **Take the lock.** Run `mkdir -p <state>`, then `mkdir <state>/.lock` without `-p`. From here on, remove `.lock` whenever the run ends, including when it stops early.
+2. **Take the lock.** Run `mkdir -p <state>`, then `mkdir <state>/.lock` without `-p`. From here on, run `touch <state>/.lock` after each step and after judging each item or source, so the lock shows the run is alive, and remove `.lock` whenever the run ends, including when it stops early.
 
 3. **Set the span.** Note the current time in ISO 8601 UTC as this run's start. The span runs from the last run's start, read from `<state>/last-run.md`, to this run's start.
 
@@ -57,13 +57,19 @@ Follow these steps, and apply every rule in Special Cases below wherever its cas
 
 6. **Commit.** Commit only `<state>` with `git -C ~/Desktop/chief-of-staff-operations add -A -- <state>` and `git -C ~/Desktop/chief-of-staff-operations commit -m "scout: <feed> <run start>" -- <state>`.
 
-7. **Report.** Reply with one line: `Inbox updated: <path to the inbox>` when the inbox gained a line, otherwise `Nothing new.` When the run stopped early, did not judge every item and source, or the commit failed, reply instead with `Failed: <reason>`.
+7. **Report.** Reply with one line: `Inbox updated: <path to the inbox>` when the inbox gained a line, otherwise `Nothing new.` When the run failed, reply instead with `Failed: <reason>`.
+
+## Outcomes
+
+- **Failed:** the run stopped early for any reason other than a skip, did not judge every item and source, or the commit failed.
+- **Not a failure:** a source listed under Unreadable, which counts as judged; nothing new; nothing to commit; and a skipped run.
+- **Skipped:** the scheduled check stopped the run, or another run holds a live lock. A skipped run writes nothing. A `scheduled` run that is skipped ends with no reply; any other skipped run replies `Skipped: <reason>`.
 
 ## Special Cases
 
 ### Scheduled Runs
 
-When the invocation says `scheduled`, before step 2, read the last run's start from `<state>/last-run.md`; when it, converted to local time, falls on today's local date, stop with no reply, writing nothing. This is the `scheduled` check.
+When the invocation says `scheduled`, before step 2, read the last run's start from `<state>/last-run.md`; when it, converted to local time, falls on today's local date, skip the run. This is the `scheduled` check.
 
 ### First Run
 
@@ -71,7 +77,9 @@ When `<state>/last-run.md` is missing, the span starts 24 hours before this run'
 
 ### Locks
 
-- **Scout lock.** When `mkdir <state>/.lock` fails because `.lock` exists and is less than 6 hours old, stop with `Another scout run of <feed> is going.` When it is older, stop with `The scout lock <state>/.lock is <age> old, so it is probably stale, left by a run that did not finish. If no scout run of <feed> is going, remove it with rmdir <state>/.lock and run again.` Never remove a lock this run did not take.
+- **Live lock.** When `mkdir <state>/.lock` fails because `.lock` exists and was last modified less than 2 hours ago, another run is going: skip the run.
+- **Stale lock.** When `.lock` was last modified 2 hours ago or more, no run has touched it in that time, so none is going: take it over by running `touch <state>/.lock`, and continue as if this run had taken it.
+- **Never remove another run's lock.** A run that skips for a live lock leaves `.lock` alone; never remove a lock this run did not take or take over.
 
 ### Commits
 

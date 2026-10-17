@@ -40,7 +40,7 @@ Record each useful claim at the strength the source supports. A source may estab
 
 ## 3. Find What Already Exists
 
-Read `index.md`, `always.md` and `deferred.md` in full, along with every page `always.md` lists. Search all of `wiki/` for every subject, name, alias and key term in the source; do not rely on the index alone. Read every candidate page completely.
+Read `index.md`, `always.md` and `deferred.md` in full, along with every page `always.md` lists. Follow the bootstrap instructions in `always.md` when accessing external references. Search all of `wiki/` for every subject, name, alias and key term in the source; do not rely on the index alone. Read every candidate page completely.
 
 When the source's Identity is not `none`, find every earlier capture of it: a sidecar under `raw/` with the same `source_type` and `source_id`, or whose `original_location` names the same source. If the latest one has the same `version`, fail with `unchanged since <its stem>`. Otherwise read it, compare it with the new capture, and focus on what was added, changed or removed. Recheck every wiki claim that cites an earlier capture of this source, and update or supersede each one the change affects.
 
@@ -63,7 +63,7 @@ Defer when:
 
 If this source settles an item in `deferred.md`, accept or reject it, remove it from `deferred.md`, and list it under `resolved` in the log.
 
-List a page in `always.md` only when this ingestion's note asks for it. Record the rules on a `principle` page first if they are not on one.
+Change the bootstrap instructions in `always.md` only when this ingestion's note asks for it, keeping each instruction in its `Bootstrap Instructions` list. List a page in `always.md` only when this ingestion's note asks for it. Record other standing rules on a `principle` page first if they are not on one.
 
 ## 5. Write
 

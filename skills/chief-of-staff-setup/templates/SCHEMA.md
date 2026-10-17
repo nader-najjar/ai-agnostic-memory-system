@@ -11,7 +11,7 @@ A local, tool-agnostic knowledge base for the owner's whole life, including pers
 SCHEMA.md     this file: the shared format
 GUARDIAN.md   the only write policy
 index.md      one line per wiki page
-always.md     the pages every session reads before anything else
+always.md     bootstrap instructions and standing-rule pages every session reads
 deferred.md   open deferred items
 log.md        append-only ingestion outcomes
 source-types/ one file per source type, in group folders
@@ -140,13 +140,13 @@ One line per page, sorted by slug:
 
 ## always.md
 
-The owner's standing rules: one line per `principle` page that every session must read and follow, in the owner's priority order. A new line goes at the end unless the owner says where:
+The owner's standing rules: one line per `principle` page, in the owner's priority order, under `Standing Rules`, optionally preceded by a `Bootstrap Instructions` section. Bootstrap instructions are a list of the minimum local instructions needed to read and follow the standing rules without a circular dependency; public Notion access is one such instruction. Every session reads and follows these instructions before reading the listed pages. Keep each bootstrap instruction in this one list rather than repeating it in the section pages. A new page entry goes at the end unless the owner says where:
 
 ```markdown
 - [<Subject>](wiki/<slug>.md) | governs: <when the rules apply>
 ```
 
-- Listed pages are the owner's instructions, followed rather than weighed as evidence. They never contradict each other.
+- The bootstrap instructions and listed pages are the owner's instructions, followed rather than weighed as evidence. They never contradict each other.
 
 ## deferred.md
 

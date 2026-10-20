@@ -12,6 +12,33 @@ This system makes accumulated context durable and available to future sessions. 
 
 Recall is the mechanism for restoring that context. Asking questions about the past is a useful secondary capability; the primary purpose is making AI a continuing collaborator across otherwise separate sessions.
 
+## A Chief of Staff You Can Rely On
+
+The intended role is a competent chief of staff: someone who learns how you work, carries context forward, remembers standing procedures, and helps you act without making you manage every detail of the assistance itself.
+
+You should be able to delegate with ordinary shorthand. The system should retrieve relevant established expectations, apply them in the right context, and ask only about genuinely missing or changed information. Teaching it something should create lasting value rather than another instruction you will have to repeat next week.
+
+## Concrete Frustrations This Should Remove
+
+| Situation | The usual frustration | The intended experience |
+|---|---|---|
+| A recurring weekly update | Every new chat needs the manager's format, section order, tone, and rules explained again. | Teach the SOP once. Later, say “Give me my weekly update,” and the AI restores and applies that established format without requiring “in my manager's expected format.” It uses available evidence for this week's facts and asks for missing facts rather than inventing them. |
+| Continuing a project in a new chat | You spend the first exchanges reconstructing goals, terminology, decisions, and progress. | Restore the relevant project context and describe the next task. The AI understands where the work stands. |
+| Revisiting a difficult decision | The AI proposes an approach you already rejected, forcing you to repeat the reasoning. | It retrieves the decision and rationale, and revisits it when new evidence warrants doing so. |
+| Applying your working standards | You repeatedly correct the same naming, writing, review, or implementation choices. | Relevant standing standards carry across sessions and are applied without repeated coaching. |
+| Returning after months away | You remember the conclusion but have forgotten the detailed reasoning and intermediate steps. | Recover the supporting sources, alternatives, corrections, and sequence of decisions before continuing. |
+| Creating a handoff or retrospective | You manually search old chats and reconstruct how the work evolved. | Produce a source-backed artifact from the retained history, distinguishing evidence from interpretation and exposing gaps. |
+
+The SOP example is a central acceptance case: the first captured teaching should be enough until the procedure changes. Preserve the authoritative procedure and its revisions; do not repeatedly summarize away details that determine correct execution. The initial implementation still requires relevant recall in a fresh session. Automatic context loading in every AI tool is not assumed.
+
+## More Than Human Memory: A Reconstructable Record
+
+Beyond saving repeated explanations, the system can preserve detail people naturally forget. The ambition is a precise breadcrumb trail with branching relationships: which source introduced an idea, what alternatives followed, why one was chosen, what later changed, and which work or artifacts depended on it. A connected history is more useful than a final summary alone.
+
+That record should let you return to the weeds of old work, inspect the original wording, follow a decision back to its evidence, or create a new explanation, handoff, or retrospective from it.
+
+Exact one-to-one reconstruction requires retaining the original captured material and stable references alongside synthesized memory. Summaries alone cannot provide it. Completeness is bounded by authorized sources actually captured and retained; missing, deleted, or inaccessible material must be identified, never filled in with invented history. This is the desired traceability experience, not a claim that the current system already preserves every detail or implements an exhaustive graph.
+
 ## Initial Experience: Continue Your Work Across Chats
 
 Choose supported AI chat sources, authorize access, and approve the scope of automatic ingestion. Setup verifies discovery, ingestion, and recall together. The first implementation uses skills and scheduled AI sessions; additional infrastructure is deferred.

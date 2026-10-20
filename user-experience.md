@@ -1,25 +1,36 @@
-# The Intended User Experience
+# Persistent AI Understanding Across Conversations
 
 This describes the planned end state, not a claim that every capability is available today. Implementation is covered by the [ingestion plan](upgrade-plan.md) and [operational readiness plan](operations-interface-plan.md).
 
-## Set Up Once, Then Use Recall
+## The Goal: Continue Working Without Starting Over
+
+Your AI’s understanding should persist beyond any individual conversation.
+
+You usually know what you are working on. The expensive part is teaching a new AI session everything it needs to help: the background, decisions, constraints, rejected approaches, and current state of the work. If rebuilding that context takes longer than doing the task yourself, using AI has failed to save you time.
+
+This system makes accumulated context durable and available to future sessions. Closing a chat should not mean losing the understanding developed through that work. The next session should be able to restore the relevant context and continue with a short statement of what you want to do next.
+
+Recall is the mechanism for restoring that context. Asking questions about the past is a useful secondary capability; the primary purpose is making AI a continuing collaborator across otherwise separate sessions.
+
+## Set Up Once, Then Continue Your Work
 
 Choose where Scout should look, authorize access, and separately approve which source types and scopes may be ingested automatically. Setup checks that discovery, ingestion, recall, and notifications work together.
 
-After that, use recall when you need context. You should not need to run Scout, manually ingest routine updates, inspect queues, or check whether yesterday's jobs ran.
+In a new session, use recall to load the relevant project or topic, then get on with the work. You should not need to reconstruct old conversations, paste repeated briefings, run Scout, manually ingest routine updates, or check whether yesterday's jobs ran.
 
-The goal is durable, useful memory that stays current in the background, with clear evidence when something needs attention.
+This preserves relevant knowledge through an explicit memory system; it does not imply that every AI tool automatically loads it or that a previous session's entire internal state is retained.
 
-## Memory That Helps You Continue Your Work
+## Understanding Worth Carrying Forward
 
-Ask questions such as:
+Memory should preserve what a future collaborator needs to act well:
 
-- What did I decide about this project, and why?
-- What constraints should I preserve when continuing this work?
-- What changed since the earlier approach?
-- What is still unresolved?
+- What you are trying to accomplish and why.
+- Decisions and the reasoning behind them.
+- Constraints, preferences, and standards that affect the work.
+- Approaches already explored or rejected, and why.
+- Progress, unresolved questions, and the next intended steps.
 
-Memory should retain decisions, reasoning, constraints, and useful context, with references back to their sources. Later changes should be understandable without losing the history that explains them. When evidence is incomplete, conflicting, or outdated, recall should make that clear rather than present an unsupported answer confidently.
+Later changes should remain understandable without losing the history that explains them. Source references let the AI verify context, distinguish current decisions from superseded ones, and acknowledge gaps or conflicting evidence. Time-sensitive facts still need verification before action.
 
 You can inspect the underlying memory and source evidence. Your knowledge remains in readable files with version history, rather than being available only through a particular chat or interface.
 
@@ -63,6 +74,8 @@ Monitoring also depends on its execution and notification environment. Setup sho
 
 ## What Success Looks Like
 
-You start a new conversation, ask for the context you need, and continue working without reconstructing your history. New material becomes useful memory automatically. Daily reports provide reassurance, and rare exceptions arrive with a specific next action.
+You close a conversation and later start another. Instead of spending the opening exchanges teaching the AI your project again, you restore its relevant context, explain the next task, and continue. Prior reasoning informs the work, and decisions already settled do not need to be repeatedly rediscovered.
 
-Your normal interaction is **using your memory**, not maintaining it.
+Automatic upkeep maintains that continuity; health monitoring makes it dependable and exposes gaps. Success is measured by less repeated explanation, fewer repeated mistakes, and useful work completed with less effort than doing it yourself—not by the number of sources ingested or questions answered about the past.
+
+Your normal interaction is **continuing your work with an AI that has access to the understanding already built**, while the memory system operates in the background.

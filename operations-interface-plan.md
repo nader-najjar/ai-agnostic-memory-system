@@ -1,6 +1,6 @@
 # Operational Readiness: Shared Scripts, System Health, and Feed Management
 
-Build on [automatic ingestion and failure recovery](upgrade-plan.md). The end goal is **setup once, then use recall**: routine discovery and ingestion require no manual attention, daily health notifications provide reassurance, and exceptional problems produce actionable requests. This applies to configured, supported feeds and owner-authorized automation.
+Build on [automatic ingestion and failure recovery](upgrade-plan.md). The end goal is [persistent AI understanding across conversations](user-experience.md): users restore relevant context and continue working without repeatedly briefing each new session. Routine discovery and ingestion require no manual attention, daily health notifications provide reassurance, and exceptional problems produce actionable requests. This applies to configured, supported feeds and owner-authorized automation.
 
 High-quality memory and uninterrupted execution cannot be guaranteed absolutely. The readiness standard is verified coverage and progress, safe recovery, source-backed memory, and no silent degradation where monitoring can detect it. A desktop application is not required.
 

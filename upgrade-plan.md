@@ -1,14 +1,10 @@
 # Persistent AI Context — Authoritative Implementation Checklist
 
-This replaces the separate ingestion, operational-readiness, and user-experience plans. Unchecked items are planned work, not claims of current capability. Verify the implementation before checking items off.
+This consolidates the implementation plans. The [user experience](user-experience.md) remains the companion description of the intended outcome. Unchecked items are planned work, not claims of current capability. Verify the implementation before checking items off.
 
 ## End Goal
 
-Close a conversation, start another, restore the relevant context, and continue working without briefing the AI from scratch. Preserve goals, decisions and reasoning, constraints, rejected approaches, progress, and unfinished work, with source evidence and clear treatment of superseded or uncertain information.
-
-The user usually knows what they are doing. Repeatedly teaching a new session enough to help can take longer than doing the task themselves. Success means less repeated explanation, fewer repeated mistakes, and useful work with less effort. Recall restores working context; answering historical questions is secondary.
-
-Setup should establish authorized background upkeep. The ordinary user interaction then becomes recall and continued work. Memory remains readable, inspectable, and versioned. This does not imply every AI tool automatically loads context, retains an entire previous session, or can trust time-sensitive facts without verification.
+Restore relevant context in a new conversation and continue working without repeated briefing. The [user-experience document](user-experience.md) defines that goal; this checklist defines the work and verification needed to reach it.
 
 ## Current Scope: Chat-First and LLM-Only
 

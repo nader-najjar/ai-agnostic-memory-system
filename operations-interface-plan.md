@@ -9,7 +9,8 @@ High-quality memory and uninterrupted execution cannot be guaranteed absolutely.
 Put deterministic mechanics in shared scripts used by skills and scheduled jobs. Skills guide interaction; models retain discovery judgment and memory synthesis.
 
 - Inventory current configuration, state formats, and repeated operations before extracting helpers. Keep existing authoritative data; do not create parallel configuration or status stores.
-- Define small operations for listing feeds, reading status, validating configuration, and registering, editing, or disabling feeds.
+- Define small operations for listing feeds, reading status, validating configuration, and registering, editing, or disabling feeds and ingestion approvals.
+- Implement the [source-type and policy contract](upgrade-plan.md#source-types-and-policy--single-source-of-truth) through one shared eligibility check. Resolve type identifiers from existing definitions; do not duplicate type schemas or authorization rules across callers.
 - Centralize repeated correctness-sensitive mechanics: committed-state reads, input validation, identity/deduplication, lock ownership, queue transitions, cooldown checks, atomic publication, and recovery checks.
 - Preserve the ingestion plan’s guarantees: coherent Git snapshots, stable operation IDs, recoverable cross-repository completion, no age-only lock takeover, and no silent inclusion or deletion of unrelated edits.
 - Return structured results, meaningful exit codes, and actionable errors. Keep presentation separate so skills, schedulers, and a future UI or MCP server can reuse the same operations.
@@ -26,9 +27,9 @@ Expand the read-only state view into an independently scheduled health monitor a
 
 ### Evidence and Diagnosis
 
-- Show configured feeds, scopes, enablement, schedules, and selected models alongside observed execution and the time of observation. Unknown or unavailable evidence must not be reported as healthy.
+- Show discovery settings and ingestion approvals separately, alongside feed enablement, schedules, selected models, observed execution, and the time of observation. Unknown or unavailable evidence must not be reported as healthy.
 - Check the complete path: source access and discovery, eligible-item queuing, ingestion completion, and availability to recall. A successful scheduled invocation alone does not prove success.
-- Report per-feed last successful scans/ingestions, pending counts, oldest waiting item, blocked reasons, and recent failures. Account for intentional pauses, empty feeds, scheduling cadence, and the five-hour ingestion cooldown.
+- Report per-feed last successful scans/ingestions, pending counts, oldest waiting item, blocked reasons, and recent failures. Account for intentional pauses, empty feeds, scheduling cadence, and the five-hour ingestion cooldown. Distinguish discoveries awaiting approval from authorized work that is stalled; lack of approval is not an execution failure.
 - Detect missed runs, stalled progress, growing or overdue backlogs, inaccessible sources, repeated failures, and unresolved locks. Define explicit freshness and backlog thresholds rather than relying on model intuition.
 - Read coherent committed state and link findings to configuration, queue items, and result evidence. Label separately observed live worker information; lock age alone does not prove liveness or abandonment.
 
@@ -63,14 +64,15 @@ Operational success does not prove accurate or useful synthesis. Preserve source
 
 Guide users through registration and maintenance, delegating changes to the shared scripts.
 
-- List supported feed types and their required fields.
+- List existing source types with supported discovery mechanisms and the configuration those mechanisms require.
 - Collect a stable feed identity, display name, source location/account, discovery scope, and applicable preferences. Reference credentials through supported mechanisms rather than storing secrets in feed configuration.
 - Validate configuration and source access; detect duplicates and surface overlapping scopes before saving.
 - Create configuration and initial operational state coherently. Support editing and disabling feeds without losing history or silently orphaning queued work.
+- Present discovery scope and automatic-ingestion approval as separate choices using the linked policy contract. Adding a feed must not implicitly approve ingestion.
 - Treat registration and scheduling as separate operations. Make Scout and auto-ingestion enablement explicit and honor those settings in scheduled jobs.
 - Reuse available scheduling integrations; clearly report when a feed is registered but scheduling is not configured or could not be verified.
 
-A **source type** defines how to interpret and ingest an item. A **feed type** must also define how to discover items, identify them, and detect updates. Do not assume every ingestible source type already supports an automatically discoverable feed.
+Feed discovery mechanisms reference the canonical source types and supply discovery/update behavior; they are not a second source-type taxonomy. Not every ingestible source type necessarily has an automatic discovery mechanism.
 
 ## Delivery Order and Readiness Criteria
 

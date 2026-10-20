@@ -4,7 +4,7 @@ This describes the planned end state, not a claim that every capability is avail
 
 ## Set Up Once, Then Use Recall
 
-Choose the supported sources the system should follow, authorize access, and enable the automation you want. Setup checks that discovery, ingestion, recall, and notifications work together.
+Choose where Scout should look, authorize access, and separately approve which source types and scopes may be ingested automatically. Setup checks that discovery, ingestion, recall, and notifications work together.
 
 After that, use recall when you need context. You should not need to run Scout, manually ingest routine updates, inspect queues, or check whether yesterday's jobs ran.
 
@@ -27,7 +27,7 @@ You can inspect the underlying memory and source evidence. Your knowledge remain
 
 The system checks enabled feeds for new or updated material, identifies what is worth remembering, and ingests eligible items within the configured processing limits.
 
-Automatic ingestion follows the scope you authorized. A link mentioned inside a conversation does not automatically authorize ingesting that other source; referenced material can remain available for manual consideration.
+Scout can follow references to surface useful material beyond the original feed. You separately decide what may enter memory automatically using the [ingestion policy](upgrade-plan.md#source-types-and-policy--single-source-of-truth). For example, you can approve your Codex chats while leaving referenced repositories and pages for consideration. You can later approve those sources too; being discovered alone never grants permission.
 
 Processing happens on a schedule, so new material may wait before it becomes available to recall. The system makes that delay visible and distinguishes expected waiting from stalled work. Retries should not produce duplicate ingestion, and ordinary interruptions should recover without your involvement.
 
@@ -47,7 +47,7 @@ For a serious actionable problem, receive a notification sooner. The message sho
 
 ## Control When You Want It
 
-You can ask to see current feeds, automation settings, recent activity, pending work, and problems. You can add supported feeds interactively, adjust their scope, or pause Scout and automatic ingestion separately.
+You can ask to see current feeds, automation settings, recent activity, pending work, and problems. You can add supported feeds interactively, adjust discovery scope, change automatic-ingestion approvals, or pause Scout and automatic ingestion separately. These controls use the same source types throughout the system.
 
 Disabling a feed should preserve its history and make the disposition of pending work clear. You can inspect, skip, or retry items through supported controls without editing internal state by hand. Manual ingestion remains available when you deliberately want to add something outside the automatic flow.
 

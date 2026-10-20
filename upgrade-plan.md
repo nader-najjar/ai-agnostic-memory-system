@@ -8,9 +8,24 @@ Use three independently scheduled roles. No scheduled subagent support or model 
 - **Auto-ingest manager:** copies eligible items into its own queue and reconciles completion.
 - **Guardian worker:** starts in a fresh standalone session, claims one queued item, and ingests it. Only guardians write memory.
 
-Automatically queue only native items belonging to the configured feed—for example, Codex chats. Referenced sources remain in Scout’s inbox for manual review, whether or not they have supported types. Respect owner-skipped entries.
+Automatic eligibility follows the policy below, independently of how Scout discovered the source.
 
 The manager reads Scout’s committed output without modifying it. Scout’s existing capture check removes ingested entries on its next scan.
+
+## Source Types and Policy — Single Source of Truth
+
+Define each source type once in the existing source-type definitions, with a stable identifier and its interpretation/ingestion rules. Feed configuration, policies, and queue entries reference that identifier; they do not redefine the type.
+
+Keep two separate concerns:
+
+- **Scout policy and feed configuration:** where to discover sources, how to detect updates, how far to follow references, and what is worth surfacing. Scout may discover useful sources recursively regardless of automatic-ingestion approval.
+- **Ingestion policy:** one authoritative configuration of the source types and scopes the owner explicitly approves for automatic ingestion. Discovery, technical support, and source access alone do not grant approval. Unapproved or unsupported discoveries remain visible for consideration; respect owner-skipped entries.
+
+Use one shared eligibility function, not separate rule implementations. The manager calls it before queuing; the guardian calls it again against current policy before admitting work. Serialize admission with policy changes so a revocation committed before admission prevents execution. Record the policy revision used; revocation blocks future admissions, not an already admitted operation retroactively. Retain no-longer-eligible pending items without executing them, with a clear reason.
+
+An initial policy can allow only the configured Codex-chat scope. This is configuration, not a permanent native-feed-only restriction: recursively discovered sources can become eligible when their type and scope are approved. Later approvals allow the manager to reconsider existing discoveries through normal deduplication.
+
+This section owns the policy contract. Other plans and skills reference it; shared scripts implement it once.
 
 ## Guardian Execution Modes
 
@@ -94,6 +109,6 @@ Independent components may run concurrently. Define a consistent acquisition ord
 - Use deterministic helpers for mechanical transitions; models handle judgment and synthesis.
 - Update package guidance and installed copies consistently.
 
-Before enabling, verify fresh scheduled-session isolation, required permissions, concurrent starts, manual/automatic overlap, interruptions around commits, duplicate retries, newer updates, dirty-state recovery, lock ownership, and cooldown enforcement.
+Before enabling, verify fresh scheduled-session isolation, required permissions, concurrent starts, manual/automatic overlap, interruptions around commits, duplicate retries, newer updates, dirty-state recovery, lock ownership, and cooldown enforcement. Also verify approved and unapproved types/scopes, recursive discoveries, unknown type identifiers, owner skips, later approvals, and revocation between queueing and admission.
 
 Unreadable-source handling and model screening accuracy remain policy/judgment limitations, separate from mechanical failure recovery.

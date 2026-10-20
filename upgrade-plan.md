@@ -14,6 +14,13 @@ Implement through skills and independently scheduled AI sessions using existing 
 
 The protocol aims for safe operation, but model adherence must be evaluated in practice. Do not equate written instructions with mechanically enforced guarantees. Observe the initial system before deciding which stretch goals are justified.
 
+## Prerequisites: Resolve These Design Questions First
+
+These are open questions, not decisions to restructure the system. Record the chosen approach and update affected checklist items before implementation.
+
+- [ ] **Folder layout and setup:** Reassess the CoS directory structure and setup skills. Should memory and operations remain two separate Desktop folders, or live under one parent folder with separate Git roots? Distinguish filesystem organization from repository boundaries; consider setup simplicity, permissions, backups, scheduling paths, isolation, and migration of existing data/configuration. Identify which setup skills should own each responsibility and whether their boundaries should change.
+- [ ] **Source-type modularization:** Determine the best shared structure even for chats from different AI tools. Inventory type-specific rules currently spread across Scout, ingestion, and CoS definitions. Decide where discovery/access, source identity and update detection, extraction, interpretation, and ingestion guidance belong, and how each role references them without duplication. Keep shared lifecycle rules and owner ingestion approval separate from type-specific behavior. Verify that adding another chat provider has a clear extension point rather than requiring scattered edits across skills.
+
 ## 1. Establish One Policy and Source-Type Model
 
 - [ ] Inspect current skills, source types, feed configuration, and operational state; reuse authoritative definitions and preserve existing data.

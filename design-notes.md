@@ -45,3 +45,28 @@ Having structure of parent facet is good. Front matter is good. Not sure about r
 No need for guardian policy until a need truly arises. At start simply just tell what to do
 
 In general if anything needs to be referenced by >1 thing do not violate DRY, put its definition in a global file
+
+Maybe need to enforce some kind of recording of current state for projects. That is always useful bc the final superseded page will have a full history log of all states. But may not need to explicitly tell LLM, it may do this on its own
+
+At a bare minimum I do think it is good idea to enforce an event driven architecture rather than having no order. We have a definition of a unit of work so is natural to queue for robustness and ease of reasoning
+
+Very first thing is make a mermaid diagram of flow bare min
+* source items
+* One single queue
+* Memory folder
+* Something to periodically put new items in queue
+    * What is “new”?
+    * Maybe we don’t even need agent. Just simply put in files that have been modified?
+    * Maybe this can run every 2 hours?
+* Something to periodically ingest single item from queue into memory folder
+* Removal from queue once ingested - should this be a 3rd schedule? Or the ingestor takes 2 roles? What is most robust for queue correctness and non duplication
+    * Maybe best is for the ingest to guarantee certain preconditions, execute, and guarantee postconditions. And one of the preconditions is that one item in the queue is marked with ~, and that was the previously ingested item. If previous was successful, the new run marks it as done, then marks the next item with ~ and ingests. Surrounding all of this is a lock that ensures only one parallel execution
+* Locking (global across entire folder top level) - so only 1 git root
+* Backup
+* Recall skill
+
+So then what is best option for the “something” that periodically does stuff
+
+Regarding incomplete state - is there a way checking locks can by proxy make sure no incomplete state or do we have to make sure git clean
+
+Need policy for what good quality memory means

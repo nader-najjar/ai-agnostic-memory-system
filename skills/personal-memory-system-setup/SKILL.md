@@ -29,11 +29,12 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Install Shared Concepts
 
-1. Create `<memory-folder>/operations/` with `mkdir`, then copy [shared-concepts.md](shared-concepts.md) there as `operations/shared-concepts.md`.
+1. Create `<memory-folder>/operations/shared/` with `mkdir -p`, then copy [shared-concepts.md](shared-concepts.md) into it.
+2. Copy [source-types/](source-types/) into `<memory-folder>/operations/shared/source-types/`.
 
 ## Initialize Git
 
 1. Initialize the new memory folder as a Git repository.
 2. Create `.gitignore`, and add `.lock/` to it.
-3. Stage `config.json`, `.gitignore`, and `operations/shared-concepts.md` and commit them as the initial state.
+3. Stage `config.json`, `.gitignore`, and `operations/` and commit them as the initial state.
 4. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.

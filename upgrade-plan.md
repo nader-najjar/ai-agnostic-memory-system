@@ -1,114 +1,120 @@
-# Automatic Ingestion and Failure Recovery
+# Persistent AI Context — Authoritative Implementation Checklist
 
-## Architecture
+This consolidates the implementation plans. The [user experience](user-experience.md) remains the companion description of the intended outcome. Unchecked items are planned work, not claims of current capability. Verify the implementation before checking items off.
 
-Use three independently scheduled roles. No scheduled subagent support or model switching is required.
+## End Goal
 
-- **Scout:** discovers and judges sources; maintains its existing inbox.
-- **Auto-ingest manager:** copies eligible items into its own queue and reconciles completion.
-- **Guardian worker:** starts in a fresh standalone session, claims one queued item, and ingests it. Only guardians write memory.
+Restore relevant context in a new conversation and continue working without repeated briefing. The [user-experience document](user-experience.md) defines that goal; this checklist defines the work and verification needed to reach it.
 
-Automatic eligibility follows the policy below, independently of how Scout discovered the source.
+## Current Scope: Chat-First and LLM-Only
 
-The manager reads Scout’s committed output without modifying it. Scout’s existing capture check removes ingested entries on its next scan.
+Start with automatic ingestion of approved AI chat sources. Chats carry the reasoning, corrections, decisions, and unfinished work whose loss creates repeated briefing. Keep canonical source types to support different chat tools, but defer new non-chat integrations until a demonstrated continuity gap justifies them. Preserve references to external material without automatically ingesting it; existing non-chat support can remain available for explicit manual use. Scout may still surface useful external sources independently.
 
-## Source Types and Policy — Single Source of Truth
+Implement through skills and independently scheduled AI sessions using existing file, Git, and scheduling tools. Do not introduce a shared script layer, custom execution service, or desktop app in this phase. Define shared procedures once and reference them across skills. Ordinary tool commands for atomic directory creation and Git operations remain necessary; “LLM-only” means agents execute the protocol rather than a new scripted engine.
 
-Define each source type once in the existing source-type definitions, with a stable identifier and its interpretation/ingestion rules. Feed configuration, policies, and queue entries reference that identifier; they do not redefine the type.
+The protocol aims for safe operation, but model adherence must be evaluated in practice. Do not equate written instructions with mechanically enforced guarantees. Observe the initial system before deciding which stretch goals are justified.
 
-Keep two separate concerns:
+## Prerequisites: Resolve These Design Questions First
 
-- **Scout policy and feed configuration:** where to discover sources, how to detect updates, how far to follow references, and what is worth surfacing. Scout may discover useful sources recursively regardless of automatic-ingestion approval.
-- **Ingestion policy:** one authoritative configuration of the source types and scopes the owner explicitly approves for automatic ingestion. Discovery, technical support, and source access alone do not grant approval. Unapproved or unsupported discoveries remain visible for consideration; respect owner-skipped entries.
+These are open questions, not decisions to restructure the system. Record the chosen approach and update affected checklist items before implementation.
 
-Use one shared eligibility function, not separate rule implementations. The manager calls it before queuing; the guardian calls it again against current policy before admitting work. Serialize admission with policy changes so a revocation committed before admission prevents execution. Record the policy revision used; revocation blocks future admissions, not an already admitted operation retroactively. Retain no-longer-eligible pending items without executing them, with a clear reason.
+- [ ] **Folder layout and setup:** Reassess the CoS directory structure and setup skills. Should memory and operations remain two separate Desktop folders, or live under one parent folder with separate Git roots? Distinguish filesystem organization from repository boundaries; consider setup simplicity, permissions, backups, scheduling paths, isolation, and migration of existing data/configuration. Identify which setup skills should own each responsibility and whether their boundaries should change.
+- [ ] **Source-type modularization:** Determine the best shared structure even for chats from different AI tools. Inventory type-specific rules currently spread across Scout, ingestion, and CoS definitions. Decide where discovery/access, source identity and update detection, extraction, interpretation, and ingestion guidance belong, and how each role references them without duplication. Keep shared lifecycle rules and owner ingestion approval separate from type-specific behavior. Verify that adding another chat provider has a clear extension point rather than requiring scattered edits across skills.
 
-An initial policy can allow only the configured Codex-chat scope. This is configuration, not a permanent native-feed-only restriction: recursively discovered sources can become eligible when their type and scope are approved. Later approvals allow the manager to reconsider existing discoveries through normal deduplication.
+## 1. Establish One Policy and Source-Type Model
 
-This section owns the policy contract. Other plans and skills reference it; shared scripts implement it once.
+- [ ] Inspect current skills, source types, feed configuration, and operational state; reuse authoritative definitions and preserve existing data.
+- [ ] Define each source type once with a stable identifier and interpretation/ingestion rules. Feeds, policies, and queue items reference it rather than redefining it.
+- [ ] Keep Scout discovery policy separate: locations, update detection, reference depth, and relevance judgment. Preserve recursive discovery and the existing inbox format.
+- [ ] Store automatic-ingestion approval once, by owner-approved source type and scope. Discovery, technical support, and access alone do not authorize ingestion. Respect owner skips; leave unapproved or unsupported discoveries visible for consideration.
+- [ ] Define one shared eligibility procedure that the manager references before queueing and the guardian references before admission. No duplicated policy rules or required code function in this phase.
+- [ ] Serialize policy changes with admission, record the policy revision used, and prevent admission when approval was revoked beforehand. Revocation does not retroactively cancel an already admitted operation. Retain ineligible pending items with a reason, without executing them.
+- [ ] Allow later approvals to reconsider existing discoveries through normal deduplication. Use approved AI chats as the initial automatic scope. The policy model remains extensible, but automatic ingestion of referenced non-chat material is deferred.
 
-## Guardian Execution Modes
+## 2. Implement Independent Roles and Guardian Modes
 
-Adjust the ingest skill to support:
+- [ ] Keep Scout isolated: it discovers and judges, writes its own inbox, and never ingests or writes memory.
+- [ ] Add the auto-ingest manager: read Scout's committed output, queue eligible items, and reconcile completion without modifying Scout's inbox. Scout's existing capture check removes ingested entries on a subsequent scan.
+- [ ] Add an independently scheduled guardian worker that claims at most one item per run. Only guardians write memory.
+- [ ] Extend ingest authorization for owner-authorized scheduled execution. Preserve manual ingestion through a fresh isolated guardian subagent; a dedicated scheduled session itself acts as guardian without spawning a subagent.
+- [ ] Verify scheduled guardians actually start in fresh standalone contexts, not recurring turns in an existing conversation. Do not depend on scheduled subagent support or model switching.
+- [ ] Apply the same guardian rules, memory lock, verification, and recovery in both modes. Pass original source references and necessary operation metadata, never Scout rationale or manager-written source summaries.
 
-- **Manual invocation:** spawn a fresh isolated guardian subagent, as today.
-- **Dedicated scheduled invocation:** the fresh scheduled session itself acts as guardian; no subagent.
+## 3. Persist Queue and Scheduling State
 
-Require an actually fresh standalone session, not merely a `scheduled` flag or a recurring turn in an existing conversation.
+- [ ] Store Todo (pending/retryable), Completed (verified history), Blocked (intervention with reasons), and execution metadata in the operations repository.
+- [ ] Identify source updates by source type + source identity + latest-mention timestamp from Scout. Deduplicate across all queue sections, allow newer updates, and retain a stable operation ID across retries.
+- [ ] Use queue history for normal deduplication and committed ingestion evidence for uncertain completion/recovery.
+- [ ] Record claimed item, owner/run identity, and last automatic ingestion start.
+- [ ] Enforce at least five hours between automatic starts: check under lock and persist the start before ingestion. Failures consume the cooldown; an empty queue does not. Frequency limits are not token-per-ingestion limits.
+- [ ] Never overlap guardians. Manual ingestion bypasses the cooldown, not the memory lock. Schedule cadence alone is insufficient to enforce either rule.
+- [ ] Put model recommendations in setup/scheduling guidance, keeping core skills model-independent: Luna Max for Scout/manager and Sol Max for guardian; Haiku/Sonnet are role counterparts, not equivalent capabilities or Claude “Max” settings. Verify available models when configuring.
 
-Both modes follow the same guardian rules, memory lock, commit verification, and recovery protocol. Pass the original source reference and necessary operational metadata, never Scout’s rationale or a manager-written source summary.
+## 4. Harden Locking, Publication, and Recovery
 
-## Persistent Auto-Ingest State
+- [ ] Use atomic lock-directory creation through existing tools, without a separate long-running OS-lock supervisor. Protect Scout feed state, shared auto-ingest state, and memory independently; coordinate policy changes with admission.
+- [ ] Record unique ownership and worker identities. Only the owner releases a lock after protected work stops and its result is checked. Hold the memory lock throughout guardian execution.
+- [ ] Never take over solely because a lock is old. Clear abandonment only after confirming the owner stopped; otherwise block for intervention.
+- [ ] Define a consistent acquisition order for multiple locks and coordinate shared-repository writes so independent resource locks cannot mix Git staging/commits. Git's internal lock does not protect the complete read–modify–commit operation.
+- [ ] Treat committed Git snapshots as authoritative; readers ignore unfinished working-tree edits.
+- [ ] Publish related changes together: Scout inbox + cursor; queue/claim/cooldown transitions; guardian memory result + operation ID.
+- [ ] Handle cross-repository completion in two recoverable steps: guardian commits memory with operation ID, then manager verifies that result and marks Completed.
+- [ ] If interrupted between those steps, acknowledge the existing result without repeating ingestion. The worker also checks for committed completion before retrying a pending operation.
+- [ ] Preserve unfinished work; never silently include or discard unrelated changes. Resolve partial uncommitted state before another writer proceeds, retry recoverable failures, and block ambiguous cases with evidence and an actionable reason.
 
-Store in the operations repository:
+## 5. Verify Before Enabling
 
-- **Todo:** pending items and retryable failures.
-- **Completed:** verified successful items, retained for deduplication.
-- **Blocked:** items requiring intervention, with reasons.
-- **Execution metadata:** claimed item, owning run, and last automatic start.
+Use controlled scenarios and inspect resulting state; a successful agent response alone is not verification.
 
-Identify updates by **source type + source identity + latest-mention timestamp** copied from Scout. Deduplicate against all queue sections; newer updates remain eligible. Retain a stable operation ID across retries.
+- [ ] Verify fresh scheduled context, required permissions, shared procedure references, and consistency between package guidance and installed skills.
+- [ ] Exercise concurrent starts, manual/automatic overlap, lock ownership, confirmed abandonment, and ambiguous owner status.
+- [ ] Interrupt before and after each publication boundary, including between memory completion and queue acknowledgment; verify recovery without duplication or lost work.
+- [ ] Exercise duplicate retries, newer source updates, dirty working trees, and cooldown behavior for success, failure, and empty queues.
+- [ ] Exercise approved/unapproved scopes and types, recursive discoveries, unknown type identifiers, owner skips, later approval, and revocation between queueing and admission.
+- [ ] Confirm Scout remains independently useful and unchanged in discovery behavior. Unreadable-source policy and judgment accuracy remain separate from mechanical recovery.
 
-Normal deduplication uses queue history. Recovery checks committed ingestion evidence when completion is uncertain.
+## 6. Enable and Evaluate Continuity
 
-## Scheduling and Models
+- [ ] Configure the approved initial feed scope and independent schedules through setup; verify actual runs and committed results before treating automation as working.
+- [ ] Follow representative material from discovery through queue and ingestion into recall. Check decisions, reasoning, constraints, superseded information, and source references—not just successful commits.
+- [ ] In a fresh conversation, restore project context and continue a real task with a short instruction. Assess repeated briefing avoided and mistakes prevented.
+- [ ] Observe multiple scheduled cycles and expected idle periods. Record failures, backlog, model adherence, and manual interventions; use this evidence to decide what to harden next.
+- [ ] State remaining limitations honestly: processing delays, incomplete source coverage, model judgment, and lack of proactive monitoring until the corresponding stretch goals are delivered. Keep user controls and manual ingestion available through existing skills.
 
-| Role | OpenAI recommendation | Anthropic role counterpart |
-|---|---|---|
-| Scout | Luna Max | Haiku |
-| Auto-ingest manager | Luna Max | Haiku |
-| Guardian worker | Sol Max | Sonnet |
+## Stretch Goals — Add When Experience Justifies Them
 
-Put recommendations in scheduling/setup guidance; keep core skills model-independent. These are role counterparts, not capability equivalence; “Max” is not a Claude setting.
+These preserve the later operational vision without making it a prerequisite for the LLM-only implementation.
 
-The guardian worker processes at most one item per run and starts at most **one automatic ingestion every five hours**. Check the cooldown under lock and persist the start before ingestion. Failed attempts consume the cooldown; an empty queue does not.
+### Shared Scripts
 
-Never overlap guardians. Manual ingestion bypasses the cooldown but obeys the memory lock. Scheduling frequency alone is not the cooldown guarantee. The limit controls frequency, not tokens per ingestion.
+- [ ] Extract repeated or failure-prone mechanics into small tested operations: validation, eligibility, committed reads, locks, queue transitions, cooldown, publication, and recovery. Preserve the single policy/type model above.
+- [ ] Return structured results, meaningful errors, and safe retry behavior; migrate manual and scheduled callers incrementally. Avoid a parallel state store or speculative framework.
+- [ ] Test malformed input, concurrency, interruption, ownership, and recovery. Scripts enforce mechanics; they do not grant ingestion authority.
 
-## Atomicity and Recovery
+### State View, Health Monitor, and Troubleshooter
 
-**Committed Git state is authoritative.** Readers use coherent committed snapshots, ignoring unfinished working-tree edits.
+- [ ] Provide read-only inspection of discovery settings, ingestion approvals, enabled feeds, schedules/models, last successes, pending count/oldest item, blocked reasons, and evidence links. Distinguish configured, observed, live, and unknown state.
+- [ ] Check end-to-end progress through recall availability; detect missed schedules, inaccessible sources, stalled/growing backlog, repeated failures, and unresolved locks using explicit thresholds.
+- [ ] Account for intentional pauses, empty feeds, cooldown, and pending approval. A legitimate idle state is healthy; unapproved discoveries are not failed execution.
+- [ ] Add bounded recovery and backoff using the same protocol, record attempts/results, recheck conditions, and avoid repair loops or duplicate alerts. Never bypass permissions, steal old locks, discard ambiguous changes, or expand policy silently.
+- [ ] Escalate expired authorization, ambiguous state, and exhausted recovery with affected scope, evidence, and specific user action. Keep inspection separate from authorized repairs.
+- [ ] Deliver an actual daily notification with health, freshness/coverage, backlog, resolved problems, and required action; notify urgent actionable failures sooner. Verify timing/timezone and delivery, distinguishing report generation from receipt where observable.
+- [ ] Retain monitor execution/report evidence and use independent missed-run detection where supported. A stopped monitor cannot report its own absence; disclose that limit. A missing daily report is a warning, not automatic recovery.
+- [ ] Evaluate source coverage and synthesis/recall quality separately from job success; successful ingestion does not prove accurate understanding.
 
-Commit together:
+### Interactive Feed and Policy Management
 
-- Scout’s inbox and cursor.
-- Related queue, claim, and cooldown transitions.
-- Guardian memory changes and the ingestion operation ID.
+- [ ] Guide users through existing source types and supported discovery mechanisms; collect feed identity, location/account, scope, and preferences. Keep credentials in supported credential mechanisms.
+- [ ] Validate access/configuration, detect duplicates and overlapping scopes, and create coherent initial state. Discovery mechanisms reference source types rather than introduce a second taxonomy; not every ingestible type supports automatic discovery.
+- [ ] Separate feed registration, ingestion approval, and schedule enablement. Support editing, separate Scout/ingest pause controls, inspection, skip/retry, and disabling without losing history or orphaning queued work.
+- [ ] Integrate management and health features into setup and verify delivery failures, missed schedules, paused operation, and representative source-to-recall continuity.
 
-Memory and queue are separate repositories. Completion therefore has two recoverable steps:
+### Additional Source Integrations
 
-1. Guardian commits the ingestion result with its operation ID.
-2. Manager verifies that commit and marks the item Completed.
+- [ ] Expand beyond chats only when a concrete failure to restore working context warrants it. Reuse existing policy, queue, recovery, and recall mechanisms; pay integration effort once per type, with configuration rather than bespoke work for each instance. Treat historical backfill cost separately.
 
-If interrupted between them, acknowledge the existing result without repeating ingestion. The guardian worker must also check for an already committed result before retrying a pending operation.
+### Optional Interfaces and Execution
 
-Retain unfinished items. Resolve partial uncommitted changes before another writer proceeds; never silently include or discard another run’s work. Retry recoverable failures; block ambiguous cases for intervention.
+- [ ] Consider a desktop UI, MCP interface, or cross-tool execution adapters only when needed. Reuse established operations rather than duplicating them; none is required to retain context across conversations.
 
-## Locking
-
-Use atomic lock-directory creation within the skills. No separate long-running OS-lock supervisor.
-
-Protect shared resources independently:
-
-- Scout feed state.
-- Auto-ingest state, shared by manager and guardian worker.
-- Memory, shared by all manual and automatic guardians.
-
-Record unique ownership and owning run/agent identities. Only the owner releases its lock, after the protected work stops and its result is checked. Never take over solely because a lock is old.
-
-Clear an abandoned lock only after confirming its worker has stopped; otherwise block for intervention. The memory lock must remain held throughout guardian execution.
-
-Independent components may run concurrently. Define a consistent acquisition order wherever multiple locks are needed. Git’s commit lock does not protect the entire read–modify–commit operation.
-
-## Implementation and Verification
-
-- Add the auto-ingest skill, queue state, and independent manager/guardian schedules.
-- Extend ingest authorization and execution modes for owner-authorized scheduled ingestion.
-- Harden Scout, auto-ingest, and guardian with these locking, committed-state, and recovery rules.
-- Preserve Scout’s discovery behavior and inbox format; no new source type is needed.
-- Use deterministic helpers for mechanical transitions; models handle judgment and synthesis.
-- Update package guidance and installed copies consistently.
-
-Before enabling, verify fresh scheduled-session isolation, required permissions, concurrent starts, manual/automatic overlap, interruptions around commits, duplicate retries, newer updates, dirty-state recovery, lock ownership, and cooldown enforcement. Also verify approved and unapproved types/scopes, recursive discoveries, unknown type identifiers, owner skips, later approvals, and revocation between queueing and admission.
-
-Unreadable-source handling and model screening accuracy remain policy/judgment limitations, separate from mechanical failure recovery.
+The mature experience is setup once, continued work through recall, daily reassurance, and rare actionable exceptions. The immediate experiment is whether the LLM-only protocol delivers useful continuity reliably enough to earn that trust.

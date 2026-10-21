@@ -12,9 +12,9 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Approve Source Locations
 
-1. For each selected tool, read its usual source location from its definition and ask: “May I read conversations from `<location>`, or should I use another location?” Show the resolved path. Use the usual location or an alternative approved by the owner.
+1. For each selected tool, read its default source locations from its definition and ask: “May I read conversations from these locations, or should I use different locations?” Show each resolved path. Use the defaults or alternatives approved by the owner.
 2. Wait for the owner's answer and confirm the selected paths.
-3. Check each selected location using its source definition’s **Source Items** section. Inspect filenames only. For each location, tell the owner whether matching items were found.
+3. Check each selected location for files matching its source definition’s **Source Items** criteria. For each location, tell the owner whether matching files were found.
 
 ## Create the Memory Folder
 

@@ -12,13 +12,15 @@ Kiro Crew (local)
 
 Conversations from the Kiro Crew dashboard.
 
-## Default Source Location
+## Default Source Locations
 
-`~/.kiro/crew/sessions`.
+```json
+["~/.kiro/crew/sessions"]
+```
 
 ## Source Items
 
-`dashboard_chat-*.jsonl` directly in the selected location.
+`dashboard_chat-*.jsonl` files directly under any configured path.
 
 ## UID
 

@@ -21,13 +21,19 @@ description: Begin personal memory setup by asking which supported AI tools' con
 1. Ask: “Where would you like this system to store your personal memory? Default: `~/Desktop/personal-memory-system`.”
 2. Wait for the owner's answer and confirm the storage location.
 3. Resolve the approved storage path and create the folder with `mkdir` without `-p`. Fail and stop if anything already exists at that path, including an empty folder, file, or symlink. Never reuse or overwrite it.
+4. This folder name, going forward in this skill, is `<memory-folder>`.
 
 ## Save Configuration
 
-1. Inside the new folder, write `config.json` with a `sources` array. Each entry contains the selected source's `identifier` and approved absolute `path`. Tell the owner where the configuration was saved and show it to them inline.
+1. Create `<memory-folder>/config.json` using the [Memory Configuration](shared-concepts.md#memory-configuration) definition. Add each source the owner approved into the array. Tell the owner where it was saved and show it inline.
+
+## Install Shared Concepts
+
+1. Create `<memory-folder>/operations/` with `mkdir`, then copy [shared-concepts.md](shared-concepts.md) there as `operations/shared-concepts.md`.
 
 ## Initialize Git
 
 1. Initialize the new memory folder as a Git repository.
-2. Stage `config.json` and commit it as the initial state.
-3. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.
+2. Create `.gitignore`, and add `.lock/` to it.
+3. Stage `config.json`, `.gitignore`, and `operations/shared-concepts.md` and commit them as the initial state.
+4. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.

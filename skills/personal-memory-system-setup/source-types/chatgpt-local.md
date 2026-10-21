@@ -12,7 +12,7 @@ ChatGPT (local)
 
 Local conversations from ChatGPT Work, Codex desktop, or Codex CLI. Cloud-based ChatGPT conversations are outside this tool definition.
 
-## Source Location
+## Default Source Location
 
 `~/.codex/sessions`.
 

@@ -12,7 +12,7 @@ Kiro Crew (local)
 
 Conversations from the Kiro Crew dashboard.
 
-## Source Location
+## Default Source Location
 
 `~/.kiro/crew/sessions`.
 

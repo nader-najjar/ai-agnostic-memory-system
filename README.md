@@ -1,6 +1,6 @@
-# AI Agnostic Memory System
+# Personal Memory System — v2
 
-A local, tool-agnostic memory that gives AI agents durable context across conversations and projects. It preserves original sources and organizes useful knowledge into cited Markdown pages, keeping the knowledge under the owner's control.
+Help AI conversations build on what you have already taught them.
 
 ## License
 

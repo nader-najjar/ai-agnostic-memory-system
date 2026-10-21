@@ -26,3 +26,22 @@ for anything and everything want to add to this in the future - must strictly ju
 
 
 tell ai to never update readmes or similar english documents unless there is explicit purpose. documents just get bloated with useless words
+
+No owners note concept. For the end user perspective it should be as if this system doesn’t exist at all. Just like a person if I tell it something it better remember it. If need an “owners note” just open your ai and tell it something. It will remember
+As of now only user interaction is recall and health check notif
+
+Index md useful, giving each page some structure could still be useful but not prematurely
+
+Do need always rules but what is best way to minimally enforce it? Maybe instead of built in there, just simply a pointer to one permanent agent instructions notion file that then links to what agent must read in full? Again work backwards from absolute minimum needed
+
+What is simplest way to do backup mechanism
+
+Simplest way to do locking? Tell it to call a script file that does synchronized{} block on a resource and returns either true or false? If false llm stops?
+
+Each chat type needs capture way (json) , uuid, version for duplicate later ingrestion, and timestamp of capture. No sidecar, all in file name
+
+Having structure of parent facet is good. Front matter is good. Not sure about rest of sections but yes do need superceded (nothing deleted ever) and web links. Maybe let the rest of page be Freeform, telling it to organize it well with headers and all. Anchors really good yes. May not need predefined file types like project etc, can let it freeform
+
+No need for guardian policy until a need truly arises. At start simply just tell what to do
+
+In general if anything needs to be referenced by >1 thing do not violate DRY, put its definition in a global file

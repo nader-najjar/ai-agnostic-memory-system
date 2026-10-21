@@ -31,7 +31,3 @@ description: Begin personal memory setup by asking which supported AI tools' con
 1. Initialize the new memory folder as a Git repository.
 2. Stage `config.json` and commit it as the initial state.
 3. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.
-
-## Source Item Identity
-
-A source item is one captured version of one conversation. Identify the conversation by its source type identifier and the UID defined by that type. Its version is the lowercase hexadecimal SHA-256 hash of the captured, uncompressed JSONL bytes; hash and ingest the same fixed capture.

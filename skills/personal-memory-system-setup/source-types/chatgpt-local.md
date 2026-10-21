@@ -19,3 +19,7 @@ Local conversations from ChatGPT Work, Codex desktop, or Codex CLI. Cloud-based 
 ## Source Items
 
 `rollout-*.jsonl` and `rollout-*.jsonl.zst`, including files in subdirectories.
+
+## UID
+
+The `payload.id` of the `session_meta` record.

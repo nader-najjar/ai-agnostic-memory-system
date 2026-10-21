@@ -19,3 +19,7 @@ Conversations from the Kiro Crew dashboard.
 ## Source Items
 
 `dashboard_chat-*.jsonl` directly in the selected location.
+
+## UID
+
+The session identifier between `dashboard_chat-` and `.jsonl` in the source filename.

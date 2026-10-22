@@ -1,6 +1,6 @@
 ---
 name: personal-memory-system-memorize
-description: Capture the latest contents of the oldest queued conversation.
+description: Capture the oldest queued conversation and compare it with its previous captured version.
 ---
 # Personal Memory System Memorize
 
@@ -11,7 +11,15 @@ description: Capture the latest contents of the oldest queued conversation.
 5. Locate the item's file:
     1. Read the memory configuration using the `Memory Configuration` section of `<memory-folder>/operations/shared/shared-concepts.md`. Use the `Conversation Label` section of that file to identify the source type identifier for `<selected-item>`, and load its definition using the `Source Type Definitions` section.
     2. Search the selected source’s configured `paths` for files matching its definition’s **Source Items** criteria. Construct each candidate’s label using the `Conversation Label` section of `<memory-folder>/operations/shared/shared-concepts.md`, and stop searching when it matches `<selected-item>`’s label. If no source item matches, report an error with the selected label, release the lock, and stop with the queue unchanged.
-6. Capture the matching source file using its source definition’s **Capture** section. Create `<memory-folder>/captures/` if needed and write the capture to a unique temporary file there. Compute the SHA-256 hash of the captured file’s complete uncompressed bytes, then rename it to `<label>--<capture-time>--<sha256>.jsonl`, where `<label>` is `<selected-item>`’s label, `<capture-time>` is the capture’s UTC timestamp in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal hash, used as the content version.
-7. Follow the `Commit Changes` section of `<memory-folder>/operations/shared/shared-concepts.md`.
-8. Report the selected entry’s label and the capture file’s absolute path.
-9. Release the acquired lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md` before finishing or stopping.
+6. Prepare the capture:
+    1. Create `<memory-folder>/captures/` if needed. Capture the matching source file to a unique temporary file there using its source definition’s **Capture** section.
+    2. Record the capture’s UTC timestamp and compute the SHA-256 hash of its complete uncompressed bytes.
+    3. The final filename is `<label>--<capture-time>--<sha256>.jsonl`: the selected label, UTC timestamp in `YYYYMMDDTHHmmssffffffZ` format, and full lowercase hexadecimal content hash. Do not yet rename the file.
+7. Find the most recent existing capture for the selected label, ordered by the timestamp in its filename. Call it `<previous-capture>`.
+8. Handle the version:
+    - **`<previous-capture>` does not exist:** Rename the temporary file to its final filename.
+    - **Unchanged hash between `<previous-capture>` and the temporary file:** Reuse `<previous-capture>` and remove the temporary file.
+    - **Changed hash between `<previous-capture>` and the temporary file:** Rename the temporary file to its final filename and compare both captures in full.
+9. Follow the `Commit Changes` section of `<memory-folder>/operations/shared/shared-concepts.md`.
+10. Report the selected entry’s label, the capture file’s absolute path, and whether this is a first, changed, or unchanged version.
+11. Release the acquired lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md` before finishing or stopping.

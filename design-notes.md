@@ -6,7 +6,8 @@ use cases
 * making ai not useless. in general if when i open a new chat it is completely ephemeral, that is near useless. every single chat i do should make ai more and more useful the same way a teammate would become more and more useful as get experience
     * if each time you open a chat and have to waste 30 mins re-explaining project context or related background details / concepts about what you do, that is a waste of time and you could have done the task quicker yourself
     * you shouldnt be "scared" of closing a chat because it is deep in your current workflow and dont want to lose that progress. chats should be able to be treated as extremely ephemeral, without fear of losing valuable context buildup
-* performance review mgr and leadership asks for what you did quantify and qualify. hard to do from scratch even if have all sources. easy for llm to crawl breadcrumbs
+    * 3rd reason - when a session gets anything beyond short, the llm becomes delusional and quality severely degrades. it makes extremely clear mistakes, and holds on to very specific words from long before in the conversation, when it makes no sense to, and there is no way to remove that attention weighting. It is really frustrating and the difference is extremely clear if you just open a new fresh chat with no polluted context - the quality jump is huge. To be clear compacting does not help. All this to say that you need the ability to rapidly and frequently switch to a new ephemeral chat without losing any context
+* performance review leadership asks for what you did quantify and qualify. hard to do from scratch even if have all sources. easy for llm to crawl breadcrumbs
 * SOP following (repeated procedures) - oncall leadership reporting weekly: teach it one time then it knows forever. Jira/asana updates: tell it expected leadership formats and it knows forever. production deployment SOP checks. etc
 * job helping - regardless of role, code doc writing BA querying etc, it will always be much better if it has understanding of job vs not. For example will make less mistakes in code, know ahead of time things that can happen or should be checked, write more meaningful paragraphs in documents that need less rewriting and correcting, etc
 * back and forth idea or brainstorm bouncing - lots of work is not actually producing an artifact but coming up with approach and thinking thru things. if it already knows full domain, it is much more effective
@@ -26,6 +27,8 @@ Very first thing is make a mermaid diagram of flow bare min
 
 ## core
 
+ADD CLAUDE COWORK+CODE SOURCE TYPE IMMEDIATELY P0
+
 now, with what we are doing, i do NOT think the policy should be to ignore tool call results and similar. if chat fetches code repo, just like how it sees it, the guardian should see it. so that it has full context. same with a slack message, same with a notion document, same with anything else. that way no context is lost or ignored. we can add ignore policies for specific things ONLY if they surface as an issue. This as a whole makes capturing sources other than chats a lot less important - they become proxy-captured by the chat as long as it reads it
 
 need some kind of always.md mechanism still. is old one good or should it be simpler and better
@@ -36,11 +39,11 @@ DONE further - a general operating flow ive seen is you cannot allow an llm to d
 
 tell ai to never update readmes or similar english documents unless there is explicit purpose. documents just get bloated with useless words
 
-No owners note concept. For the end user perspective it should be as if this system doesn’t exist at all. Just like a person if I tell it something it better remember it. If need an “owners note” just open your ai and tell it something. It will remember
+DONE No owners note concept. For the end user perspective it should be as if this system doesn’t exist at all. Just like a person if I tell it something it better remember it. If need an “owners note” just open your ai and tell it something. It will remember
 
 As of now only user interaction is recall and health check notif
 
-Maybe best is for the ingest to guarantee certain preconditions, execute, and guarantee postconditions. And one of the preconditions is that one item in the queue is marked with ~, and that was the previously ingested item. If previous was successful, the new run marks it as done, then marks the next item with ~ and ingests. Surrounding all of this is a lock that ensures only one parallel execution
+DONE Maybe best is for the ingest to guarantee certain preconditions, execute, and guarantee postconditions. And one of the preconditions is that one item in the queue is marked with ~, and that was the previously ingested item. If previous was successful, the new run marks it as done, then marks the next item with ~ and ingests. Surrounding all of this is a lock that ensures only one parallel execution
 
 Index md useful, giving each page some structure could still be useful but not prematurely
 
@@ -48,19 +51,19 @@ Do need always rules but what is best way to minimally enforce it? Maybe instead
 
 What is simplest way to do backup mechanism
 
-Simplest way to do locking? Tell it to call a script file that does synchronized{} block on a resource and returns either true or false? If false llm stops?
+DONE Simplest way to do locking? Tell it to call a script file that does synchronized{} block on a resource and returns either true or false? If false llm stops?
 
-Each chat type needs capture way (json) , uuid, version for duplicate later ingrestion, and timestamp of capture. No sidecar, all in file name
+DONE Each chat type needs capture way (json) , uuid, version for duplicate later ingrestion, and timestamp of capture. No sidecar, all in file name
 
 Having structure of parent facet is good. Front matter is good. Not sure about rest of sections but yes do need superceded (nothing deleted ever) and web links. Maybe let the rest of page be Freeform, telling it to organize it well with headers and all. Anchors really good yes. May not need predefined file types like project etc, can let it freeform
 
-In general if anything needs to be referenced by >1 thing do not violate DRY, put its definition in a global file
+DONE In general if anything needs to be referenced by >1 thing do not violate DRY, put its definition in a global file
 
 Maybe need to enforce some kind of recording of current state for projects. That is always useful bc the final superseded page will have a full history log of all states. But may not need to explicitly tell LLM, it may do this on its own
 
-At a bare minimum I do think it is good idea to enforce an event driven architecture rather than having no order. We have a definition of a unit of work so is natural to queue for robustness and ease of reasoning
+DONE At a bare minimum I do think it is good idea to enforce an event driven architecture rather than having no order. We have a definition of a unit of work so is natural to queue for robustness and ease of reasoning
 
-scout may not need agentic. may just fetch files edited based on timestamp
+DONE scout may not need agentic. may just fetch files edited based on timestamp
 
 What is best option for the “something” that periodically does stuff? script? ai tool cron?
 

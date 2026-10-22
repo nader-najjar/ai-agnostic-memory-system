@@ -23,7 +23,11 @@ Source type definitions are the Markdown files in `<memory-folder>/operations/sh
 
 ## Conversation Label
 
-A conversation’s label is `<source-type>:<UID>`, using its source type’s **Identifier** and its **UID**.
+A conversation’s label is `<source-type>:<UID>`, where `<source-type>` is the value from the source definition’s **Identifier** section and `<UID>` is obtained according to that definition’s **UID** section.
+
+## Queue
+
+The queue is `<memory-folder>/operations/queue.txt`: a UTF-8 text file with one [Conversation Label](#conversation-label) per line. Each label appears at most once and represents pending ingestion of the conversation’s latest available content. Entries are ordered by when they were added, oldest first. An empty file means no pending ingestion.
 
 ## Acquire Lock
 

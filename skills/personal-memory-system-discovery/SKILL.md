@@ -1,6 +1,6 @@
 ---
 name: personal-memory-system-discovery
-description: Find configured conversations and report their conversation labels.
+description: Find configured conversations and add their labels to the queue.
 ---
 # Personal Memory System Discovery
 
@@ -10,6 +10,7 @@ description: Find configured conversations and report their conversation labels.
 4. For each configured source, read its definition by following the process in the `Source Type Definitions` section of `<memory-folder>/operations/shared/shared-concepts.md`.
 5. For each entry in the configuration’s `sources` array, use the source definition loaded for that entry in step 4:
    1. Search every directory in the entry’s `paths` array for files matching that definition’s **Source Items** criteria.
-   2. For each source item, extract its conversation UID according to that same definition’s **UID** section.
-6. Report each distinct conversation label once, one per line, using the `Conversation Label` section of `<memory-folder>/operations/shared/shared-concepts.md`.
-7. Release the lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md` when finished.
+   2. For each source item, construct its conversation label using the `Conversation Label` section of `<memory-folder>/operations/shared/shared-concepts.md`. Retain the distinct labels for the next step.
+6. Read the queue using the `Queue` section of `<memory-folder>/operations/shared/shared-concepts.md`. For each label from step 5, append it as a new line only if it is not already in the queue. Preserve existing entries and their order.
+7. Report the labels added to the queue, one per line, or report that no labels were added.
+8. Release the lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md` when finished.

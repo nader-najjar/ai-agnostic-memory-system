@@ -32,6 +32,10 @@ description: Begin personal memory setup by asking which supported AI tools' con
 1. Create `<memory-folder>/operations/shared/` with `mkdir -p`, then copy [shared-concepts.md](shared-concepts.md) into it.
 2. Copy [source-types/](source-types/) into `<memory-folder>/operations/shared/source-types/`.
 
+## Initialize Queue
+
+1. Create an empty queue file using the [Queue](shared-concepts.md#queue) definition.
+
 ## Initialize Git
 
 1. Initialize the new memory folder as a Git repository.

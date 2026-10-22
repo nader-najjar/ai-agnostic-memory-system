@@ -34,7 +34,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Initialize Queue
 
-1. Create an empty queue file using the [Queue](shared-concepts.md#queue) definition.
+1. Create the initial queue file using the [Queue](shared-concepts.md#queue) definition, with the current UTC timestamp and an empty `items` array.
 
 ## Initialize Git
 

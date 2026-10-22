@@ -27,13 +27,24 @@ A conversation’s label is `<source-type>:<UID>`, where `<source-type>` is the 
 
 ## Queue
 
-The queue is `<memory-folder>/operations/queue.jsonl`: a UTF-8 JSON Lines file with one entry per line:
+The queue is `<memory-folder>/operations/queue.json`: a UTF-8 JSON object:
 
 ```json
-{"label": "<conversation-label>"}
+{
+  "discovered_through": "<UTC-timestamp>",
+  "items": [
+    {"label": "<conversation-label>"}
+  ]
+}
 ```
 
-`label` follows the [Conversation Label](#conversation-label) definition. Each label appears at most once and represents pending ingestion of the conversation’s latest available content. Entries are ordered by when they were added, oldest first. An empty queue file means no pending ingestion.
+`discovered_through` is the start time of the last successful discovery run, recorded as an ISO 8601 UTC timestamp.
+
+Each item's `label` follows the [Conversation Label](#conversation-label) definition. Each label appears at most once and represents pending ingestion of the conversation’s latest available content. Items are ordered by when they were added, oldest first. An empty `items` array means no pending ingestion.
+
+## Commit Changes
+
+Stage only the files changed by this run and commit them with a message describing the operation. Skip the commit if nothing changed.
 
 ## Acquire Lock
 

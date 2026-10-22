@@ -1,6 +1,6 @@
 ---
 name: personal-memory-system-memorize
-description: Capture the oldest queued conversation and compare it with its previous captured version.
+description: Memorize the oldest queued conversation using its latest captured contents.
 ---
 # Personal Memory System Memorize
 
@@ -20,6 +20,7 @@ description: Capture the oldest queued conversation and compare it with its prev
     - **`<previous-capture>` does not exist:** Rename the temporary file to its final filename.
     - **Unchanged hash between `<previous-capture>` and the temporary file:** Reuse `<previous-capture>` and remove the temporary file.
     - **Changed hash between `<previous-capture>` and the temporary file:** Rename the temporary file to its final filename and compare both captures in full.
-9. Follow the `Commit Changes` section of `<memory-folder>/operations/shared/shared-concepts.md`.
-10. Report the selected entry’s label, the capture file’s absolute path, and whether this is a first, changed, or unchanged version.
-11. Release the acquired lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md` before finishing or stopping.
+9. For a first or changed version, read the `Memory Extraction` and `Memory Pages` sections of `<memory-folder>/operations/shared/shared-concepts.md` and follow them to memorize the new capture. Create `<memory-folder>/memory/` if needed. For a changed version, only the delta between old and new is what is being memorized; the full file however can be used to understand context of words in this delta. Skip extraction when the hash is unchanged.
+10. Follow the `Commit Changes` section of `<memory-folder>/operations/shared/shared-concepts.md`.
+11. Report the selected entry’s label, the capture file’s absolute path, whether this is a first, changed, or unchanged version, and the memory pages created or updated. If no memory changes were needed, report that instead.
+12. Release the acquired lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md` before finishing or stopping.

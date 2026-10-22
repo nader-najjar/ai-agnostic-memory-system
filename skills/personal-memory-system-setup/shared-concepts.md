@@ -27,7 +27,13 @@ A conversation’s label is `<source-type>:<UID>`, where `<source-type>` is the 
 
 ## Queue
 
-The queue is `<memory-folder>/operations/queue.txt`: a UTF-8 text file with one [Conversation Label](#conversation-label) per line. Each label appears at most once and represents pending ingestion of the conversation’s latest available content. Entries are ordered by when they were added, oldest first. An empty file means no pending ingestion.
+The queue is `<memory-folder>/operations/queue.jsonl`: a UTF-8 JSON Lines file with one entry per line:
+
+```json
+{"label": "<conversation-label>", "path": "<absolute-source-file-path>"}
+```
+
+`label` follows the [Conversation Label](#conversation-label) definition. `path` is the source item’s current absolute file path. Each label appears at most once and represents pending ingestion of the conversation’s latest available content. Entries are ordered by when they were added, oldest first. An empty queue file means no pending ingestion.
 
 ## Acquire Lock
 

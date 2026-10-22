@@ -1,6 +1,6 @@
 ---
 name: personal-memory-system-discover
-description: Find configured conversations and add or update their queue entries.
+description: Find configured conversations and queue their labels.
 ---
 # Personal Memory System Discover
 
@@ -10,7 +10,7 @@ description: Find configured conversations and add or update their queue entries
 4. For each configured source, read its definition by following the process in the `Source Type Definitions` section of `<memory-folder>/operations/shared/shared-concepts.md`.
 5. For each entry in the configuration’s `sources` array, use the source definition loaded for that entry in step 4:
    1. Search every directory in the entry’s `paths` array for files matching that definition’s **Source Items** criteria.
-   2. For each source item, construct its conversation label using the `Conversation Label` section of `<memory-folder>/operations/shared/shared-concepts.md`. Retain each distinct label together with the source item’s current absolute file path for the next step.
-6. Read the queue using the `Queue` section of `<memory-folder>/operations/shared/shared-concepts.md`. For each label and path retained in step 5, if the label is already queued, update its entry’s path only if it has changed and keep its current queue position. If the label is not queued, append a new entry.
-7. Report the labels added or whose paths were updated, one per line, or report that the queue was unchanged.
+   2. For each source item, construct its conversation label using the `Conversation Label` section of `<memory-folder>/operations/shared/shared-concepts.md`. Retain each distinct label for the next step.
+6. Read the queue using the `Queue` section of `<memory-folder>/operations/shared/shared-concepts.md`. For each label retained in step 5, append a new entry only if the label is not already queued.
+7. Report the labels added, one per line, or report that the queue was unchanged.
 8. Release the lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md` before finishing or stopping.

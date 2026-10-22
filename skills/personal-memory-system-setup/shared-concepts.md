@@ -30,15 +30,15 @@ A conversation’s label is `<source-type>:<UID>`, where `<source-type>` is the 
 The queue is `<memory-folder>/operations/queue.jsonl`: a UTF-8 JSON Lines file with one entry per line:
 
 ```json
-{"label": "<conversation-label>", "path": "<absolute-source-file-path>"}
+{"label": "<conversation-label>"}
 ```
 
-`label` follows the [Conversation Label](#conversation-label) definition. `path` is the source item’s current absolute file path. Each label appears at most once and represents pending ingestion of the conversation’s latest available content. Entries are ordered by when they were added, oldest first. An empty queue file means no pending ingestion.
+`label` follows the [Conversation Label](#conversation-label) definition. Each label appears at most once and represents pending ingestion of the conversation’s latest available content. Entries are ordered by when they were added, oldest first. An empty queue file means no pending ingestion.
 
 ## Acquire Lock
 
 ```sh
-mkdir "<memory-folder>/.lock" 2>/dev/null && echo true || echo false
+memory_git_status=$(git -C "<memory-folder>" status --porcelain=v1 --untracked-files=all) && [ -z "$memory_git_status" ] && mkdir "<memory-folder>/.lock" 2>/dev/null && echo true || echo false
 ```
 
 ## Release Lock

@@ -28,3 +28,10 @@ Local conversations from ChatGPT Work, Codex desktop, or Codex CLI. Cloud-based 
 ## UID
 
 The `payload.id` of the `session_meta` record.
+
+## Capture
+
+An uncompressed `.jsonl` file containing the complete source item:
+
+- For a `.jsonl` source item, its original bytes.
+- For a `.jsonl.zst` source item, its bytes after lossless Zstandard decompression.

@@ -25,3 +25,7 @@ Conversations from the Kiro Crew dashboard.
 ## UID
 
 The session identifier between `dashboard_chat-` and `.jsonl` in the source filename.
+
+## Capture
+
+An uncompressed `.jsonl` file containing the complete original source item, byte for byte.

@@ -62,11 +62,15 @@ IMPORTANT: Preserve previously memorized information. When information changes, 
 
 ## Memory Extraction
 
+Preserve enough understanding that the owner can leave any chat and start a fresh one without fearing the loss of valuable context or having to explain everything again.
+
 Weigh each claim by what supports it: the owner’s statements or confirmations, original source material, tool results, or an AI assistant’s assertions. An assistant’s assertion alone does not establish a fact; it needs the owner’s confirmation or supporting evidence from the conversation. Keep unsupported assistant claims unconfirmed.
 
-Read the complete captured conversation, including tool calls and results. Retain the context that would help a fresh chat continue effectively: the owner’s preferences and constraints, decisions and their reasons, working knowledge, current state, unresolved questions, and next actions.
+Preserve useful beliefs, preferences, intentions, and estimates as statements attributed to whoever expressed them. They need not be objectively proven to be worth remembering; retain their uncertainty rather than presenting them as established facts.
 
-Update relevant existing memory pages before creating new ones, integrating new information without repeating what is already known. Distinguish confirmed outcomes from proposals, attempts, and unresolved claims; preserve meaningful dates and uncertainty. Organize by the subjects discussed rather than by chat, and create no page when the conversation adds no useful information.
+Read the complete captured conversation, including tool calls and results. Retain context that would help a future chat understand the owner’s personal and professional life, make decisions, continue effectively, or avoid rediscovery and repeated explanation: the owner’s goals, preferences and constraints, decisions and their reasons, useful rejected approaches and failed attempts, working knowledge, current state, unresolved questions, and next actions.
+
+Update relevant existing memory pages before creating new ones, integrating new information without repeating what is already known. Distinguish confirmed outcomes from proposals, attempts, and unresolved claims; preserve meaningful dates and uncertainty. Organize by the subjects discussed rather than by chat, and create no page when the conversation adds no useful information. Omit chatter and process narration that add no useful context.
 
 ## Commit Changes
 

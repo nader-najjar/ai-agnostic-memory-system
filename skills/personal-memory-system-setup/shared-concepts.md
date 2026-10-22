@@ -70,7 +70,11 @@ Preserve useful beliefs, preferences, intentions, and estimates as statements at
 
 Read the complete captured conversation, including tool calls and results. Retain context that would help a future chat understand the owner’s personal and professional life, make decisions, continue effectively, or avoid rediscovery and repeated explanation: the owner’s goals, preferences and constraints, decisions and their reasons, useful rejected approaches and failed attempts, working knowledge, current state, unresolved questions, and next actions.
 
-Update relevant existing memory pages before creating new ones, integrating new information without repeating what is already known. Distinguish confirmed outcomes from proposals, attempts, and unresolved claims; preserve meaningful dates and uncertainty. Organize by the subjects discussed rather than by chat, and create no page when the conversation adds no useful information. Omit chatter and process narration that add no useful context.
+Before writing, search existing memory pages for the conversation’s subjects, names, aliases, and key terms. Read each matching page in full before deciding what to change. Update relevant existing memory pages before creating new ones, integrating new information without repeating what is already known. Clearly distinguish what happened, what was decided, what is intended or proposed, what was attempted, and what remains unresolved. Record each at the level the evidence supports; a plan is not a completed action, and an attempt is not a confirmed outcome. Preserve meaningful dates and uncertainty. Organize by the subjects discussed rather than by chat, and create no page when the conversation adds no useful information. Omit chatter and process narration that add no useful context.
+
+After writing, reread each changed page in full and check for contradictions, including claims supported by other conversations. Move information shown to be outdated to Superseded; when the evidence does not resolve a conflict, preserve the competing claims with their sources and make the disagreement explicit.
+
+For time-dependent information, record when it happened or was true using an explicit date from the conversation, or the relevant message’s timestamp when it establishes the state at that time. If only the capture date is known, identify it as the date recorded and leave the event date unknown rather than implying the information became true then.
 
 ## Commit Changes
 

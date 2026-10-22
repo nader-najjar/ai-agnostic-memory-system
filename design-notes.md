@@ -5,6 +5,7 @@
 use cases
 * making ai not useless. in general if when i open a new chat it is completely ephemeral, that is near useless. every single chat i do should make ai more and more useful the same way a teammate would become more and more useful as get experience
     * if each time you open a chat and have to waste 30 mins re-explaining project context or related background details / concepts about what you do, that is a waste of time and you could have done the task quicker yourself
+    * you shouldnt be "scared" of closing a chat because it is deep in your current workflow and dont want to lose that progress. chats should be able to be treated as extremely ephemeral, without fear of losing valuable context buildup
 * performance review mgr and leadership asks for what you did quantify and qualify. hard to do from scratch even if have all sources. easy for llm to crawl breadcrumbs
 * SOP following (repeated procedures) - oncall leadership reporting weekly: teach it one time then it knows forever. Jira/asana updates: tell it expected leadership formats and it knows forever. production deployment SOP checks. etc
 * job helping - regardless of role, code doc writing BA querying etc, it will always be much better if it has understanding of job vs not. For example will make less mistakes in code, know ahead of time things that can happen or should be checked, write more meaningful paragraphs in documents that need less rewriting and correcting, etc

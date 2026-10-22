@@ -19,4 +19,4 @@ flowchart LR
     M --> B[Periodic backup:<br/>whole repository]
 ```
 
-Discovery adds new conversation versions. Ingestion writes memory and marks the item completed in one commit. Both acquire the shared lock before changing the repository.
+Discovery queues conversations for ingestion of their latest available content. Ingestion writes memory and marks the item completed in one commit. Both acquire the shared lock before changing the repository.

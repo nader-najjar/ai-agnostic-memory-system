@@ -42,6 +42,32 @@ The queue is `<memory-folder>/operations/queue.json`: a UTF-8 JSON object:
 
 Each item's `label` follows the [Conversation Label](#conversation-label) definition. Each label appears at most once and represents pending ingestion of the conversation’s latest available content. Items are ordered by when they were added, oldest first. An empty `items` array means no pending ingestion.
 
+## Memory Pages
+
+Memory pages are Markdown files under `<memory-folder>/memory/`, organized by topic. Each page has YAML front matter with:
+
+- `title`: the topic’s primary name.
+- `aliases` (optional): a list of alternative names, abbreviations, or former names that should find this same topic during recall.
+- `parent` (optional): the path of the memory page whose topic this page is a facet of, relative to `memory/`.
+
+A facet is one aspect of a broader topic, split into its own page because it has enough detail to stand alone. For example, a project’s deployment page can have the project’s overview page as its parent. The parent describes the broader topic; the facet describes that particular aspect. Each facet has one parent, while a parent can have many facets. Omit `parent` for standalone topics. Parent relationships must not form cycles and do not require matching folder nesting. Other relationships belong in links in the body.
+
+The body is freeform Markdown with descriptive headings.
+
+Include useful web links and links to related memory pages or specific sections.
+
+Support memorized information with relative links to its captured conversation and the relevant record identifiers or line numbers (call this an "anchor"). Preserve useful web links from the conversation.
+
+IMPORTANT: Preserve previously memorized information. When information changes, place the previous information under a `## Superseded` heading, retaining its dates and supporting sources and identifying what replaced it. Make the current understanding clear. The journey should be easily understandable.
+
+## Memory Extraction
+
+Weigh each claim by what supports it: the owner’s statements or confirmations, original source material, tool results, or an AI assistant’s assertions. An assistant’s assertion alone does not establish a fact; it needs the owner’s confirmation or supporting evidence from the conversation. Keep unsupported assistant claims unconfirmed.
+
+Read the complete captured conversation, including tool calls and results. Retain the context that would help a fresh chat continue effectively: the owner’s preferences and constraints, decisions and their reasons, working knowledge, current state, unresolved questions, and next actions.
+
+Update relevant existing memory pages before creating new ones, integrating new information without repeating what is already known. Distinguish confirmed outcomes from proposals, attempts, and unresolved claims; preserve meaningful dates and uncertainty. Organize by the subjects discussed rather than by chat, and create no page when the conversation adds no useful information.
+
 ## Commit Changes
 
 Stage only the files changed by this run and commit them with a message describing the operation. Skip the commit if nothing changed.

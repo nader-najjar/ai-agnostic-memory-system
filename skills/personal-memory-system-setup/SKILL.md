@@ -65,11 +65,12 @@ description: Begin personal memory setup by asking which supported AI tools' con
 2. Fill in [scripts/backup.plist](scripts/backup.plist) with the job label, absolute paths, and approved interval; install it in `~/Library/LaunchAgents/` and load it with `launchctl`.
 3. Trigger the job once through the scheduler and wait for it to finish. Confirm a successful exit and verify the destination bundle with `git -C "<memory-folder>" bundle verify "<backup_file>"`. Report the backup path, schedule, and job identifier. If registration or the first run fails, report the failure instead of claiming the backup is working.
 
-## Schedule Discovery and Memorize
+## Schedule Discovery, Memorize, and Troubleshoot
 
-1. Ask: “When should discovery and memorization run? Recommended: discovery every 3 hours at minute :00, and memorization every 2 hours at minute :15, in your local timezone.” Wait for the owner's answer and confirm both schedules and the timezone.
+1. Ask: “When should discovery, memorization, and troubleshooting run? Recommended: discovery every 3 hours at minute :00, memorization every 2 hours at minute :15, and troubleshooting hourly at minute :45, in your local timezone.” Wait for the owner's answer and confirm all three schedules and the timezone. Explain that troubleshooting may stop a run holding the lock for over two hours and discard its uncommitted changes so processing can retry.
 2. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules and timezone for these jobs; obtain model and reasoning choices as the recipe directs:
    - **Personal Memory Discover:** `$personal-memory-system-discover "<memory-folder>"`
    - **Personal Memory Memorize:** `$personal-memory-system-memorize "<memory-folder>"`
+   - **Personal Memory Troubleshoot:** `$personal-memory-system-troubleshoot "<memory-folder>"`
    If no recipe exists for the current tool, report scheduling as unsupported.
-3. Confirm that both schedules were created and report their times and identifiers. If scheduling is unavailable or either job fails to register, report which jobs have and have not been scheduled.
+3. Confirm that all three schedules were created and report their times and identifiers. If scheduling is unavailable or any job fails to register, report which jobs have and have not been scheduled.

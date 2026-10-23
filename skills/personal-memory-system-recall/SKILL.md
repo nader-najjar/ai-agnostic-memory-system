@@ -12,5 +12,5 @@ This skill is read-only. Do not create, edit, or delete files in the memory fold
 4. For each requested topic, search memory page titles, aliases, and body text case-insensitively. Search again using aliases found and obvious alternative names or spellings. Collect matching pages.
 5. For each matching page, also collect its parent chain and its facets, including nested facets, using the relationships defined in `Memory Pages`.
 6. Read every collected page in full.
-7. Use the pages as working context for the current chat.
+7. Use the pages as working context for the current chat. Treat dated information as what was known then, not automatically as current fact. When an answer depends on what is true now, verify against a current authoritative source; if verification is unavailable, state that the remembered information may be outdated.
 8. Briefly report the topics loaded and any topics without a match. The context is now loaded; do not repeat all of it unless the owner asks.

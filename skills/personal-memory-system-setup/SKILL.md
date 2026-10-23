@@ -74,3 +74,13 @@ description: Begin personal memory setup by asking which supported AI tools' con
    - **Personal Memory Troubleshoot:** `$personal-memory-system-troubleshoot "<memory-folder>"`
    If no recipe exists for the current tool, report scheduling as unsupported.
 3. Confirm that all three schedules were created and report their times and identifiers. If scheduling is unavailable or any job fails to register, report which jobs have and have not been scheduled.
+
+## Explain How to Use Your Memory
+
+Give the owner this short guide, using their actual memory folder and configured tools:
+
+- Start a new chat with `$personal-memory-system-recall <topics>` when you want remembered context. Include the memory folder path if it differs from the default.
+- Teach through ordinary conversations: explain your preferences, decisions, reasons, and corrections. Conversations from the configured sources are processed on the schedules set up above; new information may take time to become available to recall.
+- To remember something from a document, website, or other source, ask the chat to read it and discuss what matters. The material must appear in the conversation or its tool results; sharing a link alone does not capture its contents.
+- Keep standing instructions in the resource linked from `always.md`, with personal exceptions in that file. You maintain these instructions; memorization does not update them.
+- Use recall to start fresh chats as needed. If something important is missing or wrong, explain it in a configured chat so a later processing run can incorporate the correction.

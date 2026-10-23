@@ -63,7 +63,9 @@ The body is freeform Markdown with descriptive headings.
 
 Include useful web links and links to related memory pages or specific sections.
 
-Support memorized information with relative links to its captured conversation and the relevant record identifiers or line numbers (call this an "anchor"). Preserve useful web links from the conversation.
+Support memorized information with relative links to its captured conversation and the relevant record identifiers or line numbers (call this an "anchor"). Preserve useful web links from the conversation. Never edit or overwrite a saved capture.
+
+When renaming, moving, or merging memory pages or their sections, update affected links and `parent` references, including relative links within moved pages.
 
 IMPORTANT: Preserve previously memorized information. When information changes, place the previous information under a `## Superseded` heading, retaining its dates and supporting sources and identifying what replaced it. Make the current understanding clear. The journey should be easily understandable.
 

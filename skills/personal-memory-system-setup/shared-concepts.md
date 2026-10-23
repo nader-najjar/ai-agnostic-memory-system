@@ -11,11 +11,14 @@ The memory folder’s configuration is `<memory-folder>/config.json`:
       "identifier": "<source-type-identifier>",
       "paths": ["<approved-absolute-source-path>"]
     }
-  ]
+  ],
+  "backup_file": null
 }
 ```
 
 Each selected source has one entry with its source type identifier and a nonempty array of approved absolute paths.
+
+`backup_file` is the absolute path to `<backup-folder>/<memory-folder-name>.bundle`, where `<memory-folder-name>` is the memory folder’s final path component. Use `null` when the owner declines backup.
 
 ## Source Type Definitions
 

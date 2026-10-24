@@ -67,7 +67,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Schedule Discovery, Memorize, and Troubleshoot
 
-1. Ask: “When should discovery, memorization, and troubleshooting run? Recommended: discovery every 3 hours at minute :00, memorization every 2 hours at minute :15, and troubleshooting hourly at minute :45, in your local timezone.” Wait for the owner's answer and confirm all three schedules and the timezone. Explain that troubleshooting may stop a run holding the lock for over two hours and discard its uncommitted changes so processing can retry.
+1. Ask: “When should discovery, memorization, and troubleshooting run? Recommended: discovery every 20 minutes at :00, :20, and :40; memorization every 20 minutes at :10, :30, and :50; and troubleshooting hourly at :45, in your local timezone.” Wait for the owner's answer and confirm all three schedules and the timezone. Explain that troubleshooting may stop a run holding the lock for over two hours and discard its uncommitted changes so processing can retry.
 2. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules and timezone for these jobs; obtain model and reasoning choices as the recipe directs:
    - **Personal Memory Discover:** `$personal-memory-system-discover "<memory-folder>"`
    - **Personal Memory Memorize:** `$personal-memory-system-memorize "<memory-folder>"`

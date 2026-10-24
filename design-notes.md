@@ -1,18 +1,60 @@
 # Design Notes
 
-## meta
+## user stories
 
-use cases
 * making ai not useless. in general if when i open a new chat it is completely ephemeral, that is near useless. every single chat i do should make ai more and more useful the same way a teammate would become more and more useful as get experience
-    * if each time you open a chat and have to waste 30 mins re-explaining project context or related background details / concepts about what you do, that is a waste of time and you could have done the task quicker yourself
-    * you shouldnt be "scared" of closing a chat because it is deep in your current workflow and dont want to lose that progress. chats should be able to be treated as extremely ephemeral, without fear of losing valuable context buildup
-    * 3rd reason - when a session gets anything beyond short, the llm becomes delusional and quality severely degrades. it makes extremely clear mistakes, and holds on to very specific words from long before in the conversation, when it makes no sense to, and there is no way to remove that attention weighting. It is really frustrating and the difference is extremely clear if you just open a new fresh chat with no polluted context - the quality jump is huge. To be clear compacting does not help. All this to say that you need the ability to rapidly and frequently switch to a new ephemeral chat without losing any context
-* performance review leadership asks for what you did quantify and qualify. hard to do from scratch even if have all sources. easy for llm to crawl breadcrumbs
-* SOP following (repeated procedures) - oncall leadership reporting weekly: teach it one time then it knows forever. Jira/asana updates: tell it expected leadership formats and it knows forever. production deployment SOP checks. etc
-* job helping - regardless of role, code doc writing BA querying etc, it will always be much better if it has understanding of job vs not. For example will make less mistakes in code, know ahead of time things that can happen or should be checked, write more meaningful paragraphs in documents that need less rewriting and correcting, etc
-* back and forth idea or brainstorm bouncing - lots of work is not actually producing an artifact but coming up with approach and thinking thru things. if it already knows full domain, it is much more effective
-* personal - what use cases?
 
+* if each time you open a chat and have to waste 30 mins re-explaining project context or related background details / concepts about what you do, that is a waste of time and you could have done the task quicker yourself
+
+* you shouldnt be "scared" of closing a chat because it is deep in your current workflow and dont want to lose that progress. chats should be able to be treated as extremely ephemeral, without fear of losing valuable context buildup
+
+* when a session gets anything beyond short, the llm becomes delusional and quality severely degrades. it makes extremely clear mistakes, and holds on to very specific words from long before in the conversation, when it makes no sense to, and there is no way to remove that attention weighting. It is really frustrating and the difference is extremely clear if you just open a new fresh chat with no polluted context - the quality jump is huge. To be clear compacting does not help. All this to say that you need the ability to rapidly and frequently switch to a new ephemeral chat without losing any context
+
+* SOP following (repeated procedures) - oncall leadership reporting weekly: teach it one time then it knows forever. Jira/asana updates: tell it expected leadership formats and it knows forever. production deployment SOP checks. etc
+
+* regardless of role, code doc writing BA querying etc, it will always be much better if it has understanding of job vs not. For example will make less mistakes in code, know ahead of time things that can happen or should be checked, write more meaningful paragraphs in documents that need less rewriting and correcting, etc
+
+* back and forth idea or brainstorm bouncing - lots of work is not actually producing an artifact but coming up with approach and thinking thru things. if it already knows full domain, it is much more effective
+
+
+
+
+* it should remember what matters across my personal and professional life — preferences, goals, constraints, decisions and why, things tried, current state, open questions, and next actions
+
+
+
+* useful things i tell the ai should become available in other chats within a reasonably short time
+
+
+* i should be able to keep chatting or return to an old chat without confusing the memory system; later useful changes should get learned too
+
+
+* i should be able to teach it naturally by talking to it, without thinking at all about how it is working behind the scenes. for example if i learn something, i should just be able to pop open a chat and say "hey fyi XYZ btw" and then it knows it forever just like i do
+
+* if i give a chat a document, website, or other material and it reads it, the useful understanding should be remembered too
+
+
+* if i correct something or change my mind, it should know the current understanding without losing the previous context and reasoning + why that old was wrong
+
+
+* it should obviously know what is ai trash vs what is real; if ai says something in conversation it should be able to use non-polluted judgement to objectively record whats happening the same way my brain does
+
+* auditability of memory claims (citations)
+
+* retaining of the original memory sources
+
+* needs some kind of mechanism for always-on rules, and this has to be robust and DRY
+
+* chats marked private shouldnt be remembered
+
+* it should auto-troubleshoot itself and fix any system issues by itself. i should not have to know it exists
+
+* this isnt just some informal random memory ephemeral system - it should be agnostic of ai tool, and it should be formalized by being backed up to a cloud drive like icloud so that you truly have a permanent memory system following you for life that can always help you regardless of how the ai tools themselves evolve
+
+* it should be as token efficient as possible. audit ALL mechanisms to make sure it properly balances freshness with as little flux of LLM as possible
+
+
+## core
 
 Very first thing is make a mermaid diagram of flow bare min
 * source items
@@ -24,8 +66,6 @@ Very first thing is make a mermaid diagram of flow bare min
 * Locking (global across entire folder top level) - so only 1 git root
 * Backup
 * Recall skill
-
-## core
 
 DONE Add Claude Code source type.
 
@@ -83,8 +123,23 @@ for anything and everything want to add to this in the future - must strictly ju
 
 ### To do
 
-1. Historical backfill.
-2. **Improve memory freshness:** Discover every 5 minutes; memorize every 5 minutes, offset by 2 minutes. Keep one conversation per fresh memorize run and the shared lock. Target processing starting within roughly 7 minutes when there is no backlog and the computer and scheduler are running. This is a target, not a guaranteed SLA; long runs and backlog increase delay. Reassess the need for manual ingestion after trying this cadence.
+1. **Wait for inactivity before discovering a chat.** Scan file modification times from the previous successful scan’s end time up to, but not including, run-start minus N hours. N is still to be chosen. Advance `discovered_through` to that cutoff only after a successful scan.
+   * why technically: scanning up to now can repeatedly queue an active conversation and spend tokens processing intermediate versions. Assuming messages update the file’s modification time, ongoing chats stay ahead of the window and quiet chats eventually enter it.
+   * user need: don’t waste tokens repeatedly processing an ongoing conversation. This trades some freshness for lower cost; it measures inactivity, not confirmed completion, and a continuously active chat can keep being deferred.
+
+2. **Capture the eligible version during discovery and queue that snapshot.** Memorize should process that exact immutable capture. Later source updates can qualify separately after another quiet period.
+   * why technically: a label pointing to a live source can resolve to different contents by the time memorize runs, including messages that never satisfied the inactivity window. A fixed capture makes the queued work, retries, and state transitions easier to reason about. Detect changes during capture and defer the file rather than accepting an inconsistent snapshot; save the capture and its queue entry together.
+   * user need: returning to a chat shouldn’t disrupt learning what was already discussed, and later useful changes should still get learned. We accept processing an older eligible version even if newer messages exist.
+
+3. **Short-circuit based on queue status.** Acquire the shared lock first; if unavailable, stop. Check Git cleanliness while holding the lock; if dirty or the check fails, release and stop. Read the queue once: discover requires empty, memorize requires nonempty. If unreadable or ineligible, release and stop; otherwise do the work and release. No queue precheck, waiting, or additional coordination state.
+   * why technically: repeated discovery scans can hold the lock whenever memorize tries to run, even though work is already waiting. Discovery has no need to refill a nonempty queue; yielding gives the queued batch priority. Checking Git and queue under the lock avoids making the decision on state another writer is changing.
+   * user need: pending learning should make progress without babysitting. Newly eligible chats wait for the current batch to drain; a repeatedly failing oldest item can hold that up.
+
+4. **Accelerate ingestion and stagger the jobs.** Discover at :00, :20, and :40; memorize at :10, :30, and :50. Keep one conversation per fresh memorize run. Troubleshooting stays hourly at :45. Setup already recommends this cadence; the coordination above still needs implementation.
+   * why technically: the old two-hour memorize interval processes at most twelve conversations a day, so normal usage can build a days-long backlog. The new cadence allows three starts per hour, with ten minutes between discovery and memorize attempts to reduce lock collisions. Staggering is practical spacing, not a strict fairness guarantee.
+   * user need: useful things should reach other chats within a reasonably short time. Target starting processing within roughly thirty minutes after eligibility when there is no backlog and the computer and scheduler are running; inactivity waiting, long runs, and backlog add delay. This is a target, not a guaranteed SLA. Reassess manual ingestion after trying it.
+
+Historical backfill remains a separate TODO.
 
 ### Done
 

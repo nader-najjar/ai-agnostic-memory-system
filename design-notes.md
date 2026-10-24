@@ -1,37 +1,60 @@
 # Design Notes
 
-## User stories — AI draft
+## user stories
 
-* every useful chat should make the ai more useful over time, like a teammate learning about me and my work
-* i should be able to close a chat and start fresh without losing context or spending half an hour explaining everything again
-* it should remember what matters across my personal and professional life — preferences, goals, constraints, decisions and why, things tried, current state, open questions, and next actions
-* it should help me pick work back up, make decisions, brainstorm, and reconstruct what happened over time
-* useful things i tell the ai should become available in other chats within a reasonably short time
-* i should be able to keep chatting or return to an old chat without confusing the memory system; later useful changes should get learned too
-* i should be able to teach it naturally by talking to it, without maintaining a separate notes system or deciding what to ingest
-* if i give a chat a document, website, or other material and it reads it, the useful understanding should be remembered too
-* if i correct something or change my mind, it should know the current understanding without losing the previous context and reasoning
-* it should distinguish what actually happened from suggestions, plans, guesses, and failed attempts; old information shouldn’t silently become a current fact
-* i should be able to trace remembered information back to where it came from, even after memory pages get reorganized
-* my standing instructions should have one place i control, and the ai should read and follow them
-* i should control which chat sources it learns from, and chats marked private or temporary should stay out
-* i shouldn’t have to babysit it — ordinary interruptions should recover automatically, and problems needing my help should eventually be surfaced
-* my memory should live locally in files i can inspect and keep, with an optional backup that can survive losing the computer
-* it shouldn’t waste tokens repeatedly processing an ongoing conversation or unchanged information
-
-## meta
-
-use cases
 * making ai not useless. in general if when i open a new chat it is completely ephemeral, that is near useless. every single chat i do should make ai more and more useful the same way a teammate would become more and more useful as get experience
-    * if each time you open a chat and have to waste 30 mins re-explaining project context or related background details / concepts about what you do, that is a waste of time and you could have done the task quicker yourself
-    * you shouldnt be "scared" of closing a chat because it is deep in your current workflow and dont want to lose that progress. chats should be able to be treated as extremely ephemeral, without fear of losing valuable context buildup
-    * 3rd reason - when a session gets anything beyond short, the llm becomes delusional and quality severely degrades. it makes extremely clear mistakes, and holds on to very specific words from long before in the conversation, when it makes no sense to, and there is no way to remove that attention weighting. It is really frustrating and the difference is extremely clear if you just open a new fresh chat with no polluted context - the quality jump is huge. To be clear compacting does not help. All this to say that you need the ability to rapidly and frequently switch to a new ephemeral chat without losing any context
-* performance review leadership asks for what you did quantify and qualify. hard to do from scratch even if have all sources. easy for llm to crawl breadcrumbs
-* SOP following (repeated procedures) - oncall leadership reporting weekly: teach it one time then it knows forever. Jira/asana updates: tell it expected leadership formats and it knows forever. production deployment SOP checks. etc
-* job helping - regardless of role, code doc writing BA querying etc, it will always be much better if it has understanding of job vs not. For example will make less mistakes in code, know ahead of time things that can happen or should be checked, write more meaningful paragraphs in documents that need less rewriting and correcting, etc
-* back and forth idea or brainstorm bouncing - lots of work is not actually producing an artifact but coming up with approach and thinking thru things. if it already knows full domain, it is much more effective
-* personal - what use cases?
 
+* if each time you open a chat and have to waste 30 mins re-explaining project context or related background details / concepts about what you do, that is a waste of time and you could have done the task quicker yourself
+
+* you shouldnt be "scared" of closing a chat because it is deep in your current workflow and dont want to lose that progress. chats should be able to be treated as extremely ephemeral, without fear of losing valuable context buildup
+
+* when a session gets anything beyond short, the llm becomes delusional and quality severely degrades. it makes extremely clear mistakes, and holds on to very specific words from long before in the conversation, when it makes no sense to, and there is no way to remove that attention weighting. It is really frustrating and the difference is extremely clear if you just open a new fresh chat with no polluted context - the quality jump is huge. To be clear compacting does not help. All this to say that you need the ability to rapidly and frequently switch to a new ephemeral chat without losing any context
+
+* SOP following (repeated procedures) - oncall leadership reporting weekly: teach it one time then it knows forever. Jira/asana updates: tell it expected leadership formats and it knows forever. production deployment SOP checks. etc
+
+* regardless of role, code doc writing BA querying etc, it will always be much better if it has understanding of job vs not. For example will make less mistakes in code, know ahead of time things that can happen or should be checked, write more meaningful paragraphs in documents that need less rewriting and correcting, etc
+
+* back and forth idea or brainstorm bouncing - lots of work is not actually producing an artifact but coming up with approach and thinking thru things. if it already knows full domain, it is much more effective
+
+
+
+
+* it should remember what matters across my personal and professional life — preferences, goals, constraints, decisions and why, things tried, current state, open questions, and next actions
+
+
+
+* useful things i tell the ai should become available in other chats within a reasonably short time
+
+
+* i should be able to keep chatting or return to an old chat without confusing the memory system; later useful changes should get learned too
+
+
+* i should be able to teach it naturally by talking to it, without thinking at all about how it is working behind the scenes. for example if i learn something, i should just be able to pop open a chat and say "hey fyi XYZ btw" and then it knows it forever just like i do
+
+* if i give a chat a document, website, or other material and it reads it, the useful understanding should be remembered too
+
+
+* if i correct something or change my mind, it should know the current understanding without losing the previous context and reasoning + why that old was wrong
+
+
+* it should obviously know what is ai trash vs what is real; if ai says something in conversation it should be able to use non-polluted judgement to objectively record whats happening the same way my brain does
+
+* auditability of memory claims (citations)
+
+* retaining of the original memory sources
+
+* needs some kind of mechanism for always-on rules, and this has to be robust and DRY
+
+* chats marked private shouldnt be remembered
+
+* it should auto-troubleshoot itself and fix any system issues by itself. i should not have to know it exists
+
+* this isnt just some informal random memory ephemeral system - it should be agnostic of ai tool, and it should be formalized by being backed up to a cloud drive like icloud so that you truly have a permanent memory system following you for life that can always help you regardless of how the ai tools themselves evolve
+
+* it should be as token efficient as possible. audit ALL mechanisms to make sure it properly balances freshness with as little flux of LLM as possible
+
+
+## core
 
 Very first thing is make a mermaid diagram of flow bare min
 * source items
@@ -43,8 +66,6 @@ Very first thing is make a mermaid diagram of flow bare min
 * Locking (global across entire folder top level) - so only 1 git root
 * Backup
 * Recall skill
-
-## core
 
 DONE Add Claude Code source type.
 

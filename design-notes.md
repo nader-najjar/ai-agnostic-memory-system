@@ -1,5 +1,24 @@
 # Design Notes
 
+## User stories — AI draft
+
+* every useful chat should make the ai more useful over time, like a teammate learning about me and my work
+* i should be able to close a chat and start fresh without losing context or spending half an hour explaining everything again
+* it should remember what matters across my personal and professional life — preferences, goals, constraints, decisions and why, things tried, current state, open questions, and next actions
+* it should help me pick work back up, make decisions, brainstorm, and reconstruct what happened over time
+* useful things i tell the ai should become available in other chats within a reasonably short time
+* i should be able to keep chatting or return to an old chat without confusing the memory system; later useful changes should get learned too
+* i should be able to teach it naturally by talking to it, without maintaining a separate notes system or deciding what to ingest
+* if i give a chat a document, website, or other material and it reads it, the useful understanding should be remembered too
+* if i correct something or change my mind, it should know the current understanding without losing the previous context and reasoning
+* it should distinguish what actually happened from suggestions, plans, guesses, and failed attempts; old information shouldn’t silently become a current fact
+* i should be able to trace remembered information back to where it came from, even after memory pages get reorganized
+* my standing instructions should have one place i control, and the ai should read and follow them
+* i should control which chat sources it learns from, and chats marked private or temporary should stay out
+* i shouldn’t have to babysit it — ordinary interruptions should recover automatically, and problems needing my help should eventually be surfaced
+* my memory should live locally in files i can inspect and keep, with an optional backup that can survive losing the computer
+* it shouldn’t waste tokens repeatedly processing an ongoing conversation or unchanged information
+
 ## meta
 
 use cases

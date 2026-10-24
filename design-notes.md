@@ -102,10 +102,23 @@ for anything and everything want to add to this in the future - must strictly ju
 
 ### To do
 
-1. Historical backfill.
-2. **Accelerate ingestion with staggered schedules:** Setup recommends discovery at :00, :20, and :40; memorization at :10, :30, and :50, with one conversation per fresh memorize run. Target processing starting within roughly 30 minutes of eligibility for discovery when there is no backlog and the computer and scheduler are running; this is not a guaranteed SLA, and long runs or backlog increase delay. Reassess the need for manual ingestion after trying this cadence.
-3. **Short-circuit based on queue status:** Acquire the shared lock first; if unavailable, stop. Check Git cleanliness while holding the lock; if dirty or the check fails, release and stop. Then read the queue once: discovery requires an empty queue, and memorize requires a nonempty queue. If the queue cannot be read or the condition is not met, release and stop. Otherwise do the work and release the lock. No queue precheck, waiting, or additional coordination state.
-4. **Delay discovery of active chats:** Consider scanning source modification times from the previous successful scan's end time up to, but not including, run-start minus N hours, with N still to be chosen. On a successful scan, advance `discovered_through` to that cutoff rather than run-start. Assuming new messages update the source file's modification time, ongoing chats remain ahead of the window while quiet chats eventually enter it. This measures inactivity, not confirmed completion; a chat may resume after being queued, and memorize currently captures its latest contents. The delay adds N hours of inactivity before the cadence's processing target applies.
+1. **Wait for inactivity before discovering a chat.** Scan file modification times from the previous successful scan’s end time up to, but not including, run-start minus N hours. N is still to be chosen. Advance `discovered_through` to that cutoff only after a successful scan.
+   * why technically: scanning up to now can repeatedly queue an active conversation and spend tokens processing intermediate versions. Assuming messages update the file’s modification time, ongoing chats stay ahead of the window and quiet chats eventually enter it.
+   * user need: don’t waste tokens repeatedly processing an ongoing conversation. This trades some freshness for lower cost; it measures inactivity, not confirmed completion, and a continuously active chat can keep being deferred.
+
+2. **Capture the eligible version during discovery and queue that snapshot.** Memorize should process that exact immutable capture. Later source updates can qualify separately after another quiet period.
+   * why technically: a label pointing to a live source can resolve to different contents by the time memorize runs, including messages that never satisfied the inactivity window. A fixed capture makes the queued work, retries, and state transitions easier to reason about. Detect changes during capture and defer the file rather than accepting an inconsistent snapshot; save the capture and its queue entry together.
+   * user need: returning to a chat shouldn’t disrupt learning what was already discussed, and later useful changes should still get learned. We accept processing an older eligible version even if newer messages exist.
+
+3. **Short-circuit based on queue status.** Acquire the shared lock first; if unavailable, stop. Check Git cleanliness while holding the lock; if dirty or the check fails, release and stop. Read the queue once: discover requires empty, memorize requires nonempty. If unreadable or ineligible, release and stop; otherwise do the work and release. No queue precheck, waiting, or additional coordination state.
+   * why technically: repeated discovery scans can hold the lock whenever memorize tries to run, even though work is already waiting. Discovery has no need to refill a nonempty queue; yielding gives the queued batch priority. Checking Git and queue under the lock avoids making the decision on state another writer is changing.
+   * user need: pending learning should make progress without babysitting. Newly eligible chats wait for the current batch to drain; a repeatedly failing oldest item can hold that up.
+
+4. **Accelerate ingestion and stagger the jobs.** Discover at :00, :20, and :40; memorize at :10, :30, and :50. Keep one conversation per fresh memorize run. Troubleshooting stays hourly at :45. Setup already recommends this cadence; the coordination above still needs implementation.
+   * why technically: the old two-hour memorize interval processes at most twelve conversations a day, so normal usage can build a days-long backlog. The new cadence allows three starts per hour, with ten minutes between discovery and memorize attempts to reduce lock collisions. Staggering is practical spacing, not a strict fairness guarantee.
+   * user need: useful things should reach other chats within a reasonably short time. Target starting processing within roughly thirty minutes after eligibility when there is no backlog and the computer and scheduler are running; inactivity waiting, long runs, and backlog add delay. This is a target, not a guaranteed SLA. Reassess manual ingestion after trying it.
+
+Historical backfill remains a separate TODO.
 
 ### Done
 

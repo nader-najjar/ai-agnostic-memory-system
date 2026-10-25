@@ -22,6 +22,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 2. Wait for the owner's answer and confirm the storage location.
 3. Resolve the approved storage path and create the folder with `mkdir` without `-p`. Fail and stop if anything already exists at that path, including an empty folder, file, or symlink. Never reuse or overwrite it.
 4. This folder name, going forward in this skill, is `<memory-folder>`.
+5. Create `captures/`, `memory/`, and `operations/queue-snapshots/` under `<memory-folder>`. Add an empty `.gitkeep` file in each so Git preserves the folders during backup and recovery.
 
 ## Choose Backup Folder
 
@@ -56,7 +57,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 1. Initialize the new memory folder as a Git repository.
 2. Create `.gitignore`, and add `.lock/` and `/.tmp/` to it.
-3. Stage `config.json`, `.gitignore`, `always.md`, and `operations/` and commit them as the initial state.
+3. Run `git add .` from `<memory-folder>` and commit the initial state.
 4. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.
 
 ## Schedule Backup

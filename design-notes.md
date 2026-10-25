@@ -64,23 +64,23 @@ now the issue is that these jobs are scheduled to run once every hour or so. tha
 
 the first thing is the most important - p0 had a pretty big issue in that the event driven stuff isnt immutable. the chats queued can change a ton from discover to ingest and thinking about all possible behaviors is really hard. to make it easier:
 
-1. **Capture the eligible version during discovery and queue that snapshot.** Memorize should process that exact immutable capture. Later source updates can qualify separately after another quiet period. This will require queue labels containing versions as well
-   * why technically: a label pointing to a live source can resolve to different contents by the time memorize runs, including messages that never satisfied the inactivity window. A fixed capture makes the queued work, retries, and state transitions easier to reason about. Detect changes during capture and defer the file rather than accepting an inconsistent snapshot; save the capture and its queue entry together.
+1. **Capture the eligible version during discovery and queue that snapshot.** Memorize should process that exact immutable capture. Later source updates can qualify separately. This will require queue labels containing versions as well
+   * why technically: a label pointing to a live source can resolve to different contents by the time memorize runs, including messages that never satisfied the inactivity window. A fixed capture makes the queued work, retries, and state transitions easier to reason about. Save the capture and its queue entry together.
    * user need: returning to a chat shouldn’t disrupt learning what was already discussed, and later useful changes should still get learned. We accept processing an older eligible version even if newer messages exist.
 
-then with that we can do the first issue and actually reason about how it will work in all cases - not wasting llm flux. in other words, you can guarantee that any given chat is not ingested more than once every N hours:
+as a prereq to just optimize skills and make it all easier to reason about atomicity:
 
-2. **Wait for inactivity before discovering a chat.** Scan file modification times from the previous successful scan’s end time up to, but not including, run-start minus N hours. N is still to be chosen. Advance `discovered_through` to that cutoff only after a successful scan.
-   * why technically: scanning up to now can repeatedly queue an active conversation and spend tokens processing intermediate versions. Assuming messages update the file’s modification time, ongoing chats stay ahead of the window and quiet chats eventually enter it.
-   * user need: don’t waste tokens repeatedly processing an ongoing conversation. This trades some freshness for lower cost; it measures inactivity, not confirmed completion, and a continuously active chat can keep being deferred.
-
-at this point we have better reliability and reasoning guarantees but still no fix to big backlogs. as a prereq:
-
-3. **Short-circuit based on queue status.** Acquire the shared lock first; if unavailable, stop. Check Git cleanliness while holding the lock; if dirty or the check fails, release and stop. Read the queue once: discover requires empty, memorize requires nonempty. If unreadable or ineligible, release and stop; otherwise do the work and release. No queue precheck, waiting, or additional coordination state.
+2. **Short-circuit based on queue status.** Acquire the shared lock first; if unavailable, stop. Check Git cleanliness while holding the lock; if dirty or the check fails, release and stop. Read the queue once: discover requires empty, memorize requires nonempty. If unreadable or ineligible, release and stop; otherwise do the work and release. No queue precheck, waiting, or additional coordination state. likely easiest way to do this is define a single shared concept section that has instructions to take lock, after that check git, and after check queue, and what to do in each case?
    * why technically: repeated discovery scans can hold the lock whenever memorize tries to run, even though work is already waiting. Discovery has no need to refill a nonempty queue; yielding gives the queued batch priority. Checking Git and queue under the lock avoids making the decision on state another writer is changing.
    * user need: pending learning should make progress without babysitting. Newly eligible chats wait for the current batch to drain; a repeatedly failing oldest item can hold that up.
 
-now finally:
+then with that we can do the first issue and actually reason about how it will work in all cases - not wasting llm flux. in other words, you can guarantee that any given chat is not ingested more than once every N hours:
+
+3. **Wait for inactivity before discovering a chat.** Scan file modification times from the previous successful scan’s end time up to, but not including, run-start minus N hours. N is still to be chosen. Advance `discovered_through` to that cutoff only after a successful scan.
+   * why technically: scanning up to now can repeatedly queue an active conversation and spend tokens processing intermediate versions. Assuming messages update the file’s modification time, ongoing chats stay ahead of the window and quiet chats eventually enter it.
+   * user need: don’t waste tokens repeatedly processing an ongoing conversation. This trades some freshness for lower cost; it measures inactivity, not confirmed completion, and a continuously active chat can keep being deferred.
+
+at this point we have better reliability and reasoning guarantees but still no fix to big backlogs. now finally:
 
 4. **Accelerate ingestion and stagger the jobs.** Discover hourly at :00; memorize at :15, :30, and :45. Keep one conversation per fresh memorize run. Troubleshoot hourly at :55 to avoid starting alongside memorize. Update setup to recommend this cadence after the coordination above is implemented.
    * why technically: the old two-hour memorize interval processes at most twelve conversations a day, so normal usage can build a days-long backlog. This allows three memorize starts per hour while hourly discovery reduces wakeups for chats already waiting through the inactivity window. The tradeoff is slower discovery and retry after a missed discovery turn; memorize attempts are fifteen, fifteen, then thirty minutes apart. Staggering reduces deliberate overlap but does not guarantee fairness or prevent long runs from overlapping.

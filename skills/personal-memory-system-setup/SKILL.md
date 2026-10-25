@@ -4,6 +4,10 @@ description: Begin personal memory setup by asking which supported AI tools' con
 ---
 # Personal Memory System Setup
 
+## Ensure Skills Are Installed
+
+1. Check that every personal-memory-system skill from the same source as this setup skill is installed and available to the current AI tool. Install or update any missing or outdated skills before continuing.
+
 ## Choose Sources
 
 1. Read every Markdown file directly in [source-types/](source-types/). Each file defines one available source type. Read its **Identifier** and **Display Name** sections to build the choices.
@@ -49,9 +53,10 @@ description: Begin personal memory setup by asking which supported AI tools' con
 2. Ask for the URL or local file path to that document and any personal adjustments to include. The owner may create a document now or leave the document location and adjustments for later. Wait for their answer.
 3. Copy [always.md](always.md) to `<memory-folder>/always.md`. Replace `<agent-instructions-location>` with the supplied URL or local file path, expanding local paths to absolute paths. Remove the link sentence if the owner skipped it. Add any supplied adjustments under `Personal Adjustments`. Show the resulting file to the owner; they maintain it going forward.
 
-## Initialize Queue
+## Initialize Queue and Backfill
 
 1. Create the initial queue file using the [Queue](shared-concepts.md#queue) definition, with `discovered_through` set to the current UTC time minus two hours and an empty `items` array.
+2. Create the backfill worklist using the [Backfill](shared-concepts.md#backfill) definition, with an empty `items` array.
 
 ## Initialize Git
 
@@ -59,6 +64,12 @@ description: Begin personal memory setup by asking which supported AI tools' con
 2. Create `.gitignore`, and add `.lock/` and `/.tmp/` to it.
 3. Run `git add .` from `<memory-folder>` and commit the initial state.
 4. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.
+
+## Backfill Existing Conversations
+
+1. Check each configured source's matching files and modification times. Summarize the conversation count and available date range for each source. Recommend backfilling all available history.
+2. Ask whether the owner wants to backfill the recommended sources and date range, choose different ones, or skip backfill. Wait for their answer.
+3. If they choose backfill, run `$personal-memory-system-backfill` with `<memory-folder>`, the selected sources, and date range. Explain that the snapshots will be memorized in the background as normal discovery leaves room.
 
 ## Schedule Backup
 

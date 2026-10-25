@@ -114,11 +114,11 @@ ai learning my writing style - would be super useful if it learned from stuff i 
 
 Add Claude Cowork local-chat source type
 
-figure out how to set kiro crew reasoning effort in cron creation
-
 human health updates on how the system is doing
 
 final instruction for use blurb. TO "INGEST" A NON CHAT SOURCE (ie make your ai learn it permanently) all you need to do is open a chat and give it that information. same exact way you would a human. once chat reads it and learns it plus says what it learned, that will automatically be saved and digested by virtue of this system. no hacky per source types. from end user perspective, treat ai as competent human. if ever give something trust it will remember it. at worst, we may need a specific skill for telling a chat "hey deep extract everything about this source, form connections, etc and lay everything out in chat in great detail so that cos can effectively ingest this info later without itself going to source" - but nothing more than that
+
+## p4
 
 for anything and everything want to add to this in the future - must strictly justify from a concrete use case why it would be needed and why it cannot be done in current
 

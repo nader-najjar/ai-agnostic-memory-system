@@ -41,9 +41,23 @@ The queue is `<memory-folder>/operations/queue.json`: a UTF-8 JSON object:
 
 Each item's `path` is relative to the memory folder and appears at most once. Items are ordered by when they were added, oldest first. An empty `items` array means no pending ingestion.
 
+## Backfill
+
+The backfill worklist is `<memory-folder>/operations/backfill.json`: a UTF-8 JSON object:
+
+```json
+{
+  "items": [
+    {"path": "<relative-capture-path>"}
+  ]
+}
+```
+
+Items follow the same format as the queue and identify saved snapshots awaiting admission to it. Paths are relative to the memory folder and appear at most once. Items are processed in list order. An empty `items` array means no pending backfill.
+
 ## Capture
 
-The filename is `<source-type>:<UID>--<capture-time>--<sha256>.jsonl`, where `<source-type>` comes from the source definition’s **Identifier** section, `<UID>` follows its **UID** section, `<capture-time>` is the UTC capture time in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal SHA-256 hash of the capture’s complete uncompressed bytes. For the same conversation, equal hashes identify unchanged content; capture time does not determine whether the content changed.
+The filename is `<source-type>:<UID>--<source-modified-time>--<sha256>.jsonl`, where `<source-type>` comes from the source definition’s **Identifier** section, `<UID>` follows its **UID** section, `<source-modified-time>` is the source file’s modification time observed when selecting it, expressed in UTC in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal SHA-256 hash of the capture’s complete uncompressed bytes. For the same conversation, equal hashes identify unchanged content; modification time does not determine whether the content changed.
 
 ## Memory Pages
 
@@ -67,11 +81,9 @@ Run `git add .` from `<memory-folder>` and commit with a message describing the 
 
 ## Acquire Lock
 
-The calling skill specifies whether the queue’s `items` array must be empty or nonempty.
-
 1. Acquire the lock with `mkdir "<memory-folder>/.lock"`. If it fails, return `false`.
 2. Run `git -C "<memory-folder>" status --porcelain=v1 --untracked-files=all`. If it fails or returns any output, release the lock and return `false`.
-3. Read the [Queue](#queue). If it cannot be read or does not meet the calling skill’s requirement of empty or nonempty, release the lock and return `false`. Otherwise, return `true`.
+3. Return `true`.
 
 ## Release Lock
 

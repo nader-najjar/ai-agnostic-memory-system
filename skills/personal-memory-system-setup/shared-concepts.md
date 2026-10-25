@@ -37,7 +37,7 @@ The queue is `<memory-folder>/operations/queue.json`: a UTF-8 JSON object:
 }
 ```
 
-`discovered_through` is the start time of the last successful discovery run, recorded as an ISO 8601 UTC timestamp.
+`discovered_through` is the timestamp through which the last successful discovery scan searched, inclusive, recorded as an ISO 8601 UTC timestamp.
 
 Each item's `path` is relative to the memory folder and appears at most once. Items are ordered by when they were added, oldest first. An empty `items` array means no pending ingestion.
 

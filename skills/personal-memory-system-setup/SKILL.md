@@ -51,7 +51,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Initialize Queue
 
-1. Create the initial queue file using the [Queue](shared-concepts.md#queue) definition, with the current UTC timestamp and an empty `items` array.
+1. Create the initial queue file using the [Queue](shared-concepts.md#queue) definition, with `discovered_through` set to the current UTC time minus two hours and an empty `items` array.
 
 ## Initialize Git
 
@@ -68,13 +68,24 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Schedule Discovery, Memorize, and Troubleshoot
 
+Suggested starting models and reasoning effort for the scheduled jobs:
+
+| Job | OpenAI | Claude |
+| --- | --- | --- |
+| Discover | GPT-6 Luna · Max | Haiku 5.5 · Max |
+| Memorize | GPT-6.1 Sol · High | Sonnet 5.5 · High |
+| Troubleshoot | GPT-6.1 Sol · Medium | Sonnet 5.5 · Medium |
+
+On a standard $20/month plan, consider lighter models or lower reasoning effort to conserve usage, especially for discovery and troubleshooting; prioritize memorization quality. Empirically, Luna and Haiku use barely any usage even with lots of chats.
+
 1. Ask: “When should discovery, memorization, and troubleshooting run? Recommended: discovery every 3 hours at minute :00, memorization every 2 hours at minute :15, and troubleshooting hourly at minute :45, in your local timezone.” Wait for the owner's answer and confirm all three schedules and the timezone. Explain that troubleshooting may stop a run holding the lock for over two hours and discard its uncommitted changes so processing can retry.
-2. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules and timezone for these jobs; obtain model and reasoning choices as the recipe directs:
+2. Show the model recommendations above for the current AI tool. Ask which model and reasoning effort to use for each of discovery, memorization, and troubleshooting. Wait for the owner's answer and confirm all three choices.
+3. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules, timezone, models, and reasoning effort for these jobs:
    - **Personal Memory Discover:** `$personal-memory-system-discover "<memory-folder>"`
    - **Personal Memory Memorize:** `$personal-memory-system-memorize "<memory-folder>"`
    - **Personal Memory Troubleshoot:** `$personal-memory-system-troubleshoot "<memory-folder>"`
    If no recipe exists for the current tool, report scheduling as unsupported.
-3. Confirm that all three schedules were created and report their times and identifiers. If scheduling is unavailable or any job fails to register, report which jobs have and have not been scheduled.
+4. Confirm that all three schedules were created and report their times and identifiers. If scheduling is unavailable or any job fails to register, report which jobs have and have not been scheduled.
 
 ## Explain How to Use Your Memory
 

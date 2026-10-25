@@ -86,19 +86,37 @@ at this point we have better reliability and reasoning guarantees but still no f
    * why technically: the old two-hour memorize interval processes at most twelve conversations a day, so normal usage can build a days-long backlog. This allows three memorize starts per hour while hourly discovery reduces wakeups for chats already waiting through the inactivity window. The tradeoff is slower discovery and retry after a missed discovery turn; memorize attempts are fifteen, fifteen, then thirty minutes apart. Staggering reduces deliberate overlap but does not guarantee fairness or prevent long runs from overlapping.
    * user need: balance reasonably fresh memory with fewer unnecessary AI wakeups. Target starting processing within roughly seventy-five minutes after eligibility when there is no backlog, discovery is quick, and the computer and scheduler are running; inactivity waiting, long runs, and backlog add delay. This is a target, not a guaranteed SLA. Reassess manual ingestion after trying it.
 
+### state transition thinking
+
+basically trace what actually happens before saying this works. this is reasoning thru the instructions, not an end to end test
+
+* setup at 12 sets discovered_through to 10. discovery at 1 has cutoff 11, so searches modifications after 10 thru 11 inclusive. after success the timestamp is 11. next scan starts after 11 so no overlap
+* chat stays quiet: last edit at 12, discover at 1 ignores it, discover at 2 can capture it. snapshot + queue entry + timestamp committed together
+* chat keeps changing: last edit keeps moving ahead of cutoff, so it waits. once quiet for 2 hours it can enter the window
+* chat resumes after capture: queued snapshot doesnt change. later edits can qualify for another snapshot once quiet again
+* queue already has stuff: discover stops without moving timestamp. memorize takes oldest snapshot. once queue drains, discovery scans from where it left off so the waiting time doesnt create a gap
+* memorize first version: move snapshot to captures, learn full thing, remove queue entry, commit together. changed version: same but learn delta with full context. same hash: delete pending snapshot, remove queue entry, commit, no memory rewrite
+* nothing qualifies: still move timestamp to cutoff and commit. otherwise we keep scanning the same empty time range
+* lock already held: stop without touching anything. dirty git or unreadable queue after taking lock: release and stop. wrong queue state: same
+* interrupted before commit: recovery returns to last committed state. failed discovery loses its pending snapshots and retries from old timestamp. failed memorize gets its queued snapshot back and retries. interrupted after commit but before unlock: recovery keeps committed work and clears stale lock
+* timing caveat we accepted: chat can change between checking its modification time and copying it. saved snapshot can include newer messages. 2 hours is the eligibility filter, not a promise every message captured is 2 hours old
+* assumes new messages advance source modification time and clock moves normally. existing memories using the old timestamp meaning need thought when upgrading; setup change only handles new ones
+
 ## p2
 
-backfill capability
+backfill capability - when first setting this up there is already a ton of useful stuff in old chats. should be able to say go back thru this source for this time range and learn it, using the same snapshot + memorize flow. shouldnt need to mess with the normal discovery timestamp or manually feed it every old chat. figure out simplest way to do that without old backlog taking over all the new stuff
+
+one failure mode ive seen a lot - after compaction, lots of always rules get ignored fully. idea: initially read full instructions, but also have a small table of contents router in persistent instructions saying what section applies to what kind of work. whenever convo enters that domain / phase (code, review, formal pr, merge, cleanup etc), reread the actual section unless already read in current uncompacted context. summary saying it was read doesnt count. dont need to reread every msg or keep a second condensed copy of all the rules in sync
 
 ## p3
+
+ai learning my writing style - would be super useful if it learned from stuff i actually write, drafts i approve, and edits i make to its writing. not just copying words but how much i explain, what i leave implicit, how direct i am etc. notes vs messages vs formal writing are different. maybe this is just another facet of memory rather than a whole separate system. figure out a workflow where it gets better from my corrections instead of me having to explain my style every time. this is honestly a big investment initially will be hard but once done it could literally save hours and hours every week
 
 Add Claude Cowork local-chat source type
 
 figure out how to set kiro crew reasoning effort in cron creation
 
 human health updates on how the system is doing
-
-one failure mode ive seen a lot we need to resolve - after compaction, lots of always rules get ignored fully. one solution is keeping them as short as possible. another is an always rule that says how to preserve them post compaction. what are others
 
 final instruction for use blurb. TO "INGEST" A NON CHAT SOURCE (ie make your ai learn it permanently) all you need to do is open a chat and give it that information. same exact way you would a human. once chat reads it and learns it plus says what it learned, that will automatically be saved and digested by virtue of this system. no hacky per source types. from end user perspective, treat ai as competent human. if ever give something trust it will remember it. at worst, we may need a specific skill for telling a chat "hey deep extract everything about this source, form connections, etc and lay everything out in chat in great detail so that cos can effectively ingest this info later without itself going to source" - but nothing more than that
 

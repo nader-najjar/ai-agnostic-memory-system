@@ -67,9 +67,11 @@ Run `git add .` from `<memory-folder>` and commit with a message describing the 
 
 ## Acquire Lock
 
-```sh
-memory_git_status=$(git -C "<memory-folder>" status --porcelain=v1 --untracked-files=all) && [ -z "$memory_git_status" ] && mkdir "<memory-folder>/.lock" 2>/dev/null && echo true || echo false
-```
+The calling skill specifies whether the queue’s `items` array must be empty or nonempty.
+
+1. Acquire the lock with `mkdir "<memory-folder>/.lock"`. If it fails, return `false`.
+2. Run `git -C "<memory-folder>" status --porcelain=v1 --untracked-files=all`. If it fails or returns any output, release the lock and return `false`.
+3. Read the [Queue](#queue). If it cannot be read or does not meet the calling skill’s requirement of empty or nonempty, release the lock and return `false`. Otherwise, return `true`.
 
 ## Release Lock
 

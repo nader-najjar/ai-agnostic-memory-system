@@ -5,17 +5,16 @@ description: Memorize the oldest queued conversation snapshot.
 # Personal Memory System Memorize
 
 1. The input to this skill is the path to the personal memory folder. This is what `<memory-folder>` refers to in this skill. If missing from input, stop here.
-2. Read the `Acquire Lock` section of `<memory-folder>/operations/shared/shared-concepts.md` and follow its acquisition instructions. If it returns `false`, the lock is unavailable, in which case you must stop here.
-3. Read the queue using the `Queue` section of `<memory-folder>/operations/shared/shared-concepts.md`. If its `items` array is empty, report that no conversations are queued, release the lock, and stop.
-4. Select the oldest entry in `items` as `<selected-item>`.
-5. Open `<selected-item>`’s `path` relative to `<memory-folder>` as `<selected-snapshot>`. Read its source type, UID, capture time, and hash from the filename using the `Capture` section of `<memory-folder>/operations/shared/shared-concepts.md`.
-6. Set `<capture-destination>` to `<memory-folder>/captures/` followed by the filename of `<selected-snapshot>`.
-7. Find the most recent capture in `<memory-folder>/captures/` for the same source type and UID, ordered by the timestamp in its filename. Call it `<previous-capture>`.
-8. If `<previous-capture>` exists and its hash matches `<selected-snapshot>`, delete the `<selected-snapshot>` file. Otherwise, move `<selected-snapshot>` to `<capture-destination>`.
-9. If the snapshot was deleted in step 8, skip this step. Otherwise, read [Memory Extraction](#memory-extraction) below and the `Memory Pages` section of `<memory-folder>/operations/shared/shared-concepts.md`. When `<previous-capture>` does not exist, memorize `<capture-destination>` in full. When `<previous-capture>` does exist, only the delta between old and new is what is being memorized; the full file however can be used to understand context of words in this delta.
-10. Remove `<selected-item>` from the queue’s `items` array.
-11. Follow the `Commit Changes` section of `<memory-folder>/operations/shared/shared-concepts.md`.
-12. Release the acquired lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md`.
+2. Follow `Acquire Lock` in `<memory-folder>/operations/shared/shared-concepts.md`, requiring a nonempty queue. If it returns `false`, stop.
+3. Select the oldest entry in `items` as `<selected-item>`.
+4. Open `<selected-item>`’s `path` relative to `<memory-folder>` as `<selected-snapshot>`. Read its source type, UID, capture time, and hash from the filename using the `Capture` section of `<memory-folder>/operations/shared/shared-concepts.md`.
+5. Set `<capture-destination>` to `<memory-folder>/captures/` followed by the filename of `<selected-snapshot>`.
+6. Find the most recent capture in `<memory-folder>/captures/` for the same source type and UID, ordered by the timestamp in its filename. Call it `<previous-capture>`.
+7. If `<previous-capture>` exists and its hash matches `<selected-snapshot>`, delete the `<selected-snapshot>` file. Otherwise, move `<selected-snapshot>` to `<capture-destination>`.
+8. If the snapshot was deleted in step 7, skip this step. Otherwise, read [Memory Extraction](#memory-extraction) below and the `Memory Pages` section of `<memory-folder>/operations/shared/shared-concepts.md`. When `<previous-capture>` does not exist, memorize `<capture-destination>` in full. When `<previous-capture>` does exist, only the delta between old and new is what is being memorized; the full file however can be used to understand context of words in this delta.
+9. Remove `<selected-item>` from the queue’s `items` array.
+10. Follow the `Commit Changes` section of `<memory-folder>/operations/shared/shared-concepts.md`.
+11. Release the acquired lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md`.
 
 ## Memory Extraction
 

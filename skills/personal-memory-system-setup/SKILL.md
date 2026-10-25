@@ -49,9 +49,10 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Install Always
 
-1. Explain that `always.md` holds standing instructions for agents, so the owner does not need to repeat their preferences and working rules in every chat. Recommend maintaining one accessible document, such as a local Markdown file or a Notion page, as the source of truth for those instructions, with local exceptions under `Personal Adjustments`.
-2. Ask for the URL or local file path to that document and any personal adjustments to include. The owner may create a document now or leave the document location and adjustments for later. Wait for their answer.
-3. Copy [always.md](always.md) to `<memory-folder>/always.md`. Replace `<agent-instructions-location>` with the supplied URL or local file path, expanding local paths to absolute paths. Remove the link sentence if the owner skipped it. Add any supplied adjustments under `Personal Adjustments`. Show the resulting file to the owner; they maintain it going forward.
+1. Explain that `always.md` tells agents how to load standing instructions, with local exceptions under `Personal Adjustments`. Recommend a small index page or Markdown file that links to separate instruction pages, each covering one topic or phase. Each index entry should say when it applies; mark general rules as applying to all work. This lets agents read the relevant pages without loading the entire collection.
+2. Ask for the URL or local file path to that index and any personal adjustments to include. The owner may create an index now or leave its location and adjustments for later. Wait for their answer.
+3. If an index was supplied, read it and check that its entries describe when they apply and link to instruction pages that can be read separately. If that structure is missing, explain what needs changing to the owner.
+4. Copy [always.md](always.md) to `<memory-folder>/always.md`. If an index was supplied, replace `<agent-instructions-location>` with its URL or local file path, expanding local paths to absolute paths. Otherwise, remove the entire `Agent Instructions` section, including its subsections. Replace `<personal-adjustments-here>` with the supplied adjustments, or remove the placeholder if none were supplied. Show the resulting file to the owner; they maintain it going forward.
 
 ## Initialize Queue and Backfill
 

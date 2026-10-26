@@ -11,16 +11,19 @@ The memory folder’s configuration is `<memory-folder>/config.json`:
   "sources": [
     {
       "identifier": "<source-type-identifier>",
-      "paths": ["<approved-absolute-source-path>"]
+      "locations": [{"type": "folder", "path": "<approved-absolute-source-path>"}]
     }
   ],
-  "backup_file": null
+  "backup_file": null,
+  "github_repository": null
 }
 ```
 
-Each selected source has one entry with its source type identifier and a nonempty array of approved absolute paths.
+Each selected source has one entry with its source type identifier and a nonempty `locations` array. A folder location has `type: "folder"` and an absolute `path`. An MCP location has `type: "mcp"`, a `tool` name, and optional `arguments`. The source definition explains how to discover and capture items from those locations.
 
 `backup_file` is the absolute path to `<backup-folder>/<memory-folder-name>.bundle`, where `<memory-folder-name>` is the memory folder’s final path component. Use `null` when the owner declines backup.
+
+`github_repository` is the private GitHub repository URL used for publishing only committed `memory/`, `always.md`, and `remote-recall.md` with separate history, or `null` when publishing is disabled. This is the authoritative destination; setup configures `origin` in the separate `.tmp/github-publish` checkout from it. The main memory repository has no publishing remote; captures, operational files, and the full local Git history remain in the local repository and its backup.
 
 ## Source Type Definitions
 
@@ -59,7 +62,7 @@ Items follow the same format as the queue and identify saved snapshots awaiting 
 
 ## Capture
 
-The filename is `<source-type>--<UID>--<source-modified-time>--<sha256>.jsonl`, where `<source-type>` comes from the source definition’s **Identifier** section, `<UID>` follows its **UID** section, `<source-modified-time>` is the source file’s modification time observed when selecting it, expressed in UTC in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal SHA-256 hash of the capture’s complete uncompressed bytes. For the same conversation, equal hashes identify unchanged content; modification time does not determine whether the content changed.
+The filename is `<source-type>--<UID>--<source-modified-time>--<sha256>.jsonl`, where `<source-type>` comes from the source definition’s **Identifier** section, `<UID>` follows its **UID** section, `<source-modified-time>` follows its **Source Modification Time** section, observed when selecting the item, expressed in UTC in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal SHA-256 hash of the capture’s complete uncompressed bytes. For the same conversation, equal hashes identify unchanged content; modification time does not determine whether the content changed.
 
 ## Memory Pages
 

@@ -13,7 +13,7 @@ description: Capture configured conversations and queue their snapshots.
 5. Read the memory configuration using the `Memory Configuration` section of `<shared-concepts>`.
 6. For each configured source, read its definition by following the process in the `Source Type Definitions` section of `<shared-concepts>`.
 7. For each entry in the configuration’s `sources` array, use the source definition loaded for that entry in step 6:
-    1. Search every directory in the entry’s `paths` array for files matching that definition’s **Source Items** criteria whose file modification time is after `discovered_through` and at or before `<cutoff>`. Filter by modification time before reading file contents and retain each selected file’s modification time for its snapshot filename.
+    1. Follow the definition’s **Discovery** section using the entry’s `locations`. Use its **Source Modification Time** section to select items whose modification time is after `discovered_through` and at or before `<cutoff>`. Filter before reading content and retain each selected item’s modification time for its snapshot filename.
     2. Capture each source item to a unique temporary file in `<memory-folder>/operations/queue-snapshots/` using its source definition’s **Capture** section.
     3. Determine the capture’s filename using the `Capture` section of `<shared-concepts>`. Rename the temporary file to that filename and retain its path relative to `<memory-folder>` for the next step.
 8. For each relative path retained in step 7, append `{"path": "<relative-path>"}` to the queue’s `items` array. Set `discovered_through` to `<cutoff>`, even if no snapshots were added.

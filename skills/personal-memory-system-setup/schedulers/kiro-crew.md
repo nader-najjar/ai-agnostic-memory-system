@@ -15,7 +15,7 @@ Ask the owner for any missing model choices, offering Kiro Crew's configured mod
 2. **Create the jobs.** Run the following shell command for each supplied job, replacing the placeholders with its inputs. Quote each value as a single literal shell argument, preserving the prompt's `$` skill invocation and any quoted paths.
 
    ```sh
-   kirocrew cron add '<name>' '<prompt>' --cron '<cron-expression>' --timezone '<timezone>' --model '<model>' --silent --hide-in-chat --no-persistent-session --no-minimal-context --timeout-secs 3600
+   kirocrew cron add '<name>' '<prompt>' --cron '<cron-expression>' --timezone '<timezone>' --model '<model>' --approval-mode auto --silent --hide-in-chat --no-persistent-session --no-minimal-context --timeout-secs 3600
    ```
 
    Use the CLI rather than the `cron_add` tool so the job is not owned by the setup chat. `--no-persistent-session` starts each run with fresh context; `--no-minimal-context` keeps skills available. `--silent` suppresses automatic result delivery and failure alerts, and `--hide-in-chat` keeps scheduled jobs out of the chat list. Each run has a one-hour timeout.

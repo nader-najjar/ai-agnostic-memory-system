@@ -15,15 +15,26 @@ Local conversations from ChatGPT Work, Codex desktop, or Codex CLI. Cloud-based 
 ## Default Source Locations
 
 ```json
-["~/.codex/sessions", "~/.codex/archived_sessions"]
+[
+  {"type": "folder", "path": "~/.codex/sessions"},
+  {"type": "folder", "path": "~/.codex/archived_sessions"}
+]
 ```
 
 ## Source Items
 
-`rollout-*.jsonl` and `rollout-*.jsonl.zst` files under any configured path, including subdirectories, with a `session_meta` record. A file counts as a source item unless its `session_meta` record has either:
+`rollout-*.jsonl` and `rollout-*.jsonl.zst` files under any configured folder, including subdirectories, with a `session_meta` record. A file counts as a source item unless its `session_meta` record has either:
 
 - A `payload.source` object containing `subagent` or `internal`.
 - A `payload.thread_source` of `guardian_review`, `subagent`, `memory_consolidation`, `automation`, or `onboarding_checklist`.
+
+## Discovery
+
+Search each configured folder for files matching **Source Items**.
+
+## Source Modification Time
+
+The source file’s filesystem modification time.
 
 ## UID
 

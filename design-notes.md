@@ -112,16 +112,16 @@ one failure mode ive seen a lot - after compaction, lots of always rules get ign
 
 ai learning my writing style - would be super useful if it learned from stuff i actually write, drafts i approve, and edits i make to its writing. not just copying words but how much i explain, what i leave implicit, how direct i am etc. notes vs messages vs formal writing are different. maybe this is just another facet of memory rather than a whole separate system. figure out a workflow where it gets better from my corrections instead of me having to explain my style every time. this is honestly a big investment initially will be hard but once done it could literally save hours and hours every week
 
-Add Claude Cowork local-chat source type
+human health updates on how the system is doing - make this part of recall itself. every time i recall it should do a quick read only health check. if all good say nothing, if something is broken or stuck tell me. no extra skill or thing i have to remember to run. troubleshoot still handles fixes
 
-human health updates on how the system is doing
+## stretch goals
 
 final instruction for use blurb. TO "INGEST" A NON CHAT SOURCE (ie make your ai learn it permanently) all you need to do is open a chat and give it that information. same exact way you would a human. once chat reads it and learns it plus says what it learned, that will automatically be saved and digested by virtue of this system. no hacky per source types. from end user perspective, treat ai as competent human. if ever give something trust it will remember it. at worst, we may need a specific skill for telling a chat "hey deep extract everything about this source, form connections, etc and lay everything out in chat in great detail so that cos can effectively ingest this info later without itself going to source" - but nothing more than that
 
-## p4
-
 for anything and everything want to add to this in the future - must strictly justify from a concrete use case why it would be needed and why it cannot be done in current
 
+
+Add Claude Cowork local-chat source type
 
 ## core
 

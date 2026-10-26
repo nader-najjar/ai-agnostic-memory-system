@@ -127,7 +127,11 @@ to summarize
 * we can put ingestion on cloud or on local. will avoid cloud to not blow up complexity. that is why we have the setup, backfill, troubleshoot, discover, and memorize skills.
 * for ingestion sources we accept that since we dont work at open ai we're limited to what we can scrape here. for local chats, we have the full jsonl file with all content of chat. for cloud chats we are limited to what is exposed. nothing we can do
 * for recall we CAN make sure that is seamless via github repo private which then any chat, local or cloud, codex or work or regular, can run recall on
-* so 1 line: we do local workers and mandate a github connector connection and accept cloud ingestion sources will be best-effort, but other than that the system is perfect and as robust as it can be
+* so:
+    * do local workers to avoid cloud blow up complexity
+    * mandate a github connector connection + recall skill as the "medium" (since dont work at open ai and cant integrate backend chatgpt app with this)
+    * accept cloud chats as ingestion sources will be best-effort again bc do not work at open ai so are relying on what is exposed
+    * but other than that the system is perfect and as robust as it can be
 
 
 * `list_threads` + `list_archived_threads` are conceptually like the two source folders. entries have stable IDs and `updatedAt`; `read_thread` is the file read. tools return JSON we could save as a snapshot, not original JSONL

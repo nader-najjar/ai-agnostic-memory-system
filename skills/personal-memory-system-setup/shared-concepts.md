@@ -1,5 +1,7 @@
 # Shared Concepts
 
+This system turns AI conversations into durable, source-backed memory. Setup configures sources, standing instructions, schedules, and optional backups. Discovery saves conversation snapshots and queues them; backfill supplies older conversations; memorization processes snapshots into topic pages; recall loads those pages and checks system health. Captures preserve the evidence. A shared lock coordinates writers, Git preserves committed state, troubleshooting recovers abandoned runs, and backups preserve the repository outside the memory folder.
+
 ## Memory Configuration
 
 The memory folder’s configuration is `<memory-folder>/config.json`:

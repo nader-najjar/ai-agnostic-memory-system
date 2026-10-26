@@ -135,10 +135,12 @@ to summarize
 
 
 todo
-* somehow make sure all mediums have 1) the gh connector and 2) the recall skill
-* best effort ingest ALL source types - regular chats, Work cloud, Work local, codex cloud, codex local, codex cli
+* best effort ingest ALL source types / mediums - regular chats, Work cloud, Work local, codex cloud, codex local, codex cli, !!! DOTS TOO !!!
 * make the auto sync bridge from local git to private gh and integrate that setup into the setup skill
+* somehow make sure all mediums have 1) the gh connector and 2) the recall skill
 
+
+deep dive
 * `list_threads` + `list_archived_threads` are conceptually like the two source folders. entries have stable IDs and `updatedAt`; `read_thread` is the file read. tools return JSON we could save as a snapshot, not original JSONL
 * no time filter on either listing, so filter returned timestamps ourselves. archived listing has pagination. active listing only exposes `limit`, no cursor, so still need to establish exhaustive discovery. pinned chats come in a separate array
 * two cloud Work tests each appeared as a `chatgpt` conversation and a `codex` thread on host `durable`, with matching messages and times but different IDs. likely conversation + execution, but no explicit ID mapping was returned. archiving one moved its ChatGPT entry into the archived list while its Codex entry remained active

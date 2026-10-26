@@ -76,7 +76,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 1. If `backup_file` is `null`, skip this section. Otherwise ask: “How often should the backup run? Recommended: every hour.” Wait for the owner's answer and confirm the interval.
 2. Fill in [scripts/backup.plist](scripts/backup.plist) with the job label, absolute paths, and approved interval; install it in `~/Library/LaunchAgents/` and load it with `launchctl`.
-3. Trigger the job once through the scheduler and wait for it to finish. Confirm a successful exit and verify the destination bundle with `git -C "<memory-folder>" bundle verify "<backup_file>"`. Report the backup path, schedule, and job identifier. If registration or the first run fails, report the failure instead of claiming the backup is working.
+3. Trigger the job once through the scheduler and wait for it to finish. Confirm a successful exit and verify the destination bundle with `git -C "<memory-folder>" bundle verify "<backup_file>"`. Report the backup path, schedule, and job identifier. If registration or the first run fails, report the failure instead of claiming the backup is working. If the backup fails with `Operation not permitted`, ask the owner to check **System Settings → Privacy & Security → Full Disk Access** for `/bin/bash`. Explain that this grants access to scripts run through Bash; let the owner enable it if they choose, then retry the scheduled backup and verify it.
 
 ## Schedule Discovery, Memorize, and Troubleshoot
 

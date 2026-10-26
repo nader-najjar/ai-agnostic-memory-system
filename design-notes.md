@@ -108,11 +108,12 @@ backfill capability - when first setting this up there is already a ton of usefu
 
 one failure mode ive seen a lot - after compaction, lots of always rules get ignored fully. idea: initially read full instructions, but also have a small table of contents router in persistent instructions saying what section applies to what kind of work. whenever convo enters that domain / phase (code, review, formal pr, merge, cleanup etc), reread the actual section unless already read in current uncompacted context. summary saying it was read doesnt count. dont need to reread every msg or keep a second condensed copy of all the rules in sync
 
+DONE human health updates on how the system is doing - make this part of recall itself. every time i recall it should do a quick read only health check. if all good say nothing, if something is broken or stuck tell me. no extra skill or thing i have to remember to run. troubleshoot still handles fixes
+
 ## p3
 
 ai learning my writing style - would be super useful if it learned from stuff i actually write, drafts i approve, and edits i make to its writing. not just copying words but how much i explain, what i leave implicit, how direct i am etc. notes vs messages vs formal writing are different. maybe this is just another facet of memory rather than a whole separate system. figure out a workflow where it gets better from my corrections instead of me having to explain my style every time. this is honestly a big investment initially will be hard but once done it could literally save hours and hours every week
-
-human health updates on how the system is doing - make this part of recall itself. every time i recall it should do a quick read only health check. if all good say nothing, if something is broken or stuck tell me. no extra skill or thing i have to remember to run. troubleshoot still handles fixes
+* this applies to much more than just writing too. should make a general style learning framework. things like how to format notion documents, how i flow pptx presentations, how i edit videos and images, how i style code, and so on
 
 ## stretch goals
 

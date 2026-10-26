@@ -139,6 +139,7 @@ todo
 * make the auto sync bridge from local git to private gh and integrate that setup into the setup skill
 * somehow make sure all mediums have 1) the gh connector and 2) the recall skill
 * make a good design diagram showing every single thing this does so is easy to reason about and discuss and all that
+* setup should essentially stay same as p2 but just have 1) a few extra source options for user to select, and 2) an option for where they want the mem to live - "cloud" or local, with emphasis that if local then only gpt local and crew local will be able to use it via recall skill, and if cloud then all mediums will be able to access it as long as gh connector and recall skill. obviously local vs cloud storage will result in 2 different forms of many skills. will need to think about how to DRY. possibly put <path-to-memory> in config json and that is the ref skills use instead of <memory-folder>
 
 
 deep dive

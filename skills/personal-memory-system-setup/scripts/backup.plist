@@ -6,6 +6,7 @@
     <string>__LABEL__</string>
     <key>ProgramArguments</key>
     <array>
+        <string>/bin/bash</string>
         <string>__SCRIPT_PATH__</string>
         <string>__MEMORY_FOLDER__</string>
         <string>__BACKUP_FILE__</string>

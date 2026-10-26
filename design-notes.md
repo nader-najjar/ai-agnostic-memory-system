@@ -123,6 +123,12 @@ for the second one, easiest solution is to put the existing git repo on private 
 
 so the only remaining problem is source ingestion of cloud chats
 
+to summarize
+* we can put ingestion on cloud or on local. will avoid cloud to not blow up complexity. that is why we have the setup, backfill, troubleshoot, discover, and memorize skills.
+* for ingestion sources we accept that since we dont work at open ai we're limited to what we can scrape here. for local chats, we have the full jsonl file with all content of chat. for cloud chats we are limited to what is exposed. nothing we can do
+* for recall we CAN make sure that is seamless via github repo private which then any chat, local or cloud, codex or work or regular, can run recall on
+* so 1 line: we do local workers and mandate a github connector connection and accept cloud ingestion sources will be best-effort, but other than that the system is perfect and as robust as it can be
+
 
 * `list_threads` + `list_archived_threads` are conceptually like the two source folders. entries have stable IDs and `updatedAt`; `read_thread` is the file read. tools return JSON we could save as a snapshot, not original JSONL
 * no time filter on either listing, so filter returned timestamps ourselves. archived listing has pagination. active listing only exposes `limit`, no cursor, so still need to establish exhaustive discovery. pinned chats come in a separate array

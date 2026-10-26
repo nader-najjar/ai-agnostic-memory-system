@@ -124,7 +124,33 @@ final instruction for use blurb. TO "INGEST" A NON CHAT SOURCE (ie make your ai 
 for anything and everything want to add to this in the future - must strictly justify from a concrete use case why it would be needed and why it cannot be done in current
 
 
-Add Claude Cowork local-chat source type
+### more chat sources
+
+want the same invisible memory flow across all the places i actually chat, but dont build a bunch of workarounds just to claim coverage. local works today. leave cloud / regular chat support here until we can reliably discover the chats and capture their contents including tool results
+
+coverage matrix below is ingestion support, not where the model runs. "defined" means we have a source definition, not that every app variant has been tested end to end. claude equivalents are things to investigate, not assumed identical products
+
+| Surface | OpenAI coverage / findings | Claude equivalent / coverage |
+| --- | --- | --- |
+| Regular chat | ChatGPT Chat: listed as `chatgpt`; tested new and older chats return user text but assistant-body placeholders. blocked | Claude Chat: not supported; discovery and transcript access unverified |
+| Work local | ChatGPT Work local: defined in `chatgpt-local`; local JSONL ingestion tested | Cowork local: stretch goal; need paid access to verify actual transcript location and contents |
+| Work cloud | ChatGPT Work cloud: tested; `chatgpt` and durable `codex` entries for the same exchange. neither read gave a complete raw transcript | Cloud Cowork equivalent: first establish whether an applicable mode exists, then investigate capture |
+| Coding desktop local | Codex desktop local: defined in `chatgpt-local` | Claude desktop Code local: defined in `claude-code-local`; not tested here |
+| Coding desktop cloud | Codex desktop cloud: not independently tested; dont assume the ChatGPT Work cloud result covers it | Claude desktop Code cloud: outside current source definition; transcript access unverified |
+| Coding CLI local | Codex CLI: defined in `chatgpt-local` | Claude Code CLI: defined in `claude-code-local`; not tested here |
+| Kiro Crew | Local chats only for our scope; defined in `kiro-crew-local` | — |
+
+what we found testing ChatGPT desktop on oct 25–26 2026:
+
+* `list_threads` + `list_archived_threads` are conceptually like the two source folders. entries have stable IDs and `updatedAt`; `read_thread` is the file read. tools return JSON we could save as a snapshot, not original JSONL
+* no time filter on either listing, so filter returned timestamps ourselves. archived listing has pagination. active listing only exposes `limit`, no cursor, so still need to establish exhaustive discovery. pinned chats come in a separate array
+* two cloud Work tests each appeared as a `chatgpt` conversation and a `codex` thread on host `durable`, with matching messages and times but different IDs. likely conversation + execution, but no explicit ID mapping was returned. archiving one moved its ChatGPT entry into the archived list while its Codex entry remained active
+* taking only `chatgpt` entries would avoid those duplicates, but `kind` doesnt distinguish regular Chat from Work. local Work appears as `codex`, so this also isnt a replacement for local capture
+* regular Chat returned `::chatgpt-content-reference{... source_message_id="..."}` instead of assistant text. reproduced with a brand new chat too. no exposed resolver found. same issue reported on multiple platforms: [openai/codex #50329](https://github.com/openai/codex/issues/50329) (open when checked)
+* richer Work test used web research + Python. ChatGPT ID returned prompt and final answer, omitted tool activity, and replaced citations with references. Codex ID returned commentary, commands + outputs, web calls and final answer, but omitted web result bodies. so readable final answers alone dont prove complete capture
+* reader supports turn pagination and an output length limit. raising the limit recovered truncated command outputs in a test; doesnt prove arbitrary long messages are recoverable. likely local cache locations checked had no transcript for the first cloud test
+
+next time: verify complete discovery and capture before adding a source. keep local flow as is for now. dont silently ingest placeholders / partial transcripts or assume all Work modes are covered from these tests
 
 ## core
 

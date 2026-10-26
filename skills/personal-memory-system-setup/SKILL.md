@@ -62,7 +62,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 ## Initialize Git
 
 1. Initialize the new memory folder as a Git repository.
-2. Create `.gitignore`, and add `.lock/` and `/.tmp/` to it.
+2. Create `.gitignore`, and add `.lock/`, `/.tmp/`, and `.DS_Store` to it.
 3. Run `git add .` from `<memory-folder>` and commit the initial state.
 4. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.
 
@@ -90,7 +90,7 @@ Suggested starting models and reasoning effort for the scheduled jobs:
 
 On a standard $20/month plan, consider lighter models or lower reasoning effort to conserve usage, especially for discovery and troubleshooting; prioritize memorization quality. Empirically, Luna and Haiku use barely any usage even with lots of chats.
 
-1. Ask: “When should discovery, memorization, and troubleshooting run? Recommended: troubleshooting hourly at minute :00, discovery hourly at minute :10, and memorization every hour at minutes :20 and :45, in your local timezone.” Explain that this gives discovery 10 minutes before memorization starts, and each memorization run 25 minutes before the next discovery or memorization run. Wait for the owner's answer and confirm all three schedules and the timezone. Explain that troubleshooting may stop a run holding the lock for over two hours and discard its uncommitted changes so processing can retry.
+1. Ask: “When should discovery, memorization, and troubleshooting run? Recommended: troubleshooting hourly at minute :00, discovery hourly at minute :10, and memorization every hour at minutes :20 and :45, in your local timezone.” Explain that this gives discovery 10 minutes before memorization starts, and each memorization run 25 minutes before the next discovery or memorization run. Wait for the owner's answer and confirm all three schedules and the timezone. Explain that troubleshooting may stop a run holding the lock for over one hour and discard its uncommitted changes so processing can retry.
 2. Show the model recommendations above for the current AI tool. Ask which model and reasoning effort to use for each of discovery, memorization, and troubleshooting. Wait for the owner's answer and confirm all three choices.
 3. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules, timezone, models, and reasoning effort for these jobs:
    - **Personal Memory Discover:** `$personal-memory-system-discover "<memory-folder>"`

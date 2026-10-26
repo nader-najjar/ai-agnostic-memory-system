@@ -59,7 +59,7 @@ Items follow the same format as the queue and identify saved snapshots awaiting 
 
 ## Capture
 
-The filename is `<source-type>:<UID>--<source-modified-time>--<sha256>.jsonl`, where `<source-type>` comes from the source definition’s **Identifier** section, `<UID>` follows its **UID** section, `<source-modified-time>` is the source file’s modification time observed when selecting it, expressed in UTC in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal SHA-256 hash of the capture’s complete uncompressed bytes. For the same conversation, equal hashes identify unchanged content; modification time does not determine whether the content changed.
+The filename is `<source-type>--<UID>--<source-modified-time>--<sha256>.jsonl`, where `<source-type>` comes from the source definition’s **Identifier** section, `<UID>` follows its **UID** section, `<source-modified-time>` is the source file’s modification time observed when selecting it, expressed in UTC in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal SHA-256 hash of the capture’s complete uncompressed bytes. For the same conversation, equal hashes identify unchanged content; modification time does not determine whether the content changed.
 
 ## Memory Pages
 

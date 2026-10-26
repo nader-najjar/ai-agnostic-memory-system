@@ -110,37 +110,19 @@ one failure mode ive seen a lot - after compaction, lots of always rules get ign
 
 DONE human health updates on how the system is doing - make this part of recall itself. every time i recall it should do a quick read only health check. if all good say nothing, if something is broken or stuck tell me. no extra skill or thing i have to remember to run. troubleshoot still handles fixes
 
-claude desktop/code schedule setup instructions
 
-## p3
+### p3
 
-ai learning my writing style - would be super useful if it learned from stuff i actually write, drafts i approve, and edits i make to its writing. not just copying words but how much i explain, what i leave implicit, how direct i am etc. notes vs messages vs formal writing are different. maybe this is just another facet of memory rather than a whole separate system. figure out a workflow where it gets better from my corrections instead of me having to explain my style every time. this is honestly a big investment initially will be hard but once done it could literally save hours and hours every week
-* this applies to much more than just writing too. should make a general style learning framework. things like how to format notion documents, how i flow pptx presentations, how i edit videos and images, how i style code, and so on
+there are 2 aspects - where the worker runs, and where recall is available to end user. if was working at open ai, would be simple, just queue all chats (cloud, local, codex, work, anything), in sqs, lambda runs memorize, put mem in s3, integrate the s3 with the chatgpt desktop app associated to user. then no hacky git, local troubleshooting or local machine dependency, etc. but we are external so we have to do some hacky things.
 
-## stretch goals
+we can accept that the worker jobs will always be dependent on local computer. you COULD put it on aws, but that is overly complex for a hacky solution which is what this will always be. so worker (setup, discover, backfill, memorize, troubleshoot) will yes live on local.
 
-final instruction for use blurb. TO "INGEST" A NON CHAT SOURCE (ie make your ai learn it permanently) all you need to do is open a chat and give it that information. same exact way you would a human. once chat reads it and learns it plus says what it learned, that will automatically be saved and digested by virtue of this system. no hacky per source types. from end user perspective, treat ai as competent human. if ever give something trust it will remember it. at worst, we may need a specific skill for telling a chat "hey deep extract everything about this source, form connections, etc and lay everything out in chat in great detail so that cos can effectively ingest this info later without itself going to source" - but nothing more than that
+then the only 2 questions from there are 1) how do we legitimately seamlessly support all sources for ingestion (right now it is just local chat jsonl files, not cloud chats too), and 2) how do we seamlessly support all sources for recall (again right now only chats with access to my pc can fetch recall).
 
-for anything and everything want to add to this in the future - must strictly justify from a concrete use case why it would be needed and why it cannot be done in current
+for the second one, easiest solution is to put the existing git repo on private github host. that is super ez, literally one step since we already use git anyways. way simpler than dealing with s3. then with that, since chatgpt has the github connector which is logged in to personal account, any medium can access the memory recall - even regular chatgpt chats (non-work non-codex).
 
+so the only remaining problem is source ingestion of cloud chats
 
-### more chat sources
-
-want the same invisible memory flow across all the places i actually chat, but dont build a bunch of workarounds just to claim coverage. local works today. leave cloud / regular chat support here until we can reliably discover the chats and capture their contents including tool results
-
-coverage matrix below is ingestion support, not where the model runs. "defined" means we have a source definition, not that every app variant has been tested end to end. claude equivalents are things to investigate, not assumed identical products
-
-| Surface | OpenAI coverage / findings | Claude equivalent / coverage |
-| --- | --- | --- |
-| Regular chat | ChatGPT Chat: listed as `chatgpt`; tested new and older chats return user text but assistant-body placeholders. blocked | Claude Chat: not supported; discovery and transcript access unverified |
-| Work local | ChatGPT Work local: defined in `chatgpt-local`; local JSONL ingestion tested | Cowork local: stretch goal; need paid access to verify actual transcript location and contents |
-| Work cloud | ChatGPT Work cloud: tested; `chatgpt` and durable `codex` entries for the same exchange. neither read gave a complete raw transcript | Cloud Cowork equivalent: first establish whether an applicable mode exists, then investigate capture |
-| Coding desktop local | Codex desktop local: defined in `chatgpt-local` | Claude desktop Code local: defined in `claude-code-local`; not tested here |
-| Coding desktop cloud | Codex desktop cloud: not independently tested; dont assume the ChatGPT Work cloud result covers it | Claude desktop Code cloud: outside current source definition; transcript access unverified |
-| Coding CLI local | Codex CLI: defined in `chatgpt-local` | Claude Code CLI: defined in `claude-code-local`; not tested here |
-| Kiro Crew | Local chats only for our scope; defined in `kiro-crew-local` | — |
-
-what we found testing ChatGPT desktop on oct 25–26 2026:
 
 * `list_threads` + `list_archived_threads` are conceptually like the two source folders. entries have stable IDs and `updatedAt`; `read_thread` is the file read. tools return JSON we could save as a snapshot, not original JSONL
 * no time filter on either listing, so filter returned timestamps ourselves. archived listing has pagination. active listing only exposes `limit`, no cursor, so still need to establish exhaustive discovery. pinned chats come in a separate array
@@ -150,7 +132,18 @@ what we found testing ChatGPT desktop on oct 25–26 2026:
 * richer Work test used web research + Python. ChatGPT ID returned prompt and final answer, omitted tool activity, and replaced citations with references. Codex ID returned commentary, commands + outputs, web calls and final answer, but omitted web result bodies. so readable final answers alone dont prove complete capture
 * reader supports turn pagination and an output length limit. raising the limit recovered truncated command outputs in a test; doesnt prove arbitrary long messages are recoverable. likely local cache locations checked had no transcript for the first cloud test
 
-next time: verify complete discovery and capture before adding a source. keep local flow as is for now. dont silently ingest placeholders / partial transcripts or assume all Work modes are covered from these tests
+## p4
+
+ai learning my writing style - would be super useful if it learned from stuff i actually write, drafts i approve, and edits i make to its writing. not just copying words but how much i explain, what i leave implicit, how direct i am etc. notes vs messages vs formal writing are different. maybe this is just another facet of memory rather than a whole separate system. figure out a workflow where it gets better from my corrections instead of me having to explain my style every time. this is honestly a big investment initially will be hard but once done it could literally save hours and hours every week
+* this applies to much more than just writing too. should make a general style learning framework. things like how to format notion documents, how i flow pptx presentations, how i edit videos and images, how i style code, and so on
+
+## stretch goals
+
+claude equivalents of everything
+
+final instruction for use blurb. TO "INGEST" A NON CHAT SOURCE (ie make your ai learn it permanently) all you need to do is open a chat and give it that information. same exact way you would a human. once chat reads it and learns it plus says what it learned, that will automatically be saved and digested by virtue of this system. no hacky per source types. from end user perspective, treat ai as competent human. if ever give something trust it will remember it. at worst, we may need a specific skill for telling a chat "hey deep extract everything about this source, form connections, etc and lay everything out in chat in great detail so that cos can effectively ingest this info later without itself going to source" - but nothing more than that
+
+for anything and everything want to add to this in the future - must strictly justify from a concrete use case why it would be needed and why it cannot be done in current
 
 ## core
 

@@ -138,6 +138,7 @@ todo
 * best effort ingest ALL source types / mediums - regular chats, Work cloud, Work local, codex cloud, codex local, codex cli, !!! DOTS TOO !!!
 * make the auto sync bridge from local git to private gh and integrate that setup into the setup skill
 * somehow make sure all mediums have 1) the gh connector and 2) the recall skill
+* make a good design diagram showing every single thing this does so is easy to reason about and discuss and all that
 
 
 deep dive

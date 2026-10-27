@@ -22,11 +22,11 @@ Placeholder only. Replace it with an approved absolute local folder path before 
 
 ## Source Items
 
-Immutable `.jsonl` snapshots under any configured folder, including subdirectories, one new local file for each exported conversation version. Each snapshot contains the full available conversation and keeps its original conversation UID in its metadata; its discovery UID identifies the individual snapshot file.
+Immutable `.jsonl` snapshots under any configured folder, including subdirectories, one new local file for each exported conversation version. Each snapshot contains the full available conversation and keeps its original conversation UID in its metadata.
 
 ## UID
 
-The source filename without `.jsonl`.
+The original conversation UID (`<kind>-<id>`) from the snapshot’s metadata record.
 
 ## Capture
 

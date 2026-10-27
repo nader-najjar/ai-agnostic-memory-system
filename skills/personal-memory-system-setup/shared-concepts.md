@@ -25,6 +25,10 @@ Each selected source has one entry with its source type identifier and a nonempt
 
 `github_repository` is the private GitHub repository URL used for publishing only committed `memory/`, `always.md`, and `remote-recall.md` with separate history, or `null` when publishing is disabled. This is the authoritative destination; setup configures `origin` in the separate `.tmp/github-publish` checkout from it. The main memory repository has no publishing remote; captures, operational files, and the full local Git history remain in the local repository and its backup.
 
+## Source Dump
+
+`<memory-folder>/.source-dump/<source-type>/` is where that source’s export or sync job puts conversation files for discover to read.
+
 ## Source Type Definitions
 
 Source type definitions are the Markdown files in `<memory-folder>/operations/shared/source-types/`. Match each configured source's `identifier` to a definition's **Identifier** section to locate its definition.

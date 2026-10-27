@@ -14,10 +14,6 @@ description: Begin personal memory setup by asking which supported AI tools' con
 2. Ask: “Which AI tools' conversations do you want this system to automatically learn from? You may skip source selection for now.” Show the available sources and allow any number of selections. Use an interactive question tool if it supports multiple selections; otherwise ask in chat.
 3. Wait for the owner's answer and confirm the selected sources.
 
-## Approve and Configure Source Locations
-
-TODO: Implement source onboarding, approval, folder population, and access verification in the next change. Until then, defer configuring selected sources and leave the source array empty; do not save placeholder paths.
-
 ## Create the Memory Folder
 
 1. Ask: “Where would you like this system to store your personal memory? Default: `~/Desktop/personal-memory-system`.”
@@ -25,6 +21,7 @@ TODO: Implement source onboarding, approval, folder population, and access verif
 3. Resolve the approved storage path and create the folder with `mkdir` without `-p`. Fail and stop if anything already exists at that path, including an empty folder, file, or symlink. Never reuse or overwrite it.
 4. This folder name, going forward in this skill, is `<memory-folder>`.
 5. Create `captures/`, `memory/`, and `operations/queue-snapshots/` under `<memory-folder>`. Add an empty `.gitkeep` file in each so Git preserves the folders during backup and recovery.
+6. Create `.source-dump/` under `<memory-folder>` for source input staging as defined in [Source Dump](shared-concepts.md#source-dump). Do not add a `.gitkeep` file there.
 
 ## Choose Backup Folder
 
@@ -39,7 +36,7 @@ TODO: Implement source onboarding, approval, folder population, and access verif
 
 ## Save Configuration
 
-1. Create `<memory-folder>/config.json` using the [Memory Configuration](shared-concepts.md#memory-configuration) definition. Add each approved source with its recorded locations and settings into the array and set `backup_file` and `github_repository` from their choices. Tell the owner where it was saved and show it inline.
+1. Create `<memory-folder>/config.json` using the [Memory Configuration](shared-concepts.md#memory-configuration) definition. Initialize `sources` as an empty array; source onboarding below adds verified sources. Set `backup_file` and `github_repository` from their choices. Tell the owner where it was saved and show it inline.
 
 ## Install Recall
 
@@ -74,7 +71,7 @@ TODO: Implement source onboarding, approval, folder population, and access verif
 ## Initialize Git
 
 1. Initialize the new memory folder as a Git repository with `git init -b main`.
-2. Create `.gitignore`, and add `.lock/`, `/.tmp/`, and `.DS_Store` to it.
+2. Create `.gitignore`, and add `.lock/`, `/.tmp/`, `/.source-dump/`, and `.DS_Store` to it.
 3. Run `git add .` from `<memory-folder>` and commit the initial state.
 4. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.
 
@@ -82,11 +79,10 @@ TODO: Implement source onboarding, approval, folder population, and access verif
 
 1. If `github_repository` is `null`, skip this section. Otherwise create a separate repository with `git init -b main "<memory-folder>/.tmp/github-publish"` and add its `origin` remote using `github_repository` from `config.json`. The destination must be the empty private repository verified above.
 
-## Backfill Existing Conversations
+## Onboard Selected Sources
 
-1. Search each source’s configured local folders for files matching its **Source Items**, including its subfolder rules, and use their filesystem modification times. Summarize the observed conversation count and available date range for each source, noting any listing limits. Recommend backfilling all available history.
-2. Ask whether the owner wants to backfill the recommended sources and date range, choose different ones, or skip backfill. Wait for their answer.
-3. If they choose backfill, run `$personal-memory-system-backfill` with `<memory-folder>`, the selected sources, and date range. Explain that the snapshots will be memorized in the background as normal discovery leaves room.
+1. If the owner skipped source selection, skip this section. Otherwise run `$personal-memory-system-onboard-source` once for each selected source, supplying `<memory-folder>` and that source. Let that skill handle source approval, preparation, verification, configuration, and backfill approval and execution.
+2. If backfill was approved, explain that the snapshots will be memorized in the background as normal discovery leaves room.
 
 ## macOS Permissions for Scheduled Scripts
 
@@ -112,7 +108,7 @@ If either scheduled backup or GitHub sync fails with `Operation not permitted`, 
 
 ## Schedule Discovery, Memorize, and Troubleshoot
 
-Suggested starting models and reasoning effort for the scheduled jobs:
+Suggested starting models and reasoning effort for the scheduled jobs (Kiro Crew supports model selection only; omit reasoning effort):
 
 | Job | OpenAI | Claude |
 | --- | --- | --- |
@@ -123,8 +119,8 @@ Suggested starting models and reasoning effort for the scheduled jobs:
 On a standard $20/month plan, consider lighter models or lower reasoning effort to conserve usage, especially for discovery and troubleshooting; prioritize memorization quality. Empirically, Luna and Haiku use barely any usage even with lots of chats.
 
 1. Ask: “When should discovery, memorization, and troubleshooting run? Recommended: troubleshooting hourly at minute :00, discovery hourly at minute :10, and memorization every hour at minutes :20 and :45, in your local timezone.” Explain that this gives discovery 10 minutes before memorization starts, and each memorization run 25 minutes before the next discovery or memorization run. Wait for the owner's answer and confirm all three schedules and the timezone. Explain that troubleshooting may stop a run holding the lock for over one hour and discard its uncommitted changes so processing can retry.
-2. Show the model recommendations above for the current AI tool. Ask which model and reasoning effort to use for each of discovery, memorization, and troubleshooting. Wait for the owner's answer and confirm all three choices.
-3. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules, timezone, models, and reasoning effort for these jobs:
+2. Show the model recommendations above for the current AI tool. Ask which model and, where supported, reasoning effort to use for each of discovery, memorization, and troubleshooting. Wait for the owner's answer and confirm all three choices.
+3. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules, timezone, models, reasoning effort where supported, and local execution for these jobs:
    - **Personal Memory Discover:** `$personal-memory-system-discover "<memory-folder>"`
    - **Personal Memory Memorize:** `$personal-memory-system-memorize "<memory-folder>"`
    - **Personal Memory Troubleshoot:** `$personal-memory-system-troubleshoot "<memory-folder>"`

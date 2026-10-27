@@ -15,11 +15,10 @@ Local conversations from ChatGPT Work, Codex desktop, or Codex CLI. Cloud-based 
 ## Default Source Locations
 
 ```json
-[
-  {"type": "folder", "path": "~/.codex/sessions"},
-  {"type": "folder", "path": "~/.codex/archived_sessions"}
-]
+[{"type": "folder", "path": "<chatgpt-local-source-folder>"}]
 ```
+
+Placeholder only. Replace it with an approved absolute local folder path before configuring this source. Folder population is handled separately from discovery.
 
 ## Source Items
 
@@ -27,14 +26,6 @@ Local conversations from ChatGPT Work, Codex desktop, or Codex CLI. Cloud-based 
 
 - A `payload.source` object containing `subagent` or `internal`.
 - A `payload.thread_source` of `guardian_review`, `subagent`, `memory_consolidation`, `automation`, or `onboarding_checklist`.
-
-## Discovery
-
-Search each configured folder for files matching **Source Items**.
-
-## Source Modification Time
-
-The source file’s filesystem modification time.
 
 ## UID
 

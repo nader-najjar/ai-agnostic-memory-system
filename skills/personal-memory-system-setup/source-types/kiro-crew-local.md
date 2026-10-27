@@ -15,22 +15,16 @@ Conversations from the Kiro Crew dashboard.
 ## Default Source Locations
 
 ```json
-[{"type": "folder", "path": "~/.kiro/crew/sessions"}]
+[{"type": "folder", "path": "<kiro-crew-local-source-folder>"}]
 ```
+
+Placeholder only. Replace it with an approved absolute local folder path before configuring this source. Folder population is handled separately from discovery.
 
 ## Source Items
 
 `dashboard_chat-*.jsonl` files directly under any configured folder.
 
 Exclude chats whose first record (metadata) has `memory_mode` set to `incognito` or `temporary`, either at the top level or under `execution_context`.
-
-## Discovery
-
-Search each configured folder for files matching **Source Items**.
-
-## Source Modification Time
-
-The source file’s filesystem modification time.
 
 ## UID
 

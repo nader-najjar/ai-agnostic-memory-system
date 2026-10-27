@@ -10,15 +10,13 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Choose Sources
 
-1. Read every Markdown file directly in [source-types/](source-types/). Each file defines one available source type. Read its **Identifier**, **Display Name**, and any **Worker Requirements** sections. Offer only sources whose worker requirements are met.
-2. Ask: “Which AI tools' conversations do you want this system to automatically learn from?” Show the available tools and allow one or more selections. Use an interactive question tool if it supports multiple selections; otherwise ask in chat.
-3. Wait for the owner's answer and confirm the selected tools.
+1. Read every Markdown file directly in [source-types/](source-types/). Each file defines one available source type. Read its **Identifier** and **Display Name**. Offer all supported sources.
+2. Ask: “Which AI tools' conversations do you want this system to automatically learn from? You may skip source selection for now.” Show the available sources and allow any number of selections. Use an interactive question tool if it supports multiple selections; otherwise ask in chat.
+3. Wait for the owner's answer and confirm the selected sources.
 
-## Approve Source Locations
+## Approve and Configure Source Locations
 
-1. For each selected source, show its default locations and explain any capture limitations. Resolve folder paths to absolute paths; show MCP tool names and arguments. Ask: “May I read conversations from these locations, or should I use different locations?”
-2. Wait for the owner's answer and confirm the approved locations.
-3. Follow the source definition to verify access and report whether matching conversations were found. For MCP sources, verify listing and reading access from the worker that will run discovery.
+TODO: Implement source onboarding, approval, folder population, and access verification in the next change. Until then, defer configuring selected sources and leave the source array empty; do not save placeholder paths.
 
 ## Create the Memory Folder
 
@@ -41,7 +39,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Save Configuration
 
-1. Create `<memory-folder>/config.json` using the [Memory Configuration](shared-concepts.md#memory-configuration) definition. Add each source the owner approved into the array and set `backup_file` and `github_repository` from their choices. Tell the owner where it was saved and show it inline.
+1. Create `<memory-folder>/config.json` using the [Memory Configuration](shared-concepts.md#memory-configuration) definition. Add each approved source with its recorded locations and settings into the array and set `backup_file` and `github_repository` from their choices. Tell the owner where it was saved and show it inline.
 
 ## Install Recall
 
@@ -86,7 +84,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Backfill Existing Conversations
 
-1. Follow each source's **Discovery** and **Source Modification Time** sections using its configured locations. Summarize the observed conversation count and available date range for each source, noting any listing limits. Recommend backfilling all available history.
+1. Search each source’s configured local folders for files matching its **Source Items**, including its subfolder rules, and use their filesystem modification times. Summarize the observed conversation count and available date range for each source, noting any listing limits. Recommend backfilling all available history.
 2. Ask whether the owner wants to backfill the recommended sources and date range, choose different ones, or skip backfill. Wait for their answer.
 3. If they choose backfill, run `$personal-memory-system-backfill` with `<memory-folder>`, the selected sources, and date range. Explain that the snapshots will be memorized in the background as normal discovery leaves room.
 

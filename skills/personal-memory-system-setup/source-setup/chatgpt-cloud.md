@@ -8,6 +8,10 @@ Confirm the absolute memory folder with the owner. Use the owner’s known timez
 
 Before scheduling, verify active and archived listing, full conversation reads, and local staging access in that chat. If a required capability is unavailable, report the blocker and stop.
 
+## Initial History
+
+Ask: “How much cloud conversation history should we initialize: all available history, since a date, or from now?” Wait for the owner's answer. Set `<initial-history-start>` to `all` or a confirmed ISO 8601 UTC timestamp; for “from now,” use the current time when they choose it. Substitute this fixed value into the saved job prompt, even if no conversations initially qualify. This selects conversations by source `updatedAt`, not individual turns; selected snapshots still contain the full available conversation.
+
 ## Local job - ChatGPT/Codex
 
 Give that chat the [scheduling instructions](../schedulers/codex.md), the absolute memory folder, and the task prompt below, with these job details:
@@ -19,7 +23,7 @@ Give that chat the [scheduling instructions](../schedulers/codex.md), the absolu
 
 Ask it to follow the scheduling instructions to create this job.
 
-> Export cloud conversations directly into `<memory-folder>/.source-dump/chatgpt-cloud/`. Use judgment and the latest set of local snapshots to identify where the previous export left off, using their source `updatedAt` timestamps rather than file modification times. Check around that boundary for missing conversation versions, then select updates through this run’s start time. If no exports exist, include all available history.
+> Export cloud conversations directly into `<memory-folder>/.source-dump/chatgpt-cloud/`. Use judgment and the latest set of local snapshots to identify where the previous export left off, using their source `updatedAt` timestamps rather than file modification times. Check around that boundary for missing conversation versions, then select updates through this run’s start time. If no exports exist, select conversations with source `updatedAt` on or after `<initial-history-start>` through this run’s start time; `all` means no lower bound. Keep this initial value fixed across runs, including while staging remains empty.
 >
 > List active threads, including pinned entries, with the largest supported limit. List archived threads in two separate calls: one with `source: chatgpt`, and one with `hostId: durable`. Follow every returned cursor. Keep `kind: chatgpt` conversations and `kind: codex` threads on host `durable`. Exclude local threads and entries explicitly identified as internal, automation, subagent, or environment-onboarding work, not by title alone. Deduplicate by `<kind>-<id>`; retain different IDs unless the tools explicitly identify the same conversation.
 >
@@ -31,4 +35,4 @@ Ask it to follow the scheduling instructions to create this job.
 
 ## Verify
 
-Run the local job and confirm a snapshot’s original conversation UID, source `updatedAt`, full returned pages, and matching `<kind>-<id>-<updatedAtUTC>.jsonl` filename. Rerun and confirm unchanged conversations create no extra files and existing staged files remain unchanged. Report the job ID and schedule with timezone, any reader failures or history gaps, and use `<memory-folder>/.source-dump/chatgpt-cloud/` as the discovery location.
+Run the local job and confirm only conversations within the selected source `updatedAt` window were exported. If none qualify, confirm no snapshots were created. Otherwise confirm a snapshot’s original conversation UID, source `updatedAt`, full returned pages, and matching `<kind>-<id>-<updatedAtUTC>.jsonl` filename. Rerun and confirm unchanged conversations create no extra files and existing staged files remain unchanged. Report the job ID and schedule with timezone, any reader failures or history gaps, and use `<memory-folder>/.source-dump/chatgpt-cloud/` as the discovery location.

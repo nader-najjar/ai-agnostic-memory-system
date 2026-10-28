@@ -12,14 +12,6 @@ ChatGPT and Codex (cloud)
 
 Best-effort full-conversation JSONL snapshots of regular ChatGPT, ChatGPT Work cloud, and Codex cloud conversations.
 
-## Default Source Locations
-
-```json
-[{"type": "folder", "path": "<chatgpt-cloud-source-folder>"}]
-```
-
-Placeholder only. Replace it with an approved absolute local folder path before configuring this source. Folder population is handled separately from discovery.
-
 ## Source Items
 
 Immutable `.jsonl` snapshots under any configured folder, including subdirectories, one new local file for each exported conversation version. Each snapshot contains the full available conversation and keeps its original conversation UID in its metadata.

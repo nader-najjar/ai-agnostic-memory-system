@@ -21,6 +21,8 @@ description: Memorize the oldest queued conversation snapshot.
 
 ## Memory Extraction
 
+Complete the required extraction for the entire capture or delta in this run; do not voluntarily stop after partial review or defer the remaining work to a later run.
+
 Never modify `<memory-folder>/always.md`; it is owner-managed.
 
 Preserve enough understanding that the owner can leave any chat and start a fresh one without fearing the loss of valuable context or having to explain everything again.

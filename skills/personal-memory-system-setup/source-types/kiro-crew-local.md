@@ -12,14 +12,6 @@ Kiro Crew (local)
 
 Conversations from the Kiro Crew dashboard.
 
-## Default Source Locations
-
-```json
-[{"type": "folder", "path": "<kiro-crew-local-source-folder>"}]
-```
-
-Placeholder only. Replace it with an approved absolute local folder path before configuring this source. Folder population is handled separately from discovery.
-
 ## Source Items
 
 `dashboard_chat-*.jsonl` files directly under any configured folder.

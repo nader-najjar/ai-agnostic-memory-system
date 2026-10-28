@@ -12,14 +12,6 @@ ChatGPT (local)
 
 Local conversations from ChatGPT Work, Codex desktop, or Codex CLI. Cloud-based ChatGPT conversations are outside this tool definition.
 
-## Default Source Locations
-
-```json
-[{"type": "folder", "path": "<chatgpt-local-source-folder>"}]
-```
-
-Placeholder only. Replace it with an approved absolute local folder path before configuring this source. Folder population is handled separately from discovery.
-
 ## Source Items
 
 `rollout-*.jsonl` and `rollout-*.jsonl.zst` files under any configured folder, including subdirectories, with a `session_meta` record. A file counts as a source item unless its `session_meta` record has either:

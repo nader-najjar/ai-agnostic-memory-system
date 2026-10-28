@@ -10,3 +10,5 @@ rsync -rt --include='*/' --include='rollout-*.jsonl' --include='rollout-*.jsonl.
 ```
 
 4. Trigger both jobs and verify successful exits, copied filenames, and preserved modification times. Report the job IDs and interval. Use `<memory-folder>/.source-dump/chatgpt-local/` as the discovery location.
+
+If a macOS scheduled job fails with `Operation not permitted` accessing Desktop, ask the owner to check **System Settings → Privacy & Security → Files & Folders** for the exact rsync executable used by that job. If it is absent, explain that **Full Disk Access** grants broader file access; the owner may choose to manually add that executable there (for example, `/usr/bin/rsync`, only if that is the job’s executable). After the owner approves and makes the change, retry the affected job through the scheduler and repeat the verification above.

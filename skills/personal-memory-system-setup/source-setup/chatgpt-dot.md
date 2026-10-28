@@ -1,6 +1,6 @@
 # ChatGPT Dot Source Setup
 
-This recipe has two jobs: dot exports its room to Library; a local ChatGPT/Codex worker downloads those exports. Your main memory tool need not be either one. Ask the owner to open the required tool and paste the prepared prompt with approved values substituted. If already in that tool, proceed there.
+This recipe has two dot jobs: export its room to Library every four hours, and copy exports to the owner’s computer hourly when available. Your main memory tool need not be dot. Ask the owner to open dot and paste the prepared prompts with approved values substituted. If already in dot, proceed there.
 
 Confirm a dedicated Library folder for this source (default: `Memory Exports/Dot`) and the absolute memory folder with the owner. Use the owner’s known timezone from context wherever scheduling requires it.
 
@@ -22,22 +22,23 @@ Ask the owner to open each dot they want included in the memory system and give 
 > >
 > > Save each chunk as a new Library file named `dot-<room-id>-<end-timestamp-UTC>.jsonl`, using the last message’s timestamp in `YYYYMMDDTHHmmssffffffZ` format. Use the current Library skill; never replace an earlier export. Send a dot message to the user if an export fails.
 
-Retain the confirmed Library folder reference for the local job.
+Retain the confirmed Library folder reference for the copy job.
 
-## 2. Local job - Library-capable ChatGPT/Codex
+## 2. Copy job - ChatGPT dot
 
-Ask the owner to open a local ChatGPT/Codex chat with Library access. Give that chat the [scheduling instructions](../schedulers/codex.md), the absolute memory folder, and the task prompt below, with these job details:
+Ask one dot to own the copy job. Use `list_environments` to confirm the owner’s computer and retain its `computerRef` as `<computer-ref>`. Confirm the local task’s model and reasoning effort; suggest GPT-6.1 Sol, Medium. Substitute those choices and the approved paths below.
 
-- Name: `Personal Memory Download - dot`
-- Execution: local (**Run on this computer** on)
-- Schedule: hourly, using the owner’s known timezone
-- Suggested model: GPT-6 Luna; reasoning effort: Max
-
-Ask it to follow the scheduling instructions to create this job. If already in the required chat, proceed there.
-
-> Materialize dot exports from Library folder `<dot-export-folder>` into `<memory-folder>/.source-dump/chatgpt-dot/`. Use the current Library skill in this local executor.
+> Schedule an hourly task for yourself named `Personal Memory Download - dot`, using my known timezone. Use these instructions for each run:
 >
-> Use judgment, Library timestamps, and existing local filenames to find the boundary between missing and already downloaded exports, then download the missing ones. Name each destination `<library-file-id>.jsonl`. Never modify or delete existing destination files.
+> > List available computers and match `computerRef: <computer-ref>`. If it is unavailable, leave the copy pending until the next run. Never select a different computer automatically.
+> >
+> > List exports in Library folder `<dot-export-folder>` and pass their file references and metadata to a local task on that computer with model `<model>` and reasoning effort `<reasoning-effort>`, using the transfer instructions below verbatim. Read its result before recording success. If a previous copy is still running, wait for it instead of starting another.
+
+Transfer instructions:
+
+> Materialize the supplied dot export file references into `<memory-folder>/.source-dump/chatgpt-dot/`. Use the current Library skill’s resolved-reference materialization procedure in this local executor.
+>
+> Use judgment, the supplied export timestamps, and existing local filenames to find the boundary between missing and already downloaded exports, then download the missing ones. Name each destination `<library-file-id>.jsonl`. Never modify or delete existing destination files.
 >
 > Create `<memory-folder>/.tmp/scratch/` if needed and use it for temporary downloads. Follow the current Library skill’s download procedure, and publish only verified complete local files. Report failed or partial transfers.
 >
@@ -45,4 +46,4 @@ Ask it to follow the scheduling instructions to create this job. If already in t
 
 ## Verify
 
-Run the cloud job, then the local job. Confirm only messages within the selected initial timestamp window were exported. If none qualify, confirm no chunks were created for this room. Otherwise confirm a saved chunk's room header and message boundaries, matching Library/local bytes, and stable ID-based filename. Run the local job again and confirm existing files remain unchanged. Report both job IDs and schedules, any history gaps, and use `<memory-folder>/.source-dump/chatgpt-dot/` as the discovery location.
+Run both jobs. Verify the downloaded file matches the export and a repeat copy leaves it unchanged. Use `<memory-folder>/.source-dump/chatgpt-dot/` as the discovery location.

@@ -1,6 +1,6 @@
 # ChatGPT Local Source Setup
 
-1. Confirm the source roots (usually `~/.codex/sessions` and `~/.codex/archived_sessions`), and memory folder with the owner. Resolve absolute paths and verify the sources exist and do not overlap the destinations.
+1. Confirm the source roots (usually `~/.codex/sessions` and `~/.codex/archived_sessions`), and memory folder with the owner. Tell the owner the initial copy includes all available matching history; date filtering is not supported yet. Resolve absolute paths and verify the sources exist and do not overlap the destinations.
 2. Create `<memory-folder>/.source-dump/chatgpt-local/sessions/` and `archived_sessions/`.
 3. Schedule the following commands every 60 seconds with the OS scheduler, substituting the approved paths. On macOS, create one LaunchAgent per command with the installed rsync executable and arguments in `ProgramArguments`, and `StartInterval` set to `60`.
 

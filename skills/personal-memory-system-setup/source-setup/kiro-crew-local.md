@@ -1,6 +1,6 @@
 # Kiro Crew Local Source Setup
 
-1. Confirm the source folder (usually `~/.kiro/crew/sessions`), and memory folder with the owner. Resolve absolute paths and verify the source exists and does not overlap the destination.
+1. Confirm the source folder (usually `~/.kiro/crew/sessions`), and memory folder with the owner. Tell the owner the initial copy includes all available matching history; date filtering is not supported yet. Resolve absolute paths and verify the source exists and does not overlap the destination.
 2. Create `<memory-folder>/.source-dump/kiro-crew-local/`.
 3. Schedule the following command every 60 seconds with the OS scheduler, substituting the approved paths. On macOS, create a LaunchAgent with the installed rsync executable and arguments in `ProgramArguments`, and `StartInterval` set to `60`.
 

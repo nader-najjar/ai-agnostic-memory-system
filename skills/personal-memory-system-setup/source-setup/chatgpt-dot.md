@@ -4,15 +4,19 @@ This recipe has two jobs: dot exports its room to Library; a local ChatGPT/Codex
 
 Confirm a dedicated Library folder for this source (default: `Memory Exports/Dot`) and the absolute memory folder with the owner. Use the owner’s known timezone from context wherever scheduling requires it.
 
+## Initial History
+
+Ask: “How much dot conversation history should we initialize: all available history, since a date, or from now?” Wait for the owner's answer. Substitute `all`, a confirmed ISO 8601 UTC timestamp, or `from now` for `<initial-history-start>` in the prompt below. Each dot resolves `from now` once during setup and saves its fixed timestamp in its scheduled prompt. This selects individual messages by their timestamps, not whole conversations. For a new initialization scope, use a fresh Library export folder for both jobs so existing checkpoints and chunks cannot bypass the chosen scope; leave earlier exports unchanged.
+
 ## 1. Cloud job - ChatGPT dot
 
 Ask the owner to open each dot they want included in the memory system and give it this prompt, using the same Library export folder for all dots:
 
-> Schedule a task for yourself every four hours. Identify this conversation’s room ID and include it in the scheduled task; do not ask me for it. Use the following instructions for each run:
+> Schedule a task for yourself every four hours. Identify this conversation’s room ID and include it in the scheduled task; do not ask me for it. Initialize history from `<initial-history-start>`; if this is `from now`, replace it with the current ISO 8601 UTC timestamp now, during setup. Save this fixed per-room value in the scheduled instructions, even if no messages initially qualify. Use the following instructions for each run:
 >
 > > Export this dot’s conversation to Library folder `<dot-export-folder>` using the dot room reader and the current Library skill. Find exports named `dot-<room-id>-<end-timestamp-UTC>.jsonl` for this room. Select the latest end timestamp and read its header to confirm the message boundary. Its last message ID is the checkpoint; no separate checkpoint file is needed.
 > >
-> > If no export exists for this room, read all accessible room history. On later runs, export only new messages after the verified checkpoint. Read neighboring pages with overlapping message IDs, deduplicate by ID, and verify continuity back to the checkpoint (or the accessible beginning on the first run). A short page alone is not proof of completion. If a read is partial or the boundary is missing, continue reading or report the gap; never advance past an unverified boundary.
+> > If no export exists for this room, export messages with timestamps on or after `<initial-history-start>`; `all` means all accessible room history. Keep this initial value fixed across runs, including while no exports exist. On later runs, export only new messages after the verified checkpoint. Read neighboring pages with overlapping message IDs, deduplicate by ID, and verify continuity back to the checkpoint (or the initial time boundary on the first run; the accessible beginning for `all`). A short page alone is not proof of completion. If a read is partial or the boundary is missing, continue reading or report the gap; never advance past an unverified boundary. If no messages qualify, create no chunk.
 > >
 > > Write immutable JSONL chunks, each a partial continuation, not a complete session. Start each with a header containing the room ID, time bounds, and first/last message IDs. Retain each message's ID, role, text, and timestamp. Include only accessible conversation content, never hidden reasoning or system instructions; redact secrets before export.
 > >
@@ -41,4 +45,4 @@ Ask it to follow the scheduling instructions to create this job. If already in t
 
 ## Verify
 
-Run the cloud job, then the local job. Confirm a saved chunk's room header and message boundaries, matching Library/local bytes, and stable ID-based filename. Run the local job again and confirm existing files remain unchanged. Report both job IDs and schedules, any history gaps, and use `<memory-folder>/.source-dump/chatgpt-dot/` as the discovery location.
+Run the cloud job, then the local job. Confirm only messages within the selected initial timestamp window were exported. If none qualify, confirm no chunks were created for this room. Otherwise confirm a saved chunk's room header and message boundaries, matching Library/local bytes, and stable ID-based filename. Run the local job again and confirm existing files remain unchanged. Report both job IDs and schedules, any history gaps, and use `<memory-folder>/.source-dump/chatgpt-dot/` as the discovery location.

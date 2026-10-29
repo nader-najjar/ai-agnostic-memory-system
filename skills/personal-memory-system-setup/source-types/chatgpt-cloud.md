@@ -14,11 +14,11 @@ Best-effort full-conversation JSONL snapshots of regular ChatGPT, ChatGPT Work c
 
 ## Source Items
 
-Immutable `.jsonl` snapshots under any configured folder, including subdirectories, one new local file for each exported conversation version. Each snapshot contains the full available conversation and keeps its original conversation UID in its metadata.
+`chatgpt-cloud--<UID>.jsonl` files directly under any configured folder. Each file holds the latest staged full available conversation; the source exporter handles exclusions and replaces the file atomically when the conversation changes.
 
 ## UID
 
-The original conversation UID (`<kind>-<id>`) from the snapshot’s metadata record.
+The filename without its `chatgpt-cloud--` prefix and `.jsonl` suffix. This preserves the original conversation UID (`<kind>-<id>`).
 
 ## Capture
 

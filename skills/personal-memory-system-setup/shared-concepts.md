@@ -29,6 +29,10 @@ Each selected source has one entry with its source type identifier and a nonempt
 
 `<memory-folder>/.source-dump/<source-type>/` is where that source’s export or sync job puts conversation files for discover to read.
 
+## Scratch
+
+Use `<memory-folder>/.tmp/scratch/` for ad hoc temporary files and working notes. Create it if needed. Everything there must be disposable and reconstructible; never store required state there. Keep prescribed operational paths unchanged: queue-snapshot temporaries, GitHub publishing, cron workspaces, and backup temporaries.
+
 ## Source Type Definitions
 
 Source type definitions are the Markdown files in `<memory-folder>/operations/shared/source-types/`. Match each configured source's `identifier` to a definition's **Identifier** section to locate its definition.

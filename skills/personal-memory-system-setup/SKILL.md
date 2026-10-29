@@ -19,7 +19,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 1. Ask: “Where would you like this system to store your personal memory? Default: `~/Desktop/personal-memory-system`.”
 2. Wait for the owner's answer and confirm the storage location.
 3. Resolve the approved storage path and create the folder with `mkdir` without `-p`. Fail and stop if anything already exists at that path, including an empty folder, file, or symlink. Never reuse or overwrite it.
-4. This folder name, going forward in this skill, is `<memory-folder>`.
+4. This folder name, going forward in this skill, is `<memory-folder>`. Follow [Scratch](shared-concepts.md#scratch).
 5. Create `captures/`, `memory/`, and `operations/queue-snapshots/` under `<memory-folder>`. Add an empty `.gitkeep` file in each so Git preserves the folders during backup and recovery.
 6. Create `.source-dump/` under `<memory-folder>` for source input staging as defined in [Source Dump](shared-concepts.md#source-dump). Do not add a `.gitkeep` file there.
 

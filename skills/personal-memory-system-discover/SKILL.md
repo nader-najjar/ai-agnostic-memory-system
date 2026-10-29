@@ -6,7 +6,7 @@ description: Capture configured conversations and queue their snapshots.
 
 `<shared-concepts>` refers to `<memory-folder>/operations/shared/shared-concepts.md`.
 
-1. The input to this skill is the path to the personal memory folder. This is what `<memory-folder>` refers to in this skill. If missing from input, stop here.
+1. The input to this skill is the path to the personal memory folder. This is what `<memory-folder>` refers to in this skill. If missing from input, stop here. Follow `Scratch` in `<memory-folder>/operations/shared/shared-concepts.md`.
 2. Follow `Acquire Lock` in `<shared-concepts>`. If it returns `false`, stop.
 3. Read the queue using the `Queue` section of `<shared-concepts>`. If its `items` array is nonempty, release the lock and stop.
 4. Set `<cutoff>` to the current UTC time minus two hours.

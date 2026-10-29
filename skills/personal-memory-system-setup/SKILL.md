@@ -113,8 +113,8 @@ Suggested starting models and reasoning effort for the scheduled jobs (Kiro Crew
 | Job | OpenAI | Claude |
 | --- | --- | --- |
 | Discover | GPT-6 Luna · Max | Haiku 5.5 · Max |
-| Memorize | GPT-6.1 Sol · High | Sonnet 5.5 · High |
-| Troubleshoot | GPT-6.1 Sol · Medium | Sonnet 5.5 · Medium |
+| Memorize | GPT-6 Luna · Max | Sonnet 5.5 · High |
+| Troubleshoot | GPT-6 Luna · Max | Sonnet 5.5 · Medium |
 
 On a standard $20/month plan, consider lighter models or lower reasoning effort to conserve usage, especially for discovery and troubleshooting; prioritize memorization quality. Empirically, Luna and Haiku use barely any usage even with lots of chats.
 

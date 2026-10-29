@@ -35,7 +35,7 @@ Give that chat the [scheduling instructions](../schedulers/codex.md), the absolu
 - Name: `Personal Memory Download - dot`
 - Schedule: hourly, using the owner’s known timezone
 - Execution: local (**Run on this computer** on)
-- Suggested model: GPT-6.1 Sol; reasoning effort: Medium
+- Suggested model: GPT-6 Luna; reasoning effort: Max
 
 Ask it to follow the scheduling instructions to create the job.
 

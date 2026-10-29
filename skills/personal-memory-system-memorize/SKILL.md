@@ -29,6 +29,8 @@ Preserve enough understanding that the owner can leave any chat and start a fres
 
 Weigh each claim by what supports it: the owner’s statements or confirmations, original source material, tool results, or an AI assistant’s assertions. An assistant’s assertion alone does not establish a fact; it needs the owner’s confirmation or supporting evidence from the conversation. Keep unsupported assistant claims unconfirmed.
 
+In cloud chats created by dot, use delegation metadata to identify dot’s prompts as assistant-authored, even when labeled as user messages. Distinguish dot’s claims and instructions from quoted owner statements.
+
 Preserve useful beliefs, preferences, intentions, and estimates as statements attributed to whoever expressed them. They need not be objectively proven to be worth remembering; retain their uncertainty rather than presenting them as established facts.
 
 Read the complete captured conversation, including tool calls and results. Retain context that would help a future chat understand the owner’s personal and professional life, make decisions, continue effectively, or avoid rediscovery and repeated explanation: the owner’s goals, preferences and constraints, decisions and their reasons, useful rejected approaches and failed attempts, working knowledge, current state, unresolved questions, and next actions.

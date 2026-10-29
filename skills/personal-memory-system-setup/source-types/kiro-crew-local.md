@@ -14,13 +14,11 @@ Conversations from the Kiro Crew dashboard.
 
 ## Source Items
 
-`dashboard_chat-*.jsonl` files directly under any configured folder.
-
-Exclude chats whose first record (metadata) has `memory_mode` set to `incognito` or `temporary`, either at the top level or under `execution_context`.
+`kiro-crew-local--<UID>.jsonl` files directly under any configured folder. Each file holds the latest staged full conversation; the source exporter handles exclusions and replaces the file atomically when the conversation changes.
 
 ## UID
 
-The session identifier between `dashboard_chat-` and `.jsonl` in the source filename.
+The filename without its `kiro-crew-local--` prefix and `.jsonl` suffix. This preserves the original Kiro session identifier.
 
 ## Capture
 

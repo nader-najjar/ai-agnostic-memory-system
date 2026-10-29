@@ -9,7 +9,7 @@ Inputs: an existing `<memory-folder>` path and, optionally, a source to add.
 
 ## Prepare the Source
 
-1. Resolve the memory folder to an absolute path. Read its `config.json` and the `Memory Configuration` and `Source Type Definitions` sections of `<shared-concepts>`.
+1. Resolve the memory folder to an absolute path. Read its `config.json` and the `Memory Configuration`, `Source Type Definitions`, and `Scratch` sections of `<shared-concepts>`.
 2. Locate the installed `personal-memory-system-setup` skill. Read the **Identifier** and **Display Name** of each definition in its `source-types/` directory. Offer supported sources not already configured, or confirm the supplied source is one of them. Ask the owner to approve the source and conversation scope before proceeding.
 3. Follow its matching recipe in that setup skill’s `source-setup/` directory, including the recipe's approvals, cross-tool handoffs, scheduling, and verification. Use its source-specific `.source-dump/` discovery folder. Do not hold the memory lock during this work or while waiting for the owner.
 4. Read the selected source definition in full. Verify that the recipe's resulting absolute local folder exists and is readable by the memory worker, and that staged conversations match its **Source Items**, including subfolder and exclusion rules. If preparation or verification is incomplete, report what remains and do not configure the source yet.

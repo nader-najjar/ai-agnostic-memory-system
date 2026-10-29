@@ -9,7 +9,7 @@ Inputs: an existing `<memory-folder>` path and, optionally, a source to remove.
 
 ## Confirm the Scope
 
-1. Resolve the memory folder to an absolute path. Read its `config.json` and the `Memory Configuration` and `Source Type Definitions` sections of `<shared-concepts>`. Ask the owner to select or confirm one source identifier and all its configured locations.
+1. Resolve the memory folder to an absolute path. Read its `config.json` and the `Memory Configuration`, `Source Type Definitions`, and `Scratch` sections of `<shared-concepts>`. Ask the owner to select or confirm one source identifier and all its configured locations.
 2. Explain that offboarding stops future collection, not forgetting: existing captures, memories, staged files, Library exports, and Git history remain. Already saved queue and backfill snapshots remain scheduled for normal memorization, so memories can still change after offboarding. Ask the owner to approve this scope before proceeding. If they want pending ingestion stopped or stored data removed, resolve that as a separate request rather than silently changing this default.
 
 ## Stop Source Jobs

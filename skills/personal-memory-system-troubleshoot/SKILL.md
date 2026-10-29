@@ -4,7 +4,7 @@ description: Recover abandoned personal memory runs so scheduled processing can 
 ---
 # Personal Memory System Troubleshoot
 
-1. The input is the path to the personal memory folder, referred to here as `<memory-folder>`. If missing, stop.
+1. The input is the path to the personal memory folder, referred to here as `<memory-folder>`. If missing, stop. Follow `Scratch` in `<memory-folder>/operations/shared/shared-concepts.md`.
 2. Check whether `<memory-folder>/.lock` exists and follow the corresponding case below.
 
 ## Lock exists

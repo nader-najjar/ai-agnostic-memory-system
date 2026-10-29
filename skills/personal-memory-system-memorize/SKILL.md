@@ -23,6 +23,8 @@ description: Memorize the oldest queued conversation snapshot.
 
 You MUST finish the required extraction for the entire capture or delta in this run, regardless of its size or the time required. Do NOT voluntarily stop execution after partial review or defer remaining work.
 
+Complete extraction of all accessible source content. Recover readable content from truncation or other recoverable read failures and continue. Unavailable content does not block processing the rest: preserve its references, never invent its contents, and report the gap only if it may materially affect the memory. Do not stop merely because some content cannot be accessed.
+
 Tool-output truncation is a per-call display limit, not a capacity blocker. Recover omitted content with smaller bounded reads until the entire required conversation, including tool calls and results, has been reviewed. Track coverage across reads and compactions. Never infer a blocker from file size, record count, or truncated output alone. Finish updating and verifying the memory pages before reporting completion. If the owner stops the run or a genuine unrecoverable execution or access limit prevents completion, report the limitation and unfinished coverage truthfully.
 
 Never modify `<memory-folder>/always.md`; it is owner-managed.

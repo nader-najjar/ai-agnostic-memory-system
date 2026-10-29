@@ -4,6 +4,8 @@ This recipe has two dot jobs: export its room to Library every four hours, and c
 
 Confirm a dedicated Library folder for this source (default: `Memory Exports/Dot`) and the absolute memory folder with the owner. Use the owner’s known timezone from context wherever scheduling requires it.
 
+Before scheduling either job, resolve the folder paths and computer below and obtain the owner’s explicit approval for recurring export to `<dot-export-folder>` and copying missing exports to `<memory-folder>/.source-dump/chatgpt-dot/` on `<computer-ref>`, using `<memory-folder>/.tmp/scratch/` for downloads. Retain their actual approval as `<owner-approval>`.
+
 ## Initial History
 
 Ask: “How much dot conversation history should we initialize: all available history, since a date, or from now?” Wait for the owner's answer. Substitute `all`, a confirmed ISO 8601 UTC timestamp, or `from now` for `<initial-history-start>` in the prompt below. Each dot resolves `from now` once during setup and saves its fixed timestamp in its scheduled prompt. This selects individual messages by their timestamps, not whole conversations. For a new initialization scope, use a fresh Library export folder for both jobs so existing checkpoints and chunks cannot bypass the chosen scope; leave earlier exports unchanged.
@@ -32,7 +34,7 @@ Ask one dot to own the copy job. Use `list_environments` to confirm the owner’
 >
 > > List available computers and match `computerRef: <computer-ref>`. If it is unavailable, leave the copy pending until the next run. Never select a different computer automatically.
 > >
-> > List exports in Library folder `<dot-export-folder>` and pass their file references and metadata to a local task on that computer with model `<model>` and reasoning effort `<reasoning-effort>`, using the transfer instructions below verbatim. Read its result before recording success. If a previous copy is still running, wait for it instead of starting another.
+> > List exports in Library folder `<dot-export-folder>` and pass their file references and metadata to a local task on that computer with model `<model>` and reasoning effort `<reasoning-effort>`, using the transfer instructions below verbatim. Include `<owner-approval>` verbatim, the confirmed computer ID and Library folder reference, and the resolved destination and scratch paths in every local task and follow-up. Read its result before recording success. If a previous copy is still running, wait for it instead of starting another.
 
 Transfer instructions:
 

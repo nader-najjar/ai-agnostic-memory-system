@@ -3,9 +3,8 @@
 ## Chat Surfaces
 
 - Regular ChatGPT: desktop, mobile.
-- ChatGPT Work: local on desktop; cloud on desktop, mobile.
-- Codex: desktop local; cloud on desktop and mobile; desktop local CLI; desktop local IDE extension.
-- Mobile remote access: connect to existing desktop Codex or Work sessions; execution stays on the desktop.
+- ChatGPT Work: desktop local, desktop cloud, mobile cloud.
+- Codex: desktop local, desktop cloud, mobile cloud.
 - Dots: desktop, mobile.
 
 ## Common Steps
@@ -16,6 +15,6 @@
 
 ## Explain How to Recall
 
-Tell the owner they can invoke the recall skill in chats where it is available. For other chats, give them the link to `<github_repository>/blob/main/remote-recall.md` and this reusable prompt, replacing `<recall-file-url>` with the actual link:
+Tell the owner they can invoke the recall skill in chats where it is available. For other chats, explain that they must give that chat the following prompt:
 
-> Follow the recall instructions at <recall-file-url> to recall <topics> from GitHub.
+> Follow the recall instructions at <URL to github_repository>/blob/main/remote-recall.md> to recall <topics> from GitHub.

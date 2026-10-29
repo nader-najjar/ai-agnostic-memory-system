@@ -2,6 +2,16 @@
 
 This system turns AI conversations into durable, source-backed memory. Setup configures sources, standing instructions, schedules, and optional backups. Discovery saves conversation snapshots and queues them; backfill supplies older conversations; memorization processes snapshots into topic pages; recall loads those pages and checks system health. Captures preserve the evidence. A shared lock coordinates writers, Git preserves committed state, troubleshooting recovers abandoned runs, and backups preserve the repository outside the memory folder.
 
+## Scratch
+
+Use `<memory-folder>/.tmp/scratch/` for ad hoc temporary files and working notes. Create it if needed. Everything there must be disposable and reconstructible; never store required state there.
+
+Each run MUST remove its own scratch files when it finishes. Do not delete the shared scratch folder or another run's files.
+
+## Source Staging
+
+`<memory-folder>/source-staging/<source-type>/` is where that source’s export or sync job puts conversation files for discover to read.
+
 ## Memory Configuration
 
 The memory folder’s configuration is `<memory-folder>/config.json`:
@@ -11,7 +21,7 @@ The memory folder’s configuration is `<memory-folder>/config.json`:
   "sources": [
     {
       "identifier": "<source-type-identifier>",
-      "locations": [{"type": "folder", "path": "<approved-absolute-source-path>"}]
+      "location": "<memory-folder>/source-staging/<source-type>/"
     }
   ],
   "backup_file": null,
@@ -19,25 +29,13 @@ The memory folder’s configuration is `<memory-folder>/config.json`:
 }
 ```
 
-Each selected source has one entry with its source type identifier and a nonempty `locations` array. A folder location has `type: "folder"` and an absolute `path`. An MCP location has `type: "mcp"`, a `tool` name, and optional `arguments`. The source definition explains how to discover and capture items from those locations.
-
 `backup_file` is the absolute path to `<backup-folder>/<memory-folder-name>.bundle`, where `<memory-folder-name>` is the memory folder’s final path component. Use `null` when the owner declines backup.
 
-`github_repository` is the private GitHub repository URL used for publishing only committed `memory/`, `always.md`, and `remote-recall.md` with separate history, or `null` when publishing is disabled. This is the authoritative destination; setup configures `origin` in the separate `.tmp/github-publish` checkout from it. The main memory repository has no publishing remote; captures, operational files, and the full local Git history remain in the local repository and its backup.
-
-## Source Dump
-
-`<memory-folder>/.source-dump/<source-type>/` is where that source’s export or sync job puts conversation files for discover to read.
-
-## Scratch
-
-Use `<memory-folder>/.tmp/scratch/` for ad hoc temporary files and working notes. Create it if needed. Everything there must be disposable and reconstructible; never store required state there. Keep prescribed operational paths unchanged: queue-snapshot temporaries, GitHub publishing, cron workspaces, and backup temporaries.
-
-Each run MUST remove its own scratch files when it finishes. Do not delete the shared scratch folder or another run's files.
+`github_repository` is the private GitHub repository URL used for publishing only committed `memory/`, `always.md`, and `remote-recall.md` with separate history, or `null` when publishing is disabled.
 
 ## Source Type Definitions
 
-Source type definitions are the Markdown files in `<memory-folder>/operations/shared/source-types/`. Match each configured source's `identifier` to a definition's **Identifier** section to locate its definition.
+Source type definitions are the Markdown files in `<memory-folder>/operations/shared/source-types/`. Match each configured source's `<source-type-identifier>` to a definition's **Identifier** section to locate its definition.
 
 ## Queue
 
@@ -70,9 +68,9 @@ The backfill worklist is `<memory-folder>/operations/backfill.json`: a UTF-8 JSO
 
 Items follow the same format as the queue and identify saved snapshots awaiting admission to it. Paths are relative to the memory folder and appear at most once. Items are processed in list order. An empty `items` array means no pending backfill.
 
-## Capture
+## Capture Naming
 
-The filename is `<source-type>--<UID>--<source-modified-time>--<sha256>.jsonl`, where `<source-type>` comes from the source definition’s **Identifier** section, `<UID>` follows its **UID** section, `<source-modified-time>` is the source file’s filesystem modification time observed when selecting the item, expressed in UTC in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal SHA-256 hash of the capture’s complete uncompressed bytes. For the same conversation, equal hashes identify unchanged content; modification time does not determine whether the content changed.
+The filename is `<source-type>--<UID>--<source-modified-time>--<sha256>.jsonl`, where `<source-type>` comes from the source definition’s **Identifier** section, `<UID>` is dynamically specified from upstream at time of capture creation, `<source-modified-time>` is the source file’s filesystem modification time observed when selecting the item, expressed in UTC in `YYYYMMDDTHHmmssffffffZ` format, and `<sha256>` is the full lowercase hexadecimal SHA-256 hash of the capture’s complete uncompressed bytes. For the same conversation, equal hashes identify unchanged content; modification time does not determine whether the content changed.
 
 ## Memory Pages
 

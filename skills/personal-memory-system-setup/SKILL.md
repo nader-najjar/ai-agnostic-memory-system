@@ -21,17 +21,17 @@ description: Begin personal memory setup by asking which supported AI tools' con
 3. Resolve the approved storage path and create the folder with `mkdir` without `-p`. Fail and stop if anything already exists at that path, including an empty folder, file, or symlink. Never reuse or overwrite it.
 4. This folder name, going forward in this skill, is `<memory-folder>`. Follow [Scratch](shared-concepts.md#scratch).
 5. Create `captures/`, `memory/`, and `operations/queue-snapshots/` under `<memory-folder>`. Add an empty `.gitkeep` file in each so Git preserves the folders during backup and recovery.
-6. Create `.source-dump/` under `<memory-folder>` for source input staging as defined in [Source Dump](shared-concepts.md#source-dump). Do not add a `.gitkeep` file there.
+6. Create `source-staging/` under `<memory-folder>` for source input staging as defined in [Source Staging](shared-concepts.md#source-staging). Do not add a `.gitkeep` file there.
 
 ## Choose Backup Folder
 
 1. Ask: “Would you like to back up your memory to a cloud-synced folder, such as iCloud Drive, OneDrive, or Dropbox, so it can survive losing this computer? If yes, which folder should hold the backup? You may skip backup.”
 2. Wait for the owner's answer. If they choose backup, expand the folder to an absolute path and confirm it exists, is outside `<memory-folder>`, and is synced by their cloud client. Ask the owner to confirm cloud syncing if it cannot be determined locally.
-3. If they chose backup, determine the backup file using the [Memory Configuration](shared-concepts.md#memory-configuration) definition and show its path. If that file already exists, ask for a different folder to avoid overwriting an existing backup.
+3. If they chose backup, form the full backup file path and extension using the [Memory Configuration](shared-concepts.md#memory-configuration) definition and show its path to the user. If that file already exists, ask for a different folder to avoid overwriting an existing backup.
 
 ## Choose GitHub Publishing
 
-1. Ask: “Would you like to publish committed memory to a private GitHub repository for recall from other chats? Only `memory/`, `always.md`, and `remote-recall.md` are published, with separate Git history. Raw captures and operational files stay local; remote recall cannot open their source citations. If yes, supply an empty private repository URL; otherwise skip publishing.”
+1. Ask: “Would you like to publish committed memory to a private GitHub repository for recall from any ai tool not based locally on this computer? Only `memory/`, `always.md`, and `remote-recall.md` are published, with separate Git history. Raw captures and operational files stay local; remote recall cannot open their source citations. If yes, supply an empty private repository URL; otherwise skip publishing.”
 2. Wait for the owner's answer. If they choose publishing, verify that the repository is private and empty and that local Git can authenticate without interactive prompts. The chat's GitHub connector alone does not establish local Git push access. If these checks fail, report what needs resolving; do not overwrite existing repository history.
 
 ## Save Configuration
@@ -40,8 +40,8 @@ description: Begin personal memory setup by asking which supported AI tools' con
 
 ## Install Recall
 
-1. Prepare the recall skill from the same source, replacing `<local-path>` with the absolute `<memory-folder>` and `<repository-url-or-none>` with `github_repository` from `config.json`, or `none` when it is `null`. Install this configured copy for the current AI tool; leave the reusable source placeholders unchanged.
-2. If `github_repository` is configured, also save this configured copy as `<memory-folder>/remote-recall.md` so GitHub sync publishes it. Keep this copy updated when the installed recall skill changes.
+1. Prepare the recall skill from the same source as this setup skill, replacing `<local-path>` with the absolute `<memory-folder>` and `<repository-url-or-none>` with `github_repository` from `config.json`, or `none` when it is `null`. Install this configured copy for the current AI tool.
+2. If `github_repository` is configured, also save this configured copy as `<memory-folder>/remote-recall.md` so GitHub sync publishes it.
 
 ## Install Shared Concepts
 
@@ -71,61 +71,48 @@ description: Begin personal memory setup by asking which supported AI tools' con
 ## Initialize Git
 
 1. Initialize the new memory folder as a Git repository with `git init -b main`.
-2. Create `.gitignore`, and add `.lock/`, `/.tmp/`, `/.source-dump/`, and `.DS_Store` to it.
+2. Create `.gitignore`, and add `.lock/`, `/.tmp/`, `/source-staging/`, `.github-publish`, and `.DS_Store` to it.
 3. Run `git add .` from `<memory-folder>` and commit the initial state.
 4. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.
 
 ## Configure GitHub Publishing
 
-1. If `github_repository` is `null`, skip this section. Otherwise create a separate repository with `git init -b main "<memory-folder>/.tmp/github-publish"` and add its `origin` remote using `github_repository` from `config.json`. The destination must be the empty private repository verified above.
+1. If `github_repository` is `null`, skip this section. Otherwise create a separate repository with `git init -b main "<memory-folder>/.github-publish"` and add its `origin` remote using `github_repository` from `config.json`. The destination must be the empty private repository verified above.
 
 ## Onboard Selected Sources
 
-1. If the owner skipped source selection, skip this section. Otherwise run `$personal-memory-system-onboard-source` once for each selected source, supplying `<memory-folder>` and that source. Let that skill handle source approval, preparation, verification, configuration, and backfill approval and execution.
-2. If backfill was approved, explain that the snapshots will be memorized in the background as normal discovery leaves room.
+1. If the owner skipped source selection, skip this section. Otherwise run `$personal-memory-system-onboard-source` once for each selected source, supplying `<memory-folder>` and that source.
+2. After onboarding succeeds, ask the user if they would like to backfill old captures from any onboarded source. Explain that current onboarding will not capture past items. If the user would like to backfill, run `$personal-memory-system-backfill` for that source(s).
 
 ## macOS Permissions for Scheduled Scripts
 
-If either scheduled backup or GitHub sync fails with `Operation not permitted`, ask the owner to check **System Settings → Privacy & Security → Full Disk Access** for `/bin/bash`. Explain that this grants access to scripts run through Bash; let the owner enable it if they choose, then retry the affected scheduled job and verify it.
+If either scheduled backup or GitHub sync below fails with `Operation not permitted`, ask the owner to check **System Settings → Privacy & Security → Full Disk Access** for `/bin/bash`. Explain that this grants access to scripts run through Bash; let the owner enable it if they choose, then retry the affected scheduled job and verify it.
 
 ## Schedule Backup
 
 1. If `backup_file` is `null`, skip this section. Otherwise ask: “How often should the backup run? Recommended: every hour.” Wait for the owner's answer and confirm the interval.
 2. Fill in [scripts/backup.plist](scripts/backup.plist) with the job label, absolute paths, and approved interval; install it in `~/Library/LaunchAgents/` and load it with `launchctl`.
-3. Trigger the job once through the scheduler and wait for it to finish. Confirm a successful exit and verify the destination bundle with `git -C "<memory-folder>" bundle verify "<backup_file>"`. Report the backup path, schedule, and job identifier. If registration or the first run fails, report the failure instead of claiming the backup is working.
+3. Trigger the job once through the scheduler and wait for it to finish. Confirm a successful exit and verify the destination bundle with `git -C "<memory-folder>" bundle verify "<backup_file>"`. Report the backup path, schedule, and job identifier.
 
 ## Schedule GitHub Sync
 
 1. If `github_repository` is `null`, skip this section. Otherwise ask: “How often should committed memory be published to GitHub? Recommended: every hour.” Wait for the owner's answer and confirm the interval. Remote recall sees the last successful push; failed pushes retry on the next scheduled run.
 2. Fill in [scripts/github-sync.plist](scripts/github-sync.plist) with a distinct job label, absolute paths, and approved interval; install it in `~/Library/LaunchAgents/` and load it with `launchctl`. Keep this job separate from backup.
-3. Trigger the job once through the scheduler and wait for it to finish. Confirm a successful exit and that the remote `main` revision matches `.tmp/github-publish`’s `main`, and its tree contains only `memory/`, `always.md`, and `remote-recall.md`. Report the repository, schedule, and job identifier. If registration or pushing fails, report the failure rather than claiming sync works. Never pull or force-push to resolve it.
+3. Trigger the job once through the scheduler and wait for it to finish. Confirm a successful exit and that the remote `main` revision matches `.github-publish`’s `main`, and its tree contains only `memory/`, `always.md`, and `remote-recall.md`. Report the repository, schedule, and job identifier.
 
 ## Set Up Remote Recall
 
 1. If `github_repository` is `null`, skip this section.
-2. Follow the current AI tool's recipe in `remote-recall/`, supplying the repository URL and the configured recall skill. The recipe should enable repository read access, make the recall instructions available on supported chat surfaces through installation or a reusable link, and follow the recipe's verification steps.
-3. If no recipe exists or a step cannot be completed, report remote recall as pending and continue local setup. Report only the surfaces actually verified.
+2. Explain to the user that they added the github repository to be able to use this memory system on AI tools not on this computer. To do so, they need to set up remote recall capability by installing the recall skill on such AI tools. For each tool in `remote-recall/`, ask the user which they would like to set up remote recall for. For each the user specifies, follow the recipe under `remote-recall/`.
 
 ## Schedule Discovery, Memorize, and Troubleshoot
 
-Suggested starting models and reasoning effort for the scheduled jobs (Kiro Crew supports model selection only; omit reasoning effort):
-
-| Job | OpenAI | Claude |
-| --- | --- | --- |
-| Discover | GPT-6 Luna · Max | Haiku 5.5 · Max |
-| Memorize | GPT-6 Luna · Max | Sonnet 5.5 · High |
-| Troubleshoot | GPT-6 Luna · Max | Sonnet 5.5 · Medium |
-
-On a standard $20/month plan, consider lighter models or lower reasoning effort to conserve usage, especially for discovery and troubleshooting; prioritize memorization quality. Empirically, Luna and Haiku use barely any usage even with lots of chats.
-
 1. Ask: “When should discovery, memorization, and troubleshooting run? Recommended: troubleshooting hourly at minute :00, discovery hourly at minute :10, and memorization every hour at minutes :20 and :45, in your local timezone.” Explain that this gives discovery 10 minutes before memorization starts, and each memorization run 25 minutes before the next discovery or memorization run. Wait for the owner's answer and confirm all three schedules and the timezone. Explain that troubleshooting checks locks at least one hour old, leaves active runs and uncertain cases unchanged, and discards uncommitted work only after confirming abandonment.
-2. Show the model recommendations above for the current AI tool. Ask which model and, where supported, reasoning effort to use for each of discovery, memorization, and troubleshooting. Wait for the owner's answer and confirm all three choices.
-3. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules, timezone, models, reasoning effort where supported, and local execution for these jobs:
+2. Ask which model and reasoning effort to use for each of discovery, memorization, and troubleshooting. Wait for the owner's answer and confirm all three choices.
+3. Follow the current AI tool's recipe in [schedulers/](schedulers/), supplying the absolute `<memory-folder>` path and the approved schedules, timezone, models, reasoning effort, and local execution for these jobs:
    - **Personal Memory Discover:** `$personal-memory-system-discover "<memory-folder>"`
    - **Personal Memory Memorize:** `$personal-memory-system-memorize "<memory-folder>"`
    - **Personal Memory Troubleshoot:** `$personal-memory-system-troubleshoot "<memory-folder>"`
-   If no recipe exists for the current tool, report scheduling as unsupported.
-4. Confirm that all three schedules were created and report their times and identifiers. If scheduling is unavailable or any job fails to register, report which jobs have and have not been scheduled.
 
 ## Explain How to Use Your Memory
 

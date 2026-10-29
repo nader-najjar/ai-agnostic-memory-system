@@ -4,8 +4,12 @@ description: Load remembered context about requested topics into the current cha
 ---
 # Personal Memory System Recall
 
-Local memory: `<local-path>`
-GitHub memory: `<repository-url-or-none>`
+Inputs:
+  1. Topics to recall
+
+Definitions:
+  1. Local memory: `<local-path>`
+  2. GitHub memory: `<repository-url-or-none>`
 
 This skill is read-only. Do not change the memory folder or repository.
 

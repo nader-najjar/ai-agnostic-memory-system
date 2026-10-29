@@ -6,23 +6,11 @@
 
 ## Display Name
 
-ChatGPT and Codex (cloud)
+ChatGPT & Codex (cloud)
 
 ## Description
 
 Best-effort full-conversation JSONL snapshots of regular ChatGPT, ChatGPT Work cloud, and Codex cloud conversations.
-
-## Source Items
-
-`chatgpt-cloud--<UID>.jsonl` files directly under any configured folder. Each file holds the latest staged full available conversation; the source exporter handles exclusions and replaces the file atomically when the conversation changes.
-
-## UID
-
-The filename without its `chatgpt-cloud--` prefix and `.jsonl` suffix. This preserves the original conversation UID (`<kind>-<id>`).
-
-## Capture
-
-Save the complete source JSONL file unchanged, byte for byte.
 
 ## Limitations
 

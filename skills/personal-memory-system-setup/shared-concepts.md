@@ -33,6 +33,8 @@ Each selected source has one entry with its source type identifier and a nonempt
 
 Use `<memory-folder>/.tmp/scratch/` for ad hoc temporary files and working notes. Create it if needed. Everything there must be disposable and reconstructible; never store required state there. Keep prescribed operational paths unchanged: queue-snapshot temporaries, GitHub publishing, cron workspaces, and backup temporaries.
 
+Each run MUST remove its own scratch files when it finishes. Do not delete the shared scratch folder or another run's files.
+
 ## Source Type Definitions
 
 Source type definitions are the Markdown files in `<memory-folder>/operations/shared/source-types/`. Match each configured source's `identifier` to a definition's **Identifier** section to locate its definition.
@@ -92,14 +94,25 @@ Citations are relative links to captured conversations, with record identifiers 
 
 Run `git add .` from `<memory-folder>` and commit with a message describing the operation. Skip the commit if nothing changed.
 
+## Lock Owner
+
+Each acquired lock contains only a regular, non-symlink `.lock/owner.json`:
+
+```json
+{"token": "<new UUID>", "tool": "<tool name>", "session_id": "<current session ID>"}
+```
+
+Record your current session ID, using judgment based on the tool.
+
 ## Acquire Lock
 
-1. Acquire the lock with `mkdir "<memory-folder>/.lock"`. If it fails, return `false`.
-2. Run `git -C "<memory-folder>" status --porcelain=v1 --untracked-files=all`. If it fails or returns any output, release the lock and return `false`.
-3. Return `true`.
+1. Prepare a fresh `Lock Owner` record. If the current session ID is unavailable, report it and return `false`.
+2. Acquire the lock with `mkdir "<memory-folder>/.lock"`. If it fails, return `false`. Retain the directory's identity and your token.
+3. Create `owner.json` exclusively inside it and read it back to verify the record. On failure, remove only your newly created owner file, then `rmdir` the same directory and return `false`. Report cleanup failures without deleting unexpected contents.
+4. Run `git -C "<memory-folder>" status --porcelain=v1 --untracked-files=all`. If it fails or returns any output, release the lock and return `false`.
+5. Return `true`.
 
 ## Release Lock
 
-```sh
-rmdir "<memory-folder>/.lock"
-```
+1. Verify the same directory contains only a regular, non-symlink `owner.json` with your saved token. If anything differs or is uncertain, leave the lock unchanged and report it.
+2. Remove only that verified `owner.json`, then run `rmdir "<memory-folder>/.lock"`. Never recursively delete the lock or remove unexpected contents.

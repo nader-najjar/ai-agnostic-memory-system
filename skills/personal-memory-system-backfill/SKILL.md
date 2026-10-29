@@ -21,9 +21,8 @@ Definitions:
     5. For each file downloaded, set its filename using the exact same naming semantics the source setup recipe uses during day-to-day operations
 4. Follow `Acquire Lock` in `<shared-concepts>`; if it returns `false`, stop. Reread the configuration, queue, and backfill worklist under the lock and confirm the selected source remains configured.
 5. Capture the temporary files as backfill snapshots:
-    1. For each temporary source item, determine the capture's filename using the `Capture Naming` section of `<shared-concepts>` and move it to `<memory-folder>/operations/queue-snapshots/` with that name. The UID is the temporary file's filename, and the `source-modified-time` is the temporary file's modification time.
+    1. For each temporary source item, determine the capture's filename using the `Capture Naming` section of `<shared-concepts>` and move it to `<memory-folder>/operations/queue-snapshots/` with that name. The UID is the temporary file's filename without the extension, and the `source-modified-time` is the temporary file's modification time.
     2. Find the latest processed capture for the same source type and UID in `<memory-folder>/captures/`, ordered by source modification time in its filename. Call this `<latest-capture>` If either of these conditions hold, delete the snapshot file:
         - `<latest-capture>` exists and the snapshot's modification time <= `<latest-capture>` source modification time.
-        - The snapshot path already appears in either the queue or backfill worklist.
-    3. Append `{"path": "<relative-path>"}` to the backfill worklist.
+    3. Append `{"path": "<relative-path>"}` to the backfill worklist, unless the path is already in the worklist. Ensure the worklist does not contain duplicates.
 5. Save the backfill worklist, follow `Commit Changes`, then `Release Lock` in `<shared-concepts>`. Release the lock on failure too. Report what was queued and any gaps or failures; regenerate temporary staging if needed for retry.

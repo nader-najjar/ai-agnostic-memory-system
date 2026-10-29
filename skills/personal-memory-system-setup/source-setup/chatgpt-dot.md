@@ -14,11 +14,11 @@ For each dot, create the customized prompt by replacing the `<onboarding-start>`
 
 > Schedule a task for yourself every two hours. Identify this conversation’s room ID and replace the room ID placeholder in the scheduled task with it. Here is the prompt for the scheduled task:
 >
-> > Check the files in `<dot-export-index>-<dot-name>`. Find the latest export's time, and let that be `EARLIER_EXPORT_TIME`. If there are no such exports, let `EARLIER_COPY_TIME` be `<onboarding-start>`.
+> > Check the files in `<dot-export-index>-<dot-name>`. Find the latest export's time, and let that be `EARLIER_EXPORT_TIME`. If there are no such exports, let `EARLIER_EXPORT_TIME` be `<onboarding-start>`.
 > >
 > > Record the current UTC time as `AI_CRON_START_TIME`.
 > >
-> > Prepare a `.jsonl` export of this dot's conversation containing all conversation content from `EARLIER_EXPORT_TIME` to `AI_CRON_START_TIME` using the dot room reader. Name the export file `<room-id>-<AI_CRON_START_TIME>.jsonl`. The export is best-effort - do not use a small issue as an excuse to abort. Retain each message's ID, role, text, timestamp, and available reference IDs. Preserve available linked thread IDs even when their display content is unreadable. Redact secrets before export.
+> > Prepare a `.jsonl` export of this dot's conversation containing all conversation content from `EARLIER_EXPORT_TIME` to `AI_CRON_START_TIME` using the dot room reader. Name the export file `<room-id>-<AI_CRON_START_TIME>.jsonl`. The export is best-effort - do not use a small issue as an excuse to abort. Retain each message's ID, role, text, timestamp, and available reference IDs. Preserve available linked thread IDs even when their display content is unreadable. Redact secrets before export. If the export ends up being > 1 MB, split it into 2 (or more as needed) files, using judgement to follow these instructions but modified to handle more than one export.
 > >
 > > Place this export in the Library folder `<dot-export-folder>` using the Library skill/mcp.
 > >
@@ -29,7 +29,7 @@ For each dot, create the customized prompt by replacing the `<onboarding-start>`
 Follow [Codex scheduling](../schedulers/codex.md) to create:
 
 - Job name: `Personal Memory Source Staging - ChatGPT Dot`
-- Prompt: below, with the placeholders filled in (`<memory-folder>` and `<ALL_DOT_INDICES>` [using all of `<dot-export-index>-<dot-name>`])
+- Prompt: below, with the placeholders filled in (`<onboarding-start>`, `<memory-folder>` and `<ALL_DOT_INDICES>` [using all of `<dot-export-index>-<dot-name>`])
 - Schedule: every two hours
 - Timezone: user timezone
 - Model: Suggested: GPT-6 Luna
@@ -41,7 +41,7 @@ Follow [Codex scheduling](../schedulers/codex.md) to create:
 >
 > Record the current UTC time as `AI_CRON_START_TIME`.
 >
-> Calculate the current UTC time minus 3 days. Set this to `AI_CRON_WINDOW`.
+> Check the files in `<memory-folder>/source-staging/chatgpt-dot/`. Find the latest file's modification time, and let that be `EARLIER_COPY_TIME`. If there are no files in this directory, let `EARLIER_COPY_TIME` be `<onboarding-start>`.
 >
 > Let `<dot-indices-list>` be [`<ALL_DOT_INDICES>`]. Each ChatGPT Library Page in `<dot-indices-list>` has entries of the form `<dot-room-id>-<export-end-time-utc>.jsonl`. For each of the Library Pages in `<dot-indices-list>`, gather all entries that have an `<export-end-time-utc>` after `AI_CRON_WINDOW`. These gathered entries are the qualifying entries.
 >

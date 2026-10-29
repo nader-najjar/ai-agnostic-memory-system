@@ -3,7 +3,7 @@ set -euo pipefail
 export GIT_TERMINAL_PROMPT=0
 
 memory=$(cd "${1:?Usage: github-sync.sh <memory-repository>}" && pwd)
-cd "$memory/.tmp/github-publish"
+cd "$memory/.github-publish"
 test -d .git
 
 rm -rf memory always.md remote-recall.md

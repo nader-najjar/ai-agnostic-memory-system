@@ -71,7 +71,7 @@ description: Begin personal memory setup by asking which supported AI tools' con
 ## Initialize Git
 
 1. Initialize the new memory folder as a Git repository with `git init -b main`.
-2. Create `.gitignore`, and add `.lock/`, `/.tmp/`, `/source-staging/`, `.github-publish`, and `.DS_Store` to it.
+2. Create `.gitignore`, and add `.lock/`, `/.tmp/`, `.github-publish`, and `.DS_Store` to it.
 3. Run `git add .` from `<memory-folder>` and commit the initial state.
 4. Confirm that the commit succeeded and report the result to the owner. If initialization or the commit fails, stop and report the error.
 

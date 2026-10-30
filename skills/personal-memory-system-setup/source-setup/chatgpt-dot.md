@@ -41,9 +41,9 @@ Follow [Codex scheduling](../schedulers/codex.md) to create:
 >
 > Record the current UTC time as `AI_CRON_START_TIME`.
 >
-> Check the files in `<memory-folder>/source-staging/chatgpt-dot/`. Find the latest file's modification time, and let that be `EARLIER_COPY_TIME`. If there are no files in this directory, let `EARLIER_COPY_TIME` be `<onboarding-start>`.
+> Check the files in `<memory-folder>/source-staging/chatgpt-dot/`. Find the latest file's modification time, subtract 1 day from that time in UTC, and let that be `EARLIER_COPY_TIME`. If there are no files in this directory, let `EARLIER_COPY_TIME` be `<onboarding-start>`.
 >
-> Let `<dot-indices-list>` be [`<ALL_DOT_INDICES>`]. Each ChatGPT Library Page in `<dot-indices-list>` has entries of the form `<dot-room-id>-<export-end-time-utc>.jsonl`. For each of the Library Pages in `<dot-indices-list>`, gather all entries that have an `<export-end-time-utc>` after `AI_CRON_WINDOW`. These gathered entries are the qualifying entries.
+> Let `<dot-indices-list>` be [`<ALL_DOT_INDICES>`]. Each ChatGPT Library Page in `<dot-indices-list>` has entries of the form `<dot-room-id>-<export-end-time-utc>.jsonl`. For each of the Library Pages in `<dot-indices-list>`, gather all entries that have an `<export-end-time-utc>` after `EARLIER_COPY_TIME`. These gathered entries are the qualifying entries.
 >
 > For each qualifying entry, download the corresponding `jsonl` file using its name and its `library-file:` reference, both of which are in the index's entry. Use the `read_page_reference` tool to do so. Use `<memory-folder>/.tmp/scratch` if needed to hold your scratch copies.
 >

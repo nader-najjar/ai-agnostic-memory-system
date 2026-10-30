@@ -18,7 +18,7 @@ For each dot, create the customized prompt by replacing the `<onboarding-start>`
 > >
 > > Record the current UTC time as `AI_CRON_START_TIME`.
 > >
-> > Prepare a `.jsonl` export of this dot's conversation containing all conversation content from `EARLIER_EXPORT_TIME` to `AI_CRON_START_TIME` using the dot room reader. Name the export file `<room-id>-<AI_CRON_START_TIME>.jsonl`. The export is best-effort - do not use a small issue as an excuse to abort. Retain each message's ID, role, text, timestamp, and available reference IDs. Preserve available linked thread IDs even when their display content is unreadable. Redact secrets before export. If the export ends up being > 1 MB, split it into 2 (or more as needed) files, using judgement to follow these instructions but modified to handle more than one export.
+> > Prepare a `.jsonl` export of this dot's conversation containing all conversation content from `EARLIER_EXPORT_TIME` to `AI_CRON_START_TIME` using the dot room reader. Name the export file `<room-id>-<AI_CRON_START_TIME>.jsonl`. The export is best-effort - do not use a small issue as an excuse to abort. Start each file with a JSON header containing the room ID and the export interval’s start and end times in UTC. Retain each message's ID, role, text, timestamp, and available reference IDs. Preserve available linked thread IDs even when their display content is unreadable. Redact secrets before export. If the export ends up being > 1 MB, split it into 2 (or more as needed) files, using judgement to follow these instructions but modified to handle more than one export.
 > >
 > > Place this export in the Library folder `<dot-export-folder>` using the Library skill/mcp.
 > >
@@ -41,7 +41,7 @@ Follow [Codex scheduling](../schedulers/codex.md) to create:
 >
 > Record the current UTC time as `AI_CRON_START_TIME`.
 >
-> Check the files in `<memory-folder>/source-staging/chatgpt-dot/`. Find the latest file's modification time, subtract 1 day from that time in UTC, and let that be `EARLIER_COPY_TIME`. If there are no files in this directory, let `EARLIER_COPY_TIME` be `<onboarding-start>`.
+> Read the `chatgpt-dot` source entry’s `staged_through` in `<memory-folder>/config.json`. If non-null, subtract 1 day in UTC and use that as `EARLIER_COPY_TIME`; otherwise use `<onboarding-start>`.
 >
 > Let `<dot-indices-list>` be [`<ALL_DOT_INDICES>`]. Each ChatGPT Library Page in `<dot-indices-list>` has entries of the form `<dot-room-id>-<export-end-time-utc>.jsonl`. For each of the Library Pages in `<dot-indices-list>`, gather all entries that have an `<export-end-time-utc>` after `EARLIER_COPY_TIME`. These gathered entries are the qualifying entries.
 >
@@ -51,6 +51,8 @@ Follow [Codex scheduling](../schedulers/codex.md) to create:
 >   * The file name, in the destination folder, is set to the exact name it had in the index entry (`<dot-room-id>-<export-end-time-utc>.jsonl`)
 >   * The file modification time, in the destination folder, is set to `AI_CRON_START_TIME`
 >   * If a file with the same name already exists at the destination, delete the downloaded file from scratch, and move on, leaving the pre-existing destination file as-is
+>
+> After the entire batch succeeds, set this source entry’s `staged_through` to `AI_CRON_START_TIME` in `config.json`.
 >
 > Follow the `Commit Changes` section of `<memory-folder>/operations/shared/shared-concepts.md`.
 > Release the lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md`.

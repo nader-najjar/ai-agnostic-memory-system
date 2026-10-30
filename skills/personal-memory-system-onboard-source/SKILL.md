@@ -20,5 +20,5 @@ Definitions:
 ## Configure and Backfill
 
 1. Follow `Acquire Lock` in `<shared-concepts>`; if it returns `false`, stop.
-2. Add one source entry with the selected source's `identifier` and `location: <source-staging-location-from-recipe>`, preserving all other sources and settings. Copy or update only the selected definition into `<memory-folder>/operations/shared/source-types/` so discovery can find it by **Identifier**.
+2. Add one source entry with the selected source's `identifier`, `location: <source-staging-location-from-recipe>`, and `staged_through: null`, preserving all other sources and settings. Copy or update only the selected definition into `<memory-folder>/operations/shared/source-types/` so discovery can find it by **Identifier**.
 3. Follow `Commit Changes`, then `Release Lock` in `<shared-concepts>`.

@@ -14,7 +14,7 @@ Create standalone local jobs in ChatGPT/Codex.
 
 ## Procedure
 
-1. **Register the local project.** Explain to the user that automations will clutter their chat list unless they are isolated to a dedicated project. Create `<memory_folder>/.personal-memory-codex-crons` with `mkdir -p`. Use `list_projects` to find the local project for that exact folder. If it is not registered, ask the owner to add that folder as a local project in the app. Wait for confirmation, then list projects again and obtain its project ID. Use this project for the supplied local jobs.
+1. **Register the local project.** Explain to the user that automations will clutter their chat list unless they are isolated to a dedicated project. Create `<memory_folder>/.personal-memory-chatgpt-automations` with `mkdir -p`. Use `list_projects` to find the local project for that exact folder. If it is not registered, ask the owner to add that folder as a local project in the app. Wait for confirmation, then list projects again and obtain its project ID. Use this project for the supplied local jobs.
 2. **Configure local access.** Read `$CODEX_HOME/config.toml`, or `~/.codex/config.toml` when `CODEX_HOME` is unset. If needed, ask permission to set `sandbox_mode = "workspace-write"` and merge `<memory_folder>` and `<memory_folder>/.git` into `sandbox_workspace_write.writable_roots`. Show the exact proposed changes and explain that they apply to new Codex sessions generally. If permission is declined, stop and report which jobs remain unscheduled.
 3. **Resolve the schedules.** Use the owner’s known timezone. Use an RRULE and the desktop scheduler’s timezone.
 4. **Create the job.** Use `automation_update` with these fields. Rows marked UI are app settings, not additional API arguments.

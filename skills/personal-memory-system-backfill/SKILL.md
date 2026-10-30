@@ -6,7 +6,7 @@ description: Retrieve approved history from configured conversation sources and 
 
 Inputs:
   1. `<memory-folder>` path
-  2. Source type to onboard
+  2. Source type to backfill
 
 Definitions:
   1. `<shared-concepts>` refers to `<memory-folder>/operations/shared/shared-concepts.md`
@@ -24,4 +24,4 @@ Definitions:
     1. For each temporary source item, determine the capture's filename using the `Capture Naming` section of `<shared-concepts>` and move it to `<memory-folder>/operations/queue-snapshots/` with that name. The UID is the temporary file's filename without the extension, and the `source-modified-time` is the temporary file's modification time.
     2. Find the latest processed capture for the same source type and UID in `<memory-folder>/captures/`, ordered by source modification time in its filename. Call this `<latest-capture>` If `<latest-capture>` exists and the snapshot's modification time <= `<latest-capture>` source modification time, delete the snapshot file.
     3. Append `{"path": "<relative-path>"}` to the backfill worklist, unless the path is already in the worklist or the snapshot was deleted as per the previous step. Ensure the worklist does not contain duplicates.
-5. Save the backfill worklist, follow `Commit Changes`, then `Release Lock` in `<shared-concepts>`. Release the lock on failure too. Report what was queued and any gaps or failures; regenerate temporary staging if needed for retry.
+6. Save the backfill worklist, follow `Commit Changes`, then `Release Lock` in `<shared-concepts>`. Release the lock on failure too. Report what was queued and any gaps or failures; regenerate temporary staging if needed for retry.

@@ -6,7 +6,7 @@ description: Stop collecting a selected conversation source in an existing perso
 
 Inputs:
   1. `<memory-folder>` path
-  2. Source type to onboard
+  2. Source type to offboard
 
 Definitions:
   1. `<shared-concepts>` refers to `<memory-folder>/operations/shared/shared-concepts.md`

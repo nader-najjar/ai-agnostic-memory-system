@@ -21,13 +21,16 @@ The memory folder’s configuration is `<memory-folder>/config.json`:
   "sources": [
     {
       "identifier": "<source-type-identifier>",
-      "location": "<memory-folder>/source-staging/<source-type>/"
+      "location": "<memory-folder>/source-staging/<source-type>/",
+      "staged_through": null
     }
   ],
   "backup_file": null,
   "github_repository": null
 }
 ```
+
+`staged_through` is the last successful staging run’s start time as an ISO 8601 UTC timestamp, or `null` before the first successful run.
 
 `backup_file` is the absolute path to `<backup-folder>/<memory-folder-name>.bundle`, where `<memory-folder-name>` is the memory folder’s final path component. Use `null` when the owner declines backup.
 

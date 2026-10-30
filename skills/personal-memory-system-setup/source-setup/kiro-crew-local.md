@@ -20,7 +20,7 @@ Use the desired AI tool's scheduler to create the AI cron job, following its [re
 >
 > Record the current UTC time as `AI_CRON_START_TIME`.
 >
-> Check the files in `<memory-folder>/source-staging/kiro-crew-local/`. Find the latest file's modification time, and let that be `EARLIER_COPY_TIME`. If there are no files in this directory, let `EARLIER_COPY_TIME` be `<onboarding-start>`.
+> Read the `kiro-crew-local` source entry’s `staged_through` in `<memory-folder>/config.json`. Use it as `EARLIER_COPY_TIME`, or use `<onboarding-start>` if it is `null`.
 >
 > Find all `dashboard_chat-*.jsonl` files directly under `<source-folder>` that have a file modification time >= `EARLIER_COPY_TIME`. Gather these qualifying files.
 >
@@ -30,6 +30,8 @@ Use the desired AI tool's scheduler to create the AI cron job, following its [re
 >   * The file name, in the destination folder, is set to `<sessionID>.jsonl`, where `<sessionID>` is the session identifier between `dashboard_chat-` and `.jsonl` (not including `dashboard_chat-` or `.jsonl`)
 >   * The file modification time, in the destination folder, is set to `AI_CRON_START_TIME`
 >   * If a file with the same name already exists at the destination, overwrite that old file with the new qualifying file, ensuring the file modification time is now `AI_CRON_START_TIME`
+>
+> After the entire batch succeeds, set this source entry’s `staged_through` to `AI_CRON_START_TIME` in `config.json`.
 >
 > Follow the `Commit Changes` section of `<memory-folder>/operations/shared/shared-concepts.md`.
 > Release the lock using the `Release Lock` section of `<memory-folder>/operations/shared/shared-concepts.md`.

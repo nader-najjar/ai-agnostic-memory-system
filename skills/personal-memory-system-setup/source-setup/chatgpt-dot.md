@@ -45,12 +45,13 @@ Follow [Codex scheduling](../schedulers/codex.md) to create:
 >
 > Let `<dot-indices-list>` be [`<ALL_DOT_INDICES>`]. Each ChatGPT Library Page in `<dot-indices-list>` has entries of the form `<dot-room-id>-<export-end-time-utc>.jsonl`. For each of the Library Pages in `<dot-indices-list>`, gather all entries that have an `<export-end-time-utc>` after `EARLIER_COPY_TIME`. These gathered entries are the qualifying entries.
 >
-> For each qualifying entry, download the corresponding `jsonl` file using its name and its `library-file:` reference, both of which are in the index's entry. Use the `read_page_reference` tool to do so. Follow `Scratch` in `<memory-folder>/operations/shared/shared-concepts.md` for temporary copies.
+> Skip a qualifying entry if its filename already exists in `<memory-folder>/source-staging/chatgpt-dot/`, or if `<memory-folder>/operations/queue-snapshots/` or `<memory-folder>/captures/` contains a file with source type `chatgpt-dot` and UID exactly equal to the entry’s filename without `.jsonl`. Parse capture filenames using `Capture Naming` in `<memory-folder>/operations/shared/shared-concepts.md`.
+>
+> For each remaining entry, download the corresponding `jsonl` file using its name and its `library-file:` reference, both of which are in the index's entry. Use the `read_page_reference` tool to do so. Follow `Scratch` in `<memory-folder>/operations/shared/shared-concepts.md` for temporary copies.
 >
 > For each downloaded file, copy it to `<memory-folder>/source-staging/chatgpt-dot/`, ensuring the following:
 >   * The file name, in the destination folder, is set to the exact name it had in the index entry (`<dot-room-id>-<export-end-time-utc>.jsonl`)
 >   * The file modification time, in the destination folder, is set to `AI_CRON_START_TIME`
->   * If a file with the same name already exists at the destination, delete the downloaded file from scratch, and move on, leaving the pre-existing destination file as-is
 >
 > After the entire batch succeeds, set this source entry’s `staged_through` to `AI_CRON_START_TIME` in `config.json`.
 >

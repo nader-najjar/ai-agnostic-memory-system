@@ -31,7 +31,7 @@ Follow [Codex scheduling](../schedulers/codex.md) to create:
 >   * Use maximum supported limits, follow all cursors, and recover truncation where possible
 >   * Ensure to retain the mtadata containing UID, source `updatedAt`, and others, followed by the complete returned pages
 >   * Redact secrets
->   * Use `<memory-folder>/.tmp/scratch` if needed to hold your scratch copies
+>   * Follow `Scratch` in `<memory-folder>/operations/shared/shared-concepts.md` for temporary copies
 >
 > For each downloaded full chat item, copy it to `<memory-folder>/source-staging/chatgpt-cloud/`, ensuring the following:
 >   * The file name, in the destination folder, is set to `<kind>-<ID>.jsonl`, where `<ID>` is the `id` of the qualifying thread and `<kind>` is the kind from the qualifying thread

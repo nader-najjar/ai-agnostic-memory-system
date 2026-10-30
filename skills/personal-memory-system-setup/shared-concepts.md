@@ -4,9 +4,9 @@ This system turns AI conversations into durable, source-backed memory. Setup con
 
 ## Scratch
 
-Use `<memory-folder>/.tmp/scratch/` for ad hoc temporary files and working notes. Create it if needed. Everything there must be disposable and reconstructible; never store required state there.
+Use a unique per-run directory under the OS temporary directory for ad hoc temporary files and working notes. Everything there must be disposable and reconstructible; never store required state there.
 
-Each run MUST remove its own scratch files when it finishes. Do not delete the shared scratch folder or another run's files.
+Each run MUST remove its directory when it finishes, including on failure. Do not delete another run's files.
 
 ## Source Staging
 

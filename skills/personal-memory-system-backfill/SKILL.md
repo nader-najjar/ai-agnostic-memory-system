@@ -15,7 +15,7 @@ Definitions:
 2. Work interactively with the owner to confirm `<memory-folder>` and the history scope to backfill. Read the memory configuration, selected source definition, selected source setup recipe, and `Scratch` in `<shared-concepts>`. Use judgment to agree on the retrieval approach and explain any limitations; do not broaden the approved scope.
 3. Read the source's setup recipe in depth. This recipe explains how its new data is incrementally fetched under normal, day-to-day operations. The backfill process will clearly require a similar, but modified, approach. Use your judgement and work with the user to download all the backfill items, following these rules:
     1. Do not disrupt any operational flow of the existing system. This includes using or changing the harness of the source recipe's day-to-day operation.
-    2. Do not place files anywhere except under `<memory-folder>/.tmp/scratch/`
+    2. Place downloaded files only in this run's scratch directory, following `Scratch` in `<shared-concepts>`.
     3. Do not hold the memory lock in this step
     4. For each file downloaded, set its filesystem last modified time not to the current time, but rather to the time the item was truly last updated. This last updated time's semantics should be specified in the source setup recipe.
     5. For each file downloaded, set its filename using the exact same naming semantics the source setup recipe uses during day-to-day operations

@@ -45,7 +45,7 @@ Follow [Codex scheduling](../schedulers/codex.md) to create:
 >
 > Let `<dot-indices-list>` be [`<ALL_DOT_INDICES>`]. Each ChatGPT Library Page in `<dot-indices-list>` has entries of the form `<dot-room-id>-<export-end-time-utc>.jsonl`. For each of the Library Pages in `<dot-indices-list>`, gather all entries that have an `<export-end-time-utc>` after `EARLIER_COPY_TIME`. These gathered entries are the qualifying entries.
 >
-> For each qualifying entry, download the corresponding `jsonl` file using its name and its `library-file:` reference, both of which are in the index's entry. Use the `read_page_reference` tool to do so. Use `<memory-folder>/.tmp/scratch` if needed to hold your scratch copies.
+> For each qualifying entry, download the corresponding `jsonl` file using its name and its `library-file:` reference, both of which are in the index's entry. Use the `read_page_reference` tool to do so. Follow `Scratch` in `<memory-folder>/operations/shared/shared-concepts.md` for temporary copies.
 >
 > For each downloaded file, copy it to `<memory-folder>/source-staging/chatgpt-dot/`, ensuring the following:
 >   * The file name, in the destination folder, is set to the exact name it had in the index entry (`<dot-room-id>-<export-end-time-utc>.jsonl`)

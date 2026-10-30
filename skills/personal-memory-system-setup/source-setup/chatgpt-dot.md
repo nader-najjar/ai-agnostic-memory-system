@@ -4,17 +4,17 @@ This recipe has two jobs: dot exports its room to ChatGPT Library every four hou
 
 1. Record onboarding time as `<onboarding-start>` in UTC.
 2. Confirm a dedicated Library folder (default: `Memory Exports/Dot`) as `<dot-export-folder>`
-3. Confirm a dedicated index Library Page for each dot as `<dot-export-index>-<dot-name>`
+3. Confirm a dedicated index Library Page for each dot as `<dot-export-index>-<room-id>`
 
 ## 1. Dot Job
 
-For each dot, create the customized prompt by replacing the `<onboarding-start>`, `<dot-export-folder>`, and `<dot-export-index>-<dot-name>` placeholders in the prompt below with the obtained values. Ask the owner to open each dot they want included and give it this value-replaced prompt.
+For each dot, create the customized prompt by replacing the `<onboarding-start>`, `<dot-export-folder>`, and `<dot-export-index>-<room-id>` placeholders in the prompt below with the obtained values. Ask the owner to open each dot they want included and give it this value-replaced prompt.
 
 ### Job Prompt
 
 > Schedule a task for yourself every two hours. Identify this conversation’s room ID and replace the room ID placeholder in the scheduled task with it. Here is the prompt for the scheduled task:
 >
-> > Check the files in `<dot-export-index>-<dot-name>`. Find the latest export's time, and let that be `EARLIER_EXPORT_TIME`. If there are no such exports, let `EARLIER_EXPORT_TIME` be `<onboarding-start>`.
+> > Check the files in `<dot-export-index>-<room-id>`. Find the latest export's time, and let that be `EARLIER_EXPORT_TIME`. If there are no such exports, let `EARLIER_EXPORT_TIME` be `<onboarding-start>`.
 > >
 > > Record the current UTC time as `AI_CRON_START_TIME`.
 > >
@@ -22,14 +22,14 @@ For each dot, create the customized prompt by replacing the `<onboarding-start>`
 > >
 > > Place this export in the Library folder `<dot-export-folder>` using the Library skill/mcp.
 > >
-> > Index the new export in the ChatGPT Library page `<dot-export-index>-<dot-name>`, as a single entry with the export's file name and exact returned `library-file:` reference.
+> > Index the new export in the ChatGPT Library page `<dot-export-index>-<room-id>`, as a single entry with the export's file name and exact returned `library-file:` reference.
 
 ## 2. Local job - ChatGPT/Codex
 
 Follow [Codex scheduling](../schedulers/codex.md) to create:
 
 - Job name: `Personal Memory Source Staging - ChatGPT Dot`
-- Prompt: below, with the placeholders filled in (`<onboarding-start>`, `<memory-folder>` and `<ALL_DOT_INDICES>` [using all of `<dot-export-index>-<dot-name>`])
+- Prompt: below, with the placeholders filled in (`<onboarding-start>`, `<memory-folder>` and `<ALL_DOT_INDICES>` [using all of `<dot-export-index>-<room-id>`])
 - Schedule: every two hours
 - Timezone: user timezone
 - Model: Suggested: GPT-6 Luna
